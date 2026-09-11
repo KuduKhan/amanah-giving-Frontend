@@ -15,7 +15,7 @@
   --radius: 22px;
 }
 
-* { box-sizing: border-box; }
+ * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: #fbfcfa; color: var(--ink); font-family: Arial, sans-serif; }
 button, a, input { font: inherit; }
@@ -488,4 +488,131 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .receipt, .receipt * { visibility: visible; }
   .receipt { position: fixed; inset: 0; padding: 60px; }
   .receipt .button, .download-receipt { display: none; }
+}
+
+/* Content-driven layouts: shrink tracks, wrap text, and keep actions reachable. */
+:where(main, section, article, aside, header, footer, nav, div, form, label, button, a, span) { min-width: 0; }
+body { overflow-wrap: anywhere; }
+button, input, select, textarea { font: inherit; }
+button { white-space: normal; line-height: 1.4; }
+input, select, textarea { min-width: 0; max-width: 100%; }
+img { max-width: 100%; }
+h1, h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
+:where(.hero-actions, .hero-proof, .section-heading, .card-footer, .calculator-top, .zakat-total, .timeline-head, .org-card, .footer-bottom, .checkout-heading, .card-head, .portal-welcome, .form-actions, .planner-summary, .notification-settings, .dashboard-welcome) { gap: 16px; flex-wrap: wrap; }
+:where(.brand-mark, .icon-button, .language, .notify-button, .close, .platform-close, .toggle-row i, .planner-toggle > i, .safety-note i, .planner-step > span, .donation-campaign img) { flex-shrink: 0; }
+:where(.toggle-row, .planner-toggle) { gap: 16px; }
+:where(.button, .outline-button) { max-width: 100%; min-height: 44px; }
+:where(input, select, textarea):focus-visible { outline: 3px solid #89c7b2; outline-offset: 2px; }
+:where(.calc-grid label div, .custom-amount div, .planner-amount):focus-within { border-color: var(--emerald); box-shadow: 0 0 0 3px #dcefe6; }
+.section, .impact-section, .how-section, .updates-section { width: min(100%, 1228px); padding-inline: 24px; }
+.cause-strip { width: min(calc(100% - 48px), 1180px); }
+.site-header { gap: 20px; }
+.site-header nav { gap: clamp(12px, 1.8vw, 28px); }
+.header-actions { gap: 8px; }
+.hero-copy { padding-inline: clamp(28px, 5vw, 80px); }
+.impact-card { left: 24px; top: 86px; max-width: calc(100% - 48px); }
+.hero-caption { right: 28px; }
+.campaign-card, .campaign-body, .update-card > div, .seasonal-track article { display: flex; flex-direction: column; }
+.campaign-body { flex: 1; }
+.campaign-image { flex-shrink: 0; }
+.campaign-signals { margin-bottom: auto; }
+.card-footer { margin-top: auto; }
+.seasonal-track article > button, .update-card > div > button { margin-top: auto; align-self: flex-start; }
+.money-row { grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto; }
+.giving-balance { height: auto; min-height: 145px; }
+.overlay { padding: 20px; overscroll-behavior: contain; }
+:where(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { max-height: calc(100dvh - 40px); overscroll-behavior: contain; scrollbar-gutter: stable; }
+:where(.search-panel, .donation-panel, .dashboard-panel, .notification-panel) { padding-top: 64px; }
+.planner-form { padding-top: 64px; }
+.planner-intro { padding-top: 64px; }
+.close { inset-inline-end: 16px; inset-inline-start: auto; top: 14px; }
+[dir="rtl"] .close { right: auto; left: 16px; }
+.checkout-heading, .notification-head { padding-inline-end: 0; }
+.toast, .platform-toast { max-width: min(420px, calc(100vw - 32px)); line-height: 1.6; }
+.platform-shell { height: 100dvh; grid-template-columns: 255px minmax(0, 1fr); }
+.platform-main { height: 100%; }
+.platform-topbar { gap: 16px; }
+.platform-topbar > div:last-child { flex-shrink: 0; }
+.assistant-bar { position: relative; top: auto; }
+.portal-grid { grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr); }
+.portal-grid.donor-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); }
+.portal-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.portal-card { container-type: inline-size; }
+.trace-route { min-width: 0; }
+.data-rows > button { min-width: 0; }
+.ledger-head, .ledger-row { min-width: 0; grid-template-columns: 1.2fr 1.7fr .8fr .8fr .9fr; }
+.ledger-row { font-size: 11px; }
+.ledger-head { font-size: 10px; }
+.platform-sidebar nav b { font-size: 12px; }
+.platform-sidebar nav small { font-size: 10px; line-height: 1.5; }
+:is(.feature-catalog b, .task-list b, .schedule-list b, .governance-grid b, .control-grid b, .level-list b, .approval-stack b, .toggle-row, .request-types button, .portal-field, .portal-form label) { font-size: 13px; }
+:is(.microcopy, .feature-catalog p, .feature-catalog small, .task-list small, .schedule-list small, .governance-grid p, .control-grid small, .level-list small, .restricted-note p, .safety-note p, .case-card > p, .module-card p, .tag-cloud span, .data-rows > button, .approval-stack small, .fund-pills span) { font-size: 11px; line-height: 1.6; }
+:is(.planner-step small, .occasion-grid small, .planner-toggle span small, .planner-summary span em, .planner-fine, .notification-list span small, .notification-list time, .notification-settings small) { font-size: 11px; line-height: 1.5; }
+:is(.planner-step b, .occasion-grid b, .planner-fields label, .planner-toggle span b, .notification-list span strong, .notification-settings b, .notification-settings button, .notification-tabs button) { font-size: 13px; }
+.planner-fields select { width: 100%; }
+.notification-tabs { flex-wrap: wrap; }
+@container (max-width: 480px) {
+  .data-rows > button { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 16px; padding-block: 16px; }
+  .ledger-head { display: none; }
+  .ledger-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding-block: 16px; }
+  .ledger-row span::before { content: attr(data-label); display: block; color: var(--muted); font-size: 10px; margin-bottom: 3px; }
+  .trace-route { grid-template-columns: 1fr; gap: 18px; padding: 12px 0; }
+  .trace-node { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 12px; text-align: start; }
+  .trace-node i { grid-row: span 2; }
+  .trace-node b, .trace-node small { margin: 0; font-size: 11px; }
+  .trace-node > span { width: 1px; height: calc(100% + 18px); left: 14px; top: 14px; }
+}
+@media (max-width: 1200px) {
+  .site-header nav { display: none; }
+  .platform-shell { grid-template-columns: 190px minmax(0, 1fr); }
+  .portal-grid, .portal-grid.donor-grid, .beneficiary-grid { grid-template-columns: 1fr; }
+  .portal-grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1050px) {
+  .platform-shell { grid-template-columns: 78px minmax(0, 1fr); }
+}
+@media (max-width: 780px) {
+  .cause-strip { width: auto; }
+  .platform-shell { display: block; }
+  .platform-sidebar { height: calc(82px + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom); }
+  .platform-sidebar nav span { display: block; }
+  .platform-sidebar nav button { align-content: center; gap: 3px; }
+  .platform-sidebar nav b { font-size: 9px; line-height: 1.2; }
+  .platform-main { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
+  .platform-ai { color: var(--emerald); width: auto; height: auto; min-height: 39px; padding: 8px; }
+  .portal-grid.three { grid-template-columns: 1fr; }
+  .portal-welcome .button { display: inline-block; }
+  .mobile-nav { height: calc(68px + env(safe-area-inset-bottom)); }
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .toast, .platform-toast { bottom: calc(94px + env(safe-area-inset-bottom)); right: 16px; }
+  .header-actions .language, .notify-button { display: inline-block; }
+  .live-giving { top: 20px; right: 20px; max-width: calc(100% - 40px); }
+  .impact-card { top: 80px; }
+  .hero-caption { left: 24px; right: 24px; }
+  .planner-intro { padding: 64px 28px 28px; }
+  .planner-form { padding-top: 28px; }
+  .planner-orbit { margin-bottom: 36px; }
+  .dashboard-welcome > button { display: block; }
+}
+@media (max-width: 460px) {
+  .site-header { padding-inline: 12px; gap: 8px; }
+  .header-actions { gap: 3px; }
+  .brand { gap: 7px; }
+  .overlay { padding: 10px; }
+  :where(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { max-height: calc(100dvh - 20px); }
+  .platform-topbar { align-items: flex-start; padding: 12px; gap: 8px; }
+  .platform-topbar h2 { font-size: 17px; }
+  .platform-ai { max-width: 82px; font-size: 10px; }
+  .detail-facts { grid-template-columns: 1fr; }
+  .notification-list > button { grid-template-columns: 34px minmax(0, 1fr); }
+  .notification-list time { grid-column: 2; }
+  .timeline-item { grid-template-columns: 20px 44px minmax(0, 1fr); gap: 8px; padding-bottom: 16px; }
+  .trustbar { height: auto; min-height: 34px; padding: 8px 12px; text-align: center; flex-wrap: wrap; }
+  .payment-summary { grid-template-columns: 1fr; gap: 8px; }
+}
+.quick-amounts button { flex: 0 1 auto; min-width: 64px; min-height: 40px; }
+body:has(.overlay, .platform-overlay) { overflow: hidden; }
+@media (max-width: 780px) {
+  .hero-proof { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
