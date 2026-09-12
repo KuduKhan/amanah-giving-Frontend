@@ -492,12 +492,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 /* Content-driven layouts: shrink tracks, wrap text, and keep actions reachable. */
 :where(main, section, article, aside, header, footer, nav, div, form, label, button, a, span) { min-width: 0; }
-body { overflow-wrap: anywhere; }
+body { overflow-wrap: normal; word-break: normal; }
 button, input, select, textarea { font: inherit; }
 button { white-space: normal; line-height: 1.4; }
 input, select, textarea { min-width: 0; max-width: 100%; }
 img { max-width: 100%; }
 h1, h2, h3, h4 { text-wrap: balance; }
+/* Size this headline to its column so whole words fit before wrapping. */
+.seasonal-heading { container-type: inline-size; }
+.seasonal-heading h2 { font-size: clamp(28px, 13cqi, 62px); overflow-wrap: normal; word-break: normal; hyphens: none; }
+/* Currency prefixes must keep their intrinsic width; the input takes the remaining space. */
+.calc-grid small, .custom-amount small, .planner-amount small, .field > div > small { flex: 0 0 auto; white-space: nowrap; }
+.calc-grid input, .custom-amount input, .planner-amount input, .field > div > input { flex: 1 1 0%; min-width: 0; }
 p { text-wrap: pretty; }
 :where(.hero-actions, .hero-proof, .section-heading, .card-footer, .calculator-top, .zakat-total, .timeline-head, .org-card, .footer-bottom, .checkout-heading, .card-head, .portal-welcome, .form-actions, .planner-summary, .notification-settings, .dashboard-welcome) { gap: 16px; flex-wrap: wrap; }
 :where(.brand-mark, .icon-button, .language, .notify-button, .close, .platform-close, .toggle-row i, .planner-toggle > i, .safety-note i, .planner-step > span, .donation-campaign img) { flex-shrink: 0; }
