@@ -705,10 +705,19 @@ body:has(.overlay, .platform-overlay) { overflow: hidden; }
 .amanah-logo-lg .amanah-logo-wordmark b { font-size: 20px; }
 .amanah-logo-lg .amanah-logo-wordmark small { font-size: 9px; }
 .amanah-logo-light .amanah-logo-wordmark b { color: var(--logo-ink); }
+/* A quiet ivory medallion preserves the original navy, green and gold on dark surfaces. */
+.amanah-logo-light .amanah-logo-mark {
+  flex-shrink: 0;
+  object-fit: contain;
+  background: #f7faf6;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(216,182,109,.35), 0 3px 10px rgba(0,0,0,.12);
+}
 .premium-header .amanah-logo-mark { width: 48px; height: 48px; }
 .premium-header .amanah-logo-wordmark b { font-size: 15px; }
 .premium-header .amanah-logo-wordmark small { font-size: 8px; }
 .platform-brand .amanah-logo { flex-shrink: 0; }
+.platform-brand > .amanah-logo { width: auto; height: auto; border: 0; border-radius: 0; display: inline-flex; }
 .platform-brand .amanah-logo-wordmark { display: none; }
 .footer-brand .amanah-logo-wordmark b { color: #f8fcfa; }
 .footer-brand .amanah-logo-wordmark small { color: #d8b66d; }
