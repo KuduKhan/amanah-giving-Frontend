@@ -1,6 +1,7 @@
 'use client';
 
 import Icon from './Icon';
+import AmanahLogo from './AmanahLogo';
 
 import { FormEvent, useMemo, useState } from 'react';
 
@@ -45,7 +46,7 @@ export default function PlatformConsole({ onClose, onGive }: { onClose: () => vo
   return <div className="platform-overlay" role="dialog" aria-modal="true" aria-label="Amanah platform console">
     <div className="platform-shell">
       <aside className="platform-sidebar">
-        <div className="platform-brand"><span>A</span><div><b>AMANAH</b><small>PLATFORM</small></div></div>
+        <div className="platform-brand"><AmanahLogo variant="light" size="sm" showTagline={false}/><div><b>AMANAH</b><small>PLATFORM</small></div></div>
         <p className="platform-kicker">YOUR WORKSPACES</p>
         <nav aria-label="Platform portals">
           {portals.map(item => <button key={item.id} className={portal === item.id ? 'active' : ''} onClick={() => setPortal(item.id)}><i><Icon name={item.icon}/></i><span><b>{item.label}</b><small>{item.role}</small></span></button>)}

@@ -2,6 +2,7 @@
 
 import Icon from './Icon';
 import SiteHeader from './SiteHeader';
+import AmanahLogo from './AmanahLogo';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import PlatformConsole from './PlatformConsole';
@@ -282,7 +283,7 @@ export default function Home() {
         <div className="org-card"><span className="org-logo">AR</span><div><p className="verified"><Icon name="●"/> Organization verified</p><h3>Al-Rahmah Community Trust</h3><p>Nairobi · 12 active projects · 94% reporting score</p></div><span className="score">A+</span></div>
       </section>
 
-      <footer><div className="footer-brand"><a className="brand inverse" href="#top"><span className="brand-mark">A</span><span>AMANAH<small>GIVING</small></span></a><p>Transparent, secure and Shariah-aware digital giving.</p></div><div><b>Give</b><a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a></div><div><b>Platform</b><a href="#how">How it works</a><button onClick={() => setPlatformOpen(true)}>Request assistance</button><button onClick={() => setPlatformOpen(true)}>For organizations</button></div><div><b>Trust</b><button onClick={() => setPlatformOpen(true)}>Verification</button><button onClick={() => setPlatformOpen(true)}>Privacy</button><button onClick={() => setPlatformOpen(true)}>Shariah governance</button></div><div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div></footer>
+      <footer><div className="footer-brand"><a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a><p>Transparent, secure and Shariah-aware digital giving.</p></div><div><b>Give</b><a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a></div><div><b>Platform</b><a href="#how">How it works</a><button onClick={() => setPlatformOpen(true)}>Request assistance</button><button onClick={() => setPlatformOpen(true)}>For organizations</button></div><div><b>Trust</b><button onClick={() => setPlatformOpen(true)}>Verification</button><button onClick={() => setPlatformOpen(true)}>Privacy</button><button onClick={() => setPlatformOpen(true)}>Shariah governance</button></div><div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div></footer>
       <div className="footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><span>English · Kiswahili · Secure giving</span></div>
 
       <nav className="mobile-nav" aria-label="Mobile navigation"><a href="#top"><span><Icon name="⌂"/></span>Home</a><a href="#causes"><span><Icon name="⌕"/></span>Explore</a><button className="mobile-give" onClick={() => startDonation()}><span><Icon name="+"/></span>Give</button><a href="#impact"><span><Icon name="◎"/></span>Impact</a><button onClick={() => setDashboardOpen(true)}><span><Icon name="wallet"/></span>Account</button></nav>

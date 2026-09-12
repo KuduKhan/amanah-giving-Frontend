@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Icon from './Icon';
+import AmanahLogo from './AmanahLogo';
 
 type Props = {
   labels: { causes: string; zakat: string; impact: string; how: string; sign: string; give: string };
@@ -63,7 +64,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
   return <header className="site-header premium-header" ref={header} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
   }}>
-    <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><span className="brand-mark">A</span><span>AMANAH<small>GIVING</small></span></a>
+    <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><AmanahLogo size="md"/></a>
     <nav className="desktop-links" aria-label="Main navigation">
       {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}><Icon name={link.icon}/>{link.label}</a>)}
       <button className="nav-platform" onClick={onPlatform}><Icon name="platform"/>Platform</button>
