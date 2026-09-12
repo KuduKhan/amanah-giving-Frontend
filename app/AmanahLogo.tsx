@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import type { CSSProperties } from 'react';
 
 type Props = {
@@ -18,3 +19,4 @@ export default function AmanahLogo({ variant = 'dark', size = 'md', showTagline 
     <span className="amanah-logo-wordmark"><b>AMANAH</b>{showTagline && <small>GIVING</small>}</span>
   </span>;
 }
+
