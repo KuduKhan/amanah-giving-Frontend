@@ -1,0 +1,18 @@
+{
+  "configured": true,
+  "campaigns": [{
+    "id": "10000000-0000-4000-8000-000000000001",
+    "organization_id": "20000000-0000-4000-8000-000000000001",
+    "title": "Test fixture: thoughtfully prepared community water",
+    "title_sw": "Mfano wa majaribio: maji kwa jamii",
+    "story": "Browser test data only. This is not a real campaign and cannot receive money.",
+    "story_sw": "Huu ni mfano wa majaribio. Si mradi halisi.",
+    "category": "Water", "location": "Garissa, Kenya", "goal": 5000000,
+    "raised": 1000000, "donor_count": 20, "end_date": "2099-12-31",
+    "image": "/water-community.jpg", "status": "published", "zakat_eligible": true,
+    "policy_id": null, "verification_summary": "Test-only verification text. No real verification claimed.",
+    "budget": [{ "label": "Test delivery budget", "amount": 5000000 }]
+  }],
+  "organizations": [], "updates": [], "policies": [],
+  "payments": { "mpesa": true, "stripe": true }
+}
