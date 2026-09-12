@@ -268,7 +268,7 @@ export default function Home() {
       </section>
 
       <section className="donor-promise">
-        <div className="promise-mark">A</div>
+        <div className="promise-mark"><AmanahLogo variant="light" size="lg" showTagline={false}/></div>
         <div><p className="eyebrow light">The Amanah promise</p><h2>Your intention stays clear. Your gift stays accountable.</h2></div>
         <div className="promise-points"><span><b>01</b>Giving type recorded</span><span><b>02</b>Funds restricted correctly</span><span><b>03</b>Every release approved</span><span><b>04</b>Impact evidence returned</span></div>
       </section>
