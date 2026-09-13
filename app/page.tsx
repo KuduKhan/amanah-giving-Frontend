@@ -168,7 +168,15 @@ export default function Home() {
   return (
     <main>
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
-      <div className="trustbar">Verified campaigns <span>•</span> Zakat funds kept separate <span>•</span> M-PESA ready</div>
+      <div className="trustbar" role="note">
+        <div className="trustbar-inner">
+          <span className="trustbar-item"><Icon name="shield" /> Verified campaigns</span>
+          <span className="trustbar-separator" aria-hidden="true" />
+          <span className="trustbar-item trustbar-primary">Zakat funds kept separate</span>
+          <span className="trustbar-separator" aria-hidden="true" />
+          <span className="trustbar-item"><Icon name="phone" /> M-PESA ready</span>
+        </div>
+      </div>
       <SiteHeader labels={t} language={language} onLanguage={() => setLanguage(language === 'en' ? 'sw' : language === 'sw' ? 'ar' : 'en')} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
       <section className="hero" id="top">

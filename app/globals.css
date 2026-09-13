@@ -25,8 +25,12 @@ img { display: block; }
 ::selection { background: #cce7dc; color: var(--navy); }
 :focus-visible { outline: 3px solid rgba(15,121,93,.35); outline-offset: 3px; }
 section[id] { scroll-margin-top: 92px; }
-.trustbar { height: 34px; background: var(--navy); color: #dce8e5; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 12px; letter-spacing: .025em; }
-.trustbar span { color: var(--gold); }
+.trustbar { min-height: 38px; padding: 0 24px; background: linear-gradient(110deg, #061827 0%, #0b2635 52%, #071a2c 100%); color: #dce8e5; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(162,228,205,.16); }
+.trustbar-inner { width: min(100%, 1160px); display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 38px; }
+.trustbar-item { display: inline-flex; align-items: center; gap: 7px; color: #b9ccc6; font-size: 11px; font-weight: 650; letter-spacing: .04em; white-space: nowrap; }
+.trustbar-item .app-icon { width: 14px; height: 14px; color: #79c9ab; }
+.trustbar-primary { color: #f2f6ef; text-transform: uppercase; letter-spacing: .16em; font-size: 10px; }
+.trustbar-separator { width: 3px; height: 3px; flex: 0 0 auto; border-radius: 999px; background: #c8a15c; box-shadow: 0 0 0 3px rgba(200,161,92,.1); }
 .site-header { height: 82px; max-width: none; margin: auto; padding: 0 max(3vw,34px); display: flex; align-items: center; justify-content: space-between; background: rgba(251,252,250,.9); position: sticky; top: 0; z-index: 18; border-bottom: 1px solid rgba(220,226,223,.8); backdrop-filter: blur(18px) saturate(1.4); box-shadow: 0 8px 35px rgba(7,26,44,.035); }
 .brand { color: var(--navy); display: flex; align-items: center; gap: 11px; text-decoration: none; font-weight: 800; letter-spacing: .12em; }
 .brand-mark { height: 42px; width: 42px; border: 1px solid #b7cbc4; border-radius: 50% 50% 48% 48%; display: grid; place-items: center; color: var(--emerald); font-family: Georgia, serif; font-size: 24px; }
@@ -398,7 +402,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 
 @media (max-width: 780px) {
   body { padding-bottom: 72px; }
-  .trustbar { font-size: 9px; gap: 6px; }
+  .trustbar { min-height: 34px; padding: 7px 12px; }
+  .trustbar-inner { gap: 9px; }
+  .trustbar-item { font-size: 10px; letter-spacing: .02em; }
+  .trustbar-primary { font-size: 9px; letter-spacing: .1em; }
+  .trustbar-separator { width: 2px; height: 2px; }
   .site-header { height: 70px; padding: 0 18px; }
   .header-actions .account-link, .header-actions .button, .header-actions .language { display: none; }
   .hero { grid-template-columns: 1fr; min-height: 0; }

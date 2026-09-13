@@ -4,13 +4,13 @@ import {
   CreditCard, Droplets, Gift, Globe2, HandHeart, Heart, House,
   Infinity as InfinityIcon, Landmark, LayoutGrid, Menu, Moon,
   Package, Plus, Repeat2, Search, ShieldCheck, Sparkles, Users,
-  Wallet, X, type LucideIcon,
+  Wallet, X, Smartphone, type LucideIcon,
 } from 'lucide-react';
 
 const icons: Record<string, LucideIcon> = {
   search: Search, bell: Bell, globe: Globe2, menu: Menu, close: X,
   heart: Heart, home: House, giving: HandHeart, platform: LayoutGrid,
-  wallet: Wallet, shield: ShieldCheck, users: Users, calendar: CalendarDays,
+  wallet: Wallet, shield: ShieldCheck, users: Users, calendar: CalendarDays, phone: Smartphone,
   book: BookOpen, bank: Landmark, card: CreditCard,
   '⌕': Search, '◉': Bell, '✦': Sparkles, '♡': Heart, '♥': Heart,
   '⌂': House, '◇': Building2, '◎': ShieldCheck, '≡': Landmark,
