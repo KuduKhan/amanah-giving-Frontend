@@ -1,4 +1,3 @@
-// Phase II visual prototype; not routed or built.
 'use client';
 
 import Icon from './Icon';

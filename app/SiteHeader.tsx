@@ -59,7 +59,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
   }, [menuOpen]);
 
   const run = (action: () => void) => { setMenuOpen(false); action(); };
-  const nextLanguage = language === 'en' ? 'Kiswahili' : 'English';
+  const nextLanguage = language === 'en' ? 'Kiswahili' : language === 'sw' ? 'Arabic' : 'English';
 
   return <header className="site-header premium-header" ref={header} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
@@ -67,11 +67,11 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><AmanahLogo size="md"/></a>
     <nav className="desktop-links" aria-label="Main navigation">
       {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}><Icon name={link.icon}/>{link.label}</a>)}
-      <button className="nav-platform" onClick={onPlatform}><Icon name="platform"/>{language === 'sw' ? 'Shirika' : 'Organizations'}</button>
+      <button className="nav-platform" onClick={onPlatform}><Icon name="platform"/>Platform</button>
     </nav>
     <div className="header-actions">
       <button className="header-icon" onClick={onSearch} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
-      <button className="header-icon notification-trigger" onClick={onNotifications} aria-label={language === 'sw' ? 'Fungua arifa' : 'Open notifications'} title={language === 'sw' ? 'Arifa' : 'Notifications'}><Icon name="bell"/></button>
+      <button className="header-icon notification-trigger" onClick={onNotifications} aria-label="Open notifications, 3 unread" title="Notifications"><Icon name="bell"/><span className="notification-dot"/></button>
       <button className="header-language" onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`} title={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
       <span className="header-divider" aria-hidden="true"/>
       <button className="account-link" onClick={onAccount}><Icon name="wallet"/>{labels.sign}</button>
@@ -82,7 +82,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
       <p className="menu-eyebrow">EXPLORE AMANAH</p>
       <nav aria-label="Expanded navigation">
         {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => setMenuOpen(false)}><Icon name={link.icon}/><span>{link.label}</span><Icon name="→"/></a>)}
-        <button onClick={() => run(onPlatform)}><Icon name="platform"/><span>{language === 'sw' ? 'Mashirika' : 'Organizations'}</span><Icon name="→"/></button>
+        <button onClick={() => run(onPlatform)}><Icon name="platform"/><span>Platform</span><Icon name="→"/></button>
         <button onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="→"/></button>
       </nav>
       <div className="menu-footer"><span><Icon name="shield"/>Verified giving. Visible impact.</span><button className="button" onClick={() => run(onGive)}>{labels.give}<Icon name="↗"/></button></div>

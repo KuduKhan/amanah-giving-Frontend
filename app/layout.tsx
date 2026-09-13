@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Pwa from './components/Pwa';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,10 +13,6 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.APP_URL || 'http://localhost:3000'),
-  manifest: '/manifest.webmanifest',
-  icons: { icon: '/amanah-logo.png', apple: '/amanah-logo.png' },
-  appleWebApp: { capable: true, title: 'Amanah Giving', statusBarStyle: 'default' },
   title: 'Amanah Giving | Verified Islamic Charity',
   description: 'Give with trust and follow your impact from donation to delivery.',
   openGraph: {
@@ -45,7 +40,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Pwa/>
       </body>
     </html>
   );
