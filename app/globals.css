@@ -1398,3 +1398,88 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   }
   .steps-grid p { font-size: 12px; }
 }
+
+/* Preserve the calculator's desktop two-column hierarchy on phones. */
+@media (max-width: 780px) {
+  .calculator {
+    padding: 20px 16px;
+  }
+  .calculator-top {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .calculator-top > div {
+    min-width: 0;
+  }
+  .calculator-top div b {
+    white-space: nowrap;
+  }
+  .verified-pill {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .calc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
+    padding: 20px 0;
+  }
+  .calc-grid label > span {
+    min-height: 2.8em;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .calc-grid label > div {
+    min-width: 0;
+    min-height: 46px;
+  }
+  .calc-grid small {
+    padding-inline: 8px;
+  }
+  .calc-grid input {
+    min-width: 0;
+    padding-inline: 8px;
+  }
+  .zakat-total {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+  }
+  .zakat-total > span {
+    min-width: 0;
+  }
+  .zakat-total strong {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 390px) {
+  .calculator { padding-inline: 13px; }
+  .calculator-top div b { font-size: 19px; }
+  .verified-pill {
+    padding: 7px 8px;
+    font-size: 9px;
+  }
+  .calc-grid { gap: 12px 8px; }
+  .calc-grid label > span { font-size: 12px; }
+  .calc-grid small {
+    padding-inline: 6px;
+    font-size: 9px;
+  }
+  .calc-grid input {
+    padding-inline: 6px;
+    font-size: 14px;
+  }
+  .zakat-total { padding: 14px 12px; }
+  .zakat-total span { font-size: 12px; }
+  .zakat-total small { font-size: 10px; }
+  .zakat-total strong { font-size: 22px; }
+}
