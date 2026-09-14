@@ -820,11 +820,11 @@ body { background-color: #fbfcfa; text-rendering: optimizeLegibility; }
 .filter-row::-webkit-scrollbar { display: none; }
 .filter-row button { flex: 0 0 auto; min-height: 42px; padding: 9px 17px; font-size: 13px; }
 .filter-row button.active, .filter-row button[aria-pressed="true"] { box-shadow: 0 7px 18px rgba(15,121,93,.16); }
-.campaign-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; }
+.campaign-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
 .campaign-card { border-radius: 24px; box-shadow: 0 14px 38px rgba(7,26,44,.065); }
 .campaign-image { height: clamp(220px, 24vw, 285px); }
 .campaign-body { padding: 25px; }
-.campaign-card h3 { font-size: clamp(23px, 2vw, 28px); line-height: 1.2; }
+.campaign-card h3 { font-size: clamp(22px, 1.75vw, 27px); line-height: 1.2; }
 .campaign-signals span, .verified, .muted { font-size: 12px; }
 .campaign-signals span { padding: 7px 10px; }
 .money-row { margin-top: 22px; }
@@ -883,12 +883,15 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
 .portal-form :is(input, select, textarea), .portal-field textarea { min-height: 46px; font-size: 14px; }
 .feature-catalog > button, .control-grid button, .fund-pills button { min-height: 76px; }
 
+@media (max-width: 1100px) {
+  .campaign-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; }
   .hero-copy { padding: 68px max(24px, 6vw) 58px; }
   .hero h1 { max-width: 760px; }
   .hero-visual { min-height: 560px; }
-  .campaign-grid { grid-template-columns: 1fr; max-width: 720px; margin-inline: auto; }
   .campaign-image { height: clamp(230px, 52vw, 360px); }
   .zakat-section, .impact-section { grid-template-columns: 1fr; }
 }
@@ -918,6 +921,10 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .mobile-nav .mobile-give { transform: translateY(-8px); }
   .overlay:not(.platform-overlay) { place-items: end center; padding: 0; }
   :where(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { width: 100%; max-width: none; max-height: 94dvh; border-radius: 24px 24px 0 0; border-bottom: 0; }
+}
+
+@media (max-width: 700px) {
+  .campaign-grid { grid-template-columns: 1fr; max-width: 620px; margin-inline: auto; }
 }
 
 @media (max-width: 480px) {
