@@ -978,3 +978,174 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
 @media (hover: none) {
   .campaign-card:hover, .seasonal-track article:hover, .cause-strip button:hover { transform: none; }
 }
+
+/* Phone layout guardrails: every surface stays inside the viewport. */
+@media (max-width: 780px) {
+  :where(main, main > section, .platform-shell, .platform-main, .platform-content) { width: 100%; max-width: 100%; }
+  :where(main > section, .hero, .zakat-section, .organizations, .seasonal-giving, .platform-preview) { overflow: clip; }
+  :where(h1, h2, h3, h4, p, b, strong, small, span, a, button, label) { max-width: 100%; }
+  :where(p, small, .muted, .portal-card, .detail-content, .receipt-card) { overflow-wrap: anywhere; }
+
+  .premium-header { width: 100%; }
+  .premium-header .brand { min-width: 0; }
+  .premium-header .header-actions { margin-inline-start: auto; }
+  .navigation-menu { inset-inline: 8px; width: auto; max-height: calc(100dvh - 112px); padding: 14px; border-radius: 17px; }
+  .premium-header .navigation-menu nav { grid-template-columns: 1fr; }
+  .navigation-menu nav :is(a,button) { min-height: 48px; padding: 12px; }
+  .menu-footer { align-items: stretch; flex-direction: column; }
+  .menu-footer .button { width: 100%; }
+
+  .hero-copy { width: 100%; }
+  .hero h1 { max-width: 100%; overflow-wrap: normal; word-break: normal; }
+  .hero-lead { max-width: 42rem; }
+  .hero-proof { width: 100%; }
+  .hero-proof span { overflow-wrap: normal; }
+  .hero-visual { width: 100%; }
+  .impact-card { left: 18px; right: auto; }
+  .live-giving { left: auto; right: 18px; }
+  .hero-caption { max-width: none; }
+
+  .cause-strip { overflow: hidden; }
+  .cause-strip button { min-width: 0; padding-inline: 8px; line-height: 1.35; }
+  .section-heading { width: 100%; }
+  .section-heading > :first-child { width: 100%; }
+  .section-heading .text-link { align-self: flex-start; }
+  .filter-row { width: calc(100% + 4px); max-width: calc(100% + 4px); margin-inline: -2px; }
+  .campaign-grid, .updates-grid, .steps-grid { width: 100%; }
+
+  .zakat-section { width: 100%; gap: 32px; padding: 64px 16px; }
+  .zakat-copy { max-width: 100%; }
+  .zakat-copy h2 br { display: none; }
+  .zakat-copy ul { padding-inline: 0; }
+  .calculator { width: 100%; max-width: 100%; }
+  .calculator-top, .zakat-total { width: 100%; }
+  .calc-grid { width: 100%; }
+  .calc-grid label, .calc-grid label > div { width: 100%; }
+  .calc-grid label > div { display: flex; }
+  .calc-grid input { width: 100%; }
+
+  .impact-section { width: 100%; gap: 34px; }
+  .impact-intro { max-width: 100%; }
+  .impact-timeline { width: 100%; overflow: hidden; }
+  .timeline-head { align-items: flex-start; }
+  .timeline-head > div { flex: 1 1 180px; }
+  .timeline-item { width: 100%; }
+  .timeline-item > div:last-child { min-width: 0; }
+  .evidence-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .evidence-row :is(span,button) { min-width: 0; }
+  .update-card { width: 100%; }
+  .update-card > div { min-width: 0; }
+  .donor-promise { width: 100%; }
+  .promise-points { width: 100%; }
+  .org-card { width: 100%; }
+
+  footer { width: 100%; }
+  footer > div { min-width: 0; }
+  .footer-cta { padding-inline-start: 0; }
+  .footer-bottom { width: 100%; padding-inline: 18px; text-align: center; }
+
+  .mobile-nav { max-width: 100%; grid-template-columns: repeat(5,minmax(0,1fr)); overflow: visible; }
+  .mobile-nav :is(a,button) { min-width: 0; padding-inline: 2px; white-space: nowrap; }
+
+  .overlay:not(.platform-overlay) { width: 100%; max-width: 100%; overflow: hidden; }
+  :where(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+  :where(.search-panel, .donation-panel, .dashboard-panel, .notification-panel, .planner-form, .detail-content) { padding-inline: 18px; }
+  .search-results { width: 100%; }
+  .search-results > button { width: 100%; grid-template-columns: 58px minmax(0,1fr) auto; }
+  .search-results img { width: 58px; height: 50px; }
+  .option-grid, .amount-grid, .two-fields, .payment-tabs, .planner-fields, .occasion-grid { width: 100%; }
+  .option-grid button, .amount-grid button, .payment-tabs button { min-width: 0; }
+  .custom-amount, .field, .custom-amount > div, .field > div { width: 100%; }
+  .payment-summary { width: 100%; }
+  .payment-summary > * { min-width: 0; }
+  .receipt, .receipt-card { width: 100%; }
+  .receipt-card span { min-width: 0; }
+  .detail-panel { width: 100%; grid-template-columns: 1fr; }
+  .detail-media { width: 100%; height: clamp(210px, 55vw, 300px); min-height: 0; }
+  .detail-facts { width: 100%; grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .detail-facts span { min-width: 0; }
+  .budget > div { gap: 12px; }
+  .disbursement-preview { width: 100%; overflow: hidden; }
+  .disbursement-preview ol { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px 8px; }
+  .disbursement-preview li:not(:last-child)::after { display: none; }
+  .detail-assurances { width: 100%; }
+  .dashboard-stats { width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .dashboard-layout, .dashboard-update, .dashboard-actions { width: 100%; }
+  .dashboard-update img { width: 100%; height: 180px; object-fit: cover; }
+
+  .planner-panel { width: 100%; grid-template-columns: 1fr; }
+  .planner-intro, .planner-form { width: 100%; }
+  .planner-summary { align-items: flex-start; }
+  .notification-list, .notification-list > button { width: 100%; }
+  .notification-list > button { grid-template-columns: 36px minmax(0,1fr) auto; }
+  .notification-settings { align-items: flex-start; }
+
+  .platform-overlay { width: 100%; max-width: 100%; overflow: hidden; }
+  .platform-shell { overflow: hidden; }
+  .platform-main { overflow-x: hidden; }
+  .platform-topbar { width: 100%; }
+  .platform-topbar > div:first-child { min-width: 0; }
+  .platform-topbar h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .assistant-bar { width: 100%; }
+  .assistant-bar span { min-width: 0; overflow-wrap: anywhere; }
+  .portal-welcome { width: 100%; }
+  .portal-welcome > div { min-width: 0; }
+  .portal-metrics { width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .portal-grid, .portal-grid.three, .portal-grid.donor-grid, .beneficiary-grid { width: 100%; grid-template-columns: 1fr; }
+  .portal-card, .trace-card { width: 100%; max-width: 100%; overflow: hidden; }
+  .trace-route { width: 100%; min-width: 0; grid-template-columns: 1fr; gap: 14px; overflow: visible; }
+  .trace-node { grid-template-columns: 28px minmax(0,1fr); text-align: start; }
+  .trace-node > span { width: 1px; height: calc(100% + 14px); left: 14px; top: 14px; }
+  .trace-detail { width: 100%; grid-template-columns: 1fr; }
+  .trace-detail img { width: 100%; height: 160px; object-fit: cover; }
+  .data-rows { width: 100%; overflow: visible; }
+  .data-rows > button { width: 100%; min-width: 0; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .feature-catalog, .control-grid, .governance-grid, .fund-pills { width: 100%; }
+  .platform-sidebar nav { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(64px,1fr); grid-template-columns: none; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; }
+  .platform-sidebar nav::-webkit-scrollbar { display: none; }
+}
+
+@media (max-width: 520px) {
+  .premium-header .notification-trigger { display: none; }
+  .premium-header .header-actions { gap: 1px; }
+  .hero-proof { grid-template-columns: 1fr; text-align: center; }
+  .hero-proof span { display: grid; grid-template-columns: auto 1fr; align-items: baseline; justify-content: center; gap: 7px; }
+  .hero-proof b { margin: 0; }
+  .update-card { display: block; }
+  .update-image { width: 100%; height: 170px; min-height: 0; }
+  .promise-points { grid-template-columns: 1fr; }
+  .calculator-top { align-items: flex-start; }
+  .verified-pill { white-space: nowrap; }
+  .notification-head { align-items: flex-start; }
+}
+
+@media (max-width: 390px) {
+  .premium-header { padding-inline: 10px; }
+  .premium-header .header-language { display: none; }
+  .premium-header .amanah-logo-wordmark small { display: none; }
+  .premium-header .amanah-logo-wordmark b { font-size: 10px; letter-spacing: .13em; }
+  .premium-header .amanah-logo-mark { width: 34px; height: 34px; }
+  .trustbar-item { font-size: 9px; }
+  .hero h1 { font-size: clamp(39px, 12.5vw, 49px); }
+  .hero-visual { min-height: 420px; }
+  .impact-card { left: 12px; width: calc(100% - 24px); }
+  .live-giving { left: 12px; right: 12px; justify-content: center; }
+  .hero-caption { left: 14px; right: 14px; }
+  .cause-strip { width: calc(100% - 20px); }
+  .cause-strip button { min-height: 84px; }
+  .section, .impact-section, .how-section, .updates-section { padding-inline: 12px; }
+  .section-heading h2, .zakat-copy h2, .impact-intro h2, .organizations h2 { font-size: 32px; }
+  .calculator-top, .zakat-total { flex-direction: column; }
+  .zakat-total strong { white-space: normal; }
+  .detail-facts, .dashboard-stats, .portal-metrics, .fund-pills { grid-template-columns: 1fr; }
+  .option-grid, .occasion-grid, .planner-fields, .two-fields { grid-template-columns: 1fr; }
+  .payment-tabs.three-tabs { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .payment-tabs button { padding-inline: 6px; font-size: 12px; }
+  .notification-list > button { grid-template-columns: 34px minmax(0,1fr); }
+  .notification-list time { grid-column: 2; }
+  .notification-settings { flex-direction: column; }
+  .platform-ai { display: none; }
+  .platform-topbar { padding-inline: 10px; }
+  .portal-welcome, .portal-card { padding-inline: 14px; }
+  .data-rows > button { grid-template-columns: 1fr; }
+}
