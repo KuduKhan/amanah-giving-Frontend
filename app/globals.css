@@ -700,6 +700,34 @@ body:has(.overlay, .platform-overlay) { overflow: hidden; }
   .premium-header .navigation-menu nav { grid-template-columns: 1fr; }
   .menu-footer { align-items: stretch; flex-direction: column; }
 }
+
+/* Search-friendly information pages share the same calm, editorial system as the app. */
+.seo-page { min-height: 100vh; background: var(--sand); color: var(--ink); }
+.seo-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px clamp(20px, 5vw, 72px); background: rgba(255,255,255,.9); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; backdrop-filter: blur(16px); }
+.seo-header .amanah-logo { flex-shrink: 0; }
+.seo-header .text-link { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.seo-header .text-link .app-icon, .seo-links .app-icon { width: 16px; height: 16px; }
+.seo-content { width: min(calc(100% - 40px), 900px); margin: 0 auto; padding: clamp(64px, 9vw, 120px) 0 88px; }
+.seo-content h1 { max-width: 820px; margin: 14px 0 24px; font: clamp(44px, 7vw, 82px)/1.03 Georgia, serif; letter-spacing: -.04em; overflow-wrap: normal; }
+.seo-intro { max-width: 680px; margin: 0 0 72px; color: var(--muted); font-size: clamp(19px, 2.5vw, 26px); line-height: 1.5; }
+.seo-sections { display: grid; gap: 24px; max-width: 760px; }
+.seo-sections section { padding: clamp(24px, 4vw, 38px); background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 12px 35px rgba(7,26,44,.04); }
+.seo-sections h2 { margin: 0 0 16px; font: clamp(24px, 3vw, 34px)/1.15 Georgia, serif; letter-spacing: -.02em; }
+.seo-sections p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.75; }
+.seo-links { display: flex; flex-wrap: wrap; gap: 16px 24px; margin-top: 24px; }
+.seo-links a { display: inline-flex; align-items: center; gap: 7px; color: var(--emerald); font-weight: 750; text-decoration: none; }
+.seo-links a:hover { color: var(--emerald-dark); text-decoration: underline; text-underline-offset: 4px; }
+.seo-footer { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding: 24px clamp(20px, 5vw, 72px); border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+@media (max-width: 600px) {
+  .seo-header { padding: 16px 18px; }
+  .seo-header .text-link { font-size: 12px; }
+  .seo-content { width: min(calc(100% - 32px), 900px); padding: 52px 0 64px; }
+  .seo-content h1 { font-size: clamp(42px, 13vw, 62px); }
+  .seo-intro { margin-bottom: 44px; }
+  .seo-sections section { padding: 22px; }
+  .seo-sections p { font-size: 16px; }
+  .seo-footer { padding-inline: 18px; font-size: 12px; }
+}
 .zakat-copy li::before { content: ''; display: inline-block; width: 14px; height: 8px; border-left: 1.7px solid #68c4a5; border-bottom: 1.7px solid #68c4a5; transform: translateY(-2px) rotate(-45deg); }
 .case-card > div span::before { content: ''; }
 .case-card > div span:not(.pending)::after { content: ''; position: absolute; left: 4px; top: -5px; width: 7px; height: 4px; border-left: 1.4px solid white; border-bottom: 1.4px solid white; transform: rotate(-45deg); }

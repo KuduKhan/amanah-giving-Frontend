@@ -13,8 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://amanahgiving.vercel.app'),
   title: 'Amanah Giving | Verified Islamic Charity',
-  description: 'Give with trust and follow your impact from donation to delivery.',
+  description: 'Amanah Giving is a verified Islamic charity platform for secure Zakat and Sadaqah giving in Kenya, with clear records from donation to delivery.',
+  keywords: ['Islamic charity', 'verified Muslim charity', 'Zakat donation online', 'Sadaqah donation platform', 'Amanah charity Kenya', 'Islamic giving platform'],
+  authors: [{ name: 'Amanah Giving' }],
+  creator: 'Amanah Giving',
+  publisher: 'Amanah Giving',
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large' } },
   openGraph: {
     title: 'Amanah Giving',
     description: 'Give with Amanah. See the Impact.',
@@ -29,6 +35,17 @@ export const metadata: Metadata = {
   },
 };
 
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Amanah Giving',
+  url: 'https://amanahgiving.vercel.app',
+  logo: 'https://amanahgiving.vercel.app/amanah-logo.png',
+  description: 'Verified Islamic charity platform for secure Zakat and Sadaqah donations in Kenya.',
+  areaServed: 'Kenya',
+  sameAs: [],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,6 +56,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         {children}
       </body>
     </html>
