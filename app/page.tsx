@@ -196,7 +196,7 @@ export default function Home() {
             {['500', '1,000', '2,500', '5,000'].map(value => <button key={value} onClick={() => { startDonation(); setAmount(value.replace(',', '')); }}>KSh {value}</button>)}
             <button onClick={() => startDonation()}>Custom</button>
           </div>
-          <div className="hero-actions"><button className="button" onClick={() => startDonation()}>{t.give} <span><Icon name="↗"/></span></button><a className="text-link" href="#causes">Explore verified causes <span><Icon name="↓"/></span></a></div>
+          <div className="hero-actions"><a className="text-link" href="#causes">Explore verified causes <span><Icon name="↓"/></span></a></div>
           <div className="hero-proof"><span><b>4.9/5</b> donor trust</span><span><b>218</b> active campaigns</span><span><b>KSh 246M+</b> verified impact</span></div>
         </div>
         <div className="hero-visual">
