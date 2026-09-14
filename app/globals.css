@@ -1149,3 +1149,128 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .portal-welcome, .portal-card { padding-inline: 14px; }
   .data-rows > button { grid-template-columns: 1fr; }
 }
+
+/* Compact phone masthead: preserve all trust messages and desktop-like metrics. */
+@media (max-width: 780px) {
+  .trustbar {
+    min-height: 52px;
+    padding: 0 10px;
+  }
+  .trustbar-inner {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    width: 100%;
+    min-height: 52px;
+  }
+  .trustbar-item,
+  .trustbar-primary {
+    display: flex;
+    min-width: 0;
+    height: 100%;
+    padding: 7px 8px;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    font-size: 10px;
+    line-height: 1.25;
+    letter-spacing: .015em;
+    text-transform: none;
+  }
+  .trustbar-item + .trustbar-separator + .trustbar-item {
+    border-inline-start: 1px solid rgba(185, 204, 198, .18);
+  }
+  .trustbar-separator { display: none; }
+  .trustbar-item .app-icon {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+
+  .premium-header {
+    min-height: 68px;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .premium-header .amanah-logo {
+    min-width: 0;
+    gap: 7px;
+  }
+  .premium-header .amanah-logo-mark {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+  }
+  .premium-header .amanah-logo-wordmark {
+    min-width: 0;
+  }
+  .premium-header .amanah-logo-wordmark b {
+    font-size: 11px;
+    letter-spacing: .14em;
+  }
+  .premium-header .amanah-logo-wordmark small {
+    margin-top: 4px;
+    font-size: 6px;
+    letter-spacing: .3em;
+  }
+  .premium-header .header-icon,
+  .premium-header .header-language {
+    width: 38px;
+    min-width: 38px;
+    height: 38px;
+    min-height: 38px;
+  }
+
+  .hero-proof {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 26px;
+    padding-top: 16px;
+    text-align: center;
+  }
+  .hero-proof span {
+    display: block;
+    min-width: 0;
+    padding: 0 8px;
+    overflow-wrap: normal;
+    word-break: normal;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+  .hero-proof span + span {
+    border-inline-start: 1px solid #d6cdbd;
+  }
+  .hero-proof b {
+    display: block;
+    margin: 0 0 4px;
+    white-space: nowrap;
+    font-size: 18px;
+    line-height: 1.1;
+  }
+}
+
+@media (max-width: 390px) {
+  .trustbar { padding-inline: 5px; }
+  .trustbar-item,
+  .trustbar-primary {
+    padding-inline: 5px;
+    font-size: 9px;
+  }
+  .trustbar-item { gap: 4px; }
+  .trustbar-item .app-icon {
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+  }
+  .premium-header .amanah-logo-wordmark small { display: block; }
+  .premium-header .header-language { display: none; }
+  .premium-header .notification-trigger { display: none; }
+  .hero-proof span {
+    padding-inline: 5px;
+    font-size: 10px;
+  }
+  .hero-proof b { font-size: 16px; }
+}
