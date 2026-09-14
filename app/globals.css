@@ -820,18 +820,21 @@ body { background-color: #fbfcfa; text-rendering: optimizeLegibility; }
 .filter-row::-webkit-scrollbar { display: none; }
 .filter-row button { flex: 0 0 auto; min-height: 42px; padding: 9px 17px; font-size: 13px; }
 .filter-row button.active, .filter-row button[aria-pressed="true"] { box-shadow: 0 7px 18px rgba(15,121,93,.16); }
-.campaign-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
-.campaign-card { border-radius: 24px; box-shadow: 0 14px 38px rgba(7,26,44,.065); }
-.campaign-image { height: clamp(172px, 16vw, 205px); }
-.campaign-body { padding: 20px; }
-.campaign-card h3 { font-size: clamp(21px, 1.65vw, 25px); line-height: 1.18; }
+.campaign-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; align-items: start; }
+.campaign-card { align-self: start; height: auto; border-radius: 21px; box-shadow: 0 12px 32px rgba(7,26,44,.06); }
+.campaign-image { height: clamp(150px, 14vw, 178px); }
+.campaign-body { flex: 0 0 auto; padding: 16px; }
+.campaign-card h3 { margin-bottom: 6px; font-size: clamp(20px, 1.5vw, 23px); line-height: 1.16; }
 .campaign-signals span, .verified, .muted { font-size: 12px; }
-.campaign-signals { margin-bottom: 0; }
-.campaign-signals span { padding: 6px 9px; }
-.money-row { margin-top: 16px; }
-.card-footer { gap: 10px; margin-top: 16px; padding-top: 14px; }
-.card-footer button { min-height: 40px; padding: 8px 14px; border-radius: 11px; font-size: 13px; }
-.save { width: 44px; height: 44px; }
+.campaign-body .verified { margin-bottom: 6px; }
+.campaign-body .muted { margin: 0; line-height: 1.45; }
+.campaign-signals { gap: 5px; margin-top: 10px; margin-bottom: 0; }
+.campaign-signals span { padding: 5px 8px; }
+.money-row { margin-top: 12px; }
+.progress { margin: 8px 0 12px; }
+.card-footer { gap: 8px; margin-top: 12px; padding-top: 11px; }
+.card-footer button { min-height: 38px; padding: 7px 12px; border-radius: 10px; font-size: 13px; }
+.save { width: 40px; height: 40px; }
 .empty-state { padding: 42px 24px; border: 1px dashed #bed0c7; border-radius: 18px; background: #f6faf8; color: var(--muted); text-align: center; font-size: 15px; }
 
 .seasonal-heading > p:not(.eyebrow) { font-size: 16px; line-height: 1.7; }
@@ -893,7 +896,7 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .hero-copy { padding: 68px max(24px, 6vw) 58px; }
   .hero h1 { max-width: 760px; }
   .hero-visual { min-height: 560px; }
-  .campaign-image { height: clamp(190px, 36vw, 240px); }
+  .campaign-image { height: clamp(170px, 30vw, 210px); }
   .zakat-section, .impact-section { grid-template-columns: 1fr; }
 }
 
@@ -948,8 +951,18 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .cause-strip { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .section, .impact-section, .how-section, .updates-section { padding-inline: 16px; }
   .section-heading h2, .zakat-copy h2, .impact-intro h2, .organizations h2 { font-size: 35px; }
-  .campaign-body { padding: 18px; }
-  .campaign-image { height: 205px; }
+  .campaign-card { border-radius: 18px; }
+  .campaign-body { padding: 14px; }
+  .campaign-image { height: 152px; }
+  .campaign-card h3 { font-size: 20px; }
+  .campaign-signals { margin-top: 8px; }
+  .campaign-signals span { padding: 4px 7px; }
+  .money-row { margin-top: 10px; }
+  .progress { height: 6px; margin: 7px 0 10px; }
+  .card-footer { margin-top: 9px; padding-top: 9px; }
+  .card-footer button { min-height: 36px; padding: 6px 11px; }
+  .campaign-image .badge { top: 10px; left: 10px; padding: 6px 9px; }
+  .campaign-image .save { top: 9px; right: 9px; width: 38px; height: 38px; }
   .money-row { grid-template-columns: 1fr auto; }
   .money-row span { grid-column: 1 / -1; grid-row: 2; }
   .zakat-section { padding-inline: 12px; }
