@@ -1347,3 +1347,54 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
     gap: 7px;
   }
 }
+
+/* The four giving steps form a compact two-by-two phone grid. */
+@media (max-width: 780px) {
+  .steps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 30px;
+  }
+  .steps-grid article,
+  .steps-grid article:first-child,
+  .steps-grid article:last-child {
+    min-width: 0;
+    min-height: 210px;
+    padding: 18px 16px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+  }
+  .steps-grid article > span {
+    font-size: 21px;
+  }
+  .steps-grid h3 {
+    margin: 20px 0 8px;
+    font-size: 18px;
+    line-height: 1.18;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .steps-grid p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
+
+@media (max-width: 390px) {
+  .steps-grid { gap: 8px; }
+  .steps-grid article,
+  .steps-grid article:first-child,
+  .steps-grid article:last-child {
+    min-height: 220px;
+    padding: 15px 12px;
+    border-radius: 13px;
+  }
+  .steps-grid h3 {
+    margin-top: 17px;
+    font-size: 16px;
+  }
+  .steps-grid p { font-size: 12px; }
+}
