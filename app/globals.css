@@ -778,3 +778,182 @@ body:has(.overlay, .platform-overlay) { overflow: hidden; }
   .premium-header .amanah-logo-wordmark b { font-size: 11px; }
   .premium-header .amanah-logo-wordmark small { font-size: 6px; letter-spacing: .34em; }
 }
+
+/* Premium refinement: consistent rhythm, readable controls, and resilient layouts. */
+html, body { max-width: 100%; overflow-x: clip; }
+body { background-color: #fbfcfa; text-rendering: optimizeLegibility; }
+.skip-link { position: fixed; z-index: 200; top: 10px; left: 12px; padding: 11px 16px; border-radius: 10px; background: var(--navy); color: #fff; font-size: 14px; font-weight: 750; text-decoration: none; transform: translateY(-150%); transition: transform .2s ease; }
+.skip-link:focus { transform: translateY(0); }
+:where(button, a, input, select, textarea) { touch-action: manipulation; }
+:where(button, a) { transition-property: color, background-color, border-color, box-shadow, transform, opacity; transition-duration: .22s; transition-timing-function: cubic-bezier(.2,.8,.2,1); }
+:where(button, a):active { transform: scale(.98); }
+.eyebrow { letter-spacing: .16em; }
+.button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.button:disabled { box-shadow: none; transform: none; }
+.text-link { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; }
+
+.trustbar { position: relative; overflow: hidden; }
+.trustbar::after { content: ''; position: absolute; inset: auto 20% 0; height: 1px; background: linear-gradient(90deg,transparent,rgba(200,161,92,.55),transparent); }
+.premium-header { min-height: 84px; }
+.premium-header .desktop-links :is(a,button) { min-height: 44px; padding-inline: 14px; font-size: 14px; }
+.premium-header .header-icon, .premium-header .header-language { min-width: 44px; min-height: 44px; }
+
+.hero { min-height: min(760px, calc(100dvh - 122px)); }
+.hero-copy { padding-block: clamp(72px, 9vw, 116px); }
+.hero h1 { max-width: 720px; font-size: clamp(52px, 5.45vw, 82px); line-height: .99; }
+.hero-lead { max-width: 570px; font-size: clamp(17px, 1.35vw, 20px); line-height: 1.65; }
+.quick-amounts { margin: 26px 0 20px; }
+.quick-amounts button { min-width: 76px; min-height: 44px; border-radius: 999px; font-size: 13px; }
+.quick-amounts button:hover { border-color: #8fb7a7; background: #fff; color: var(--emerald-dark); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(7,26,44,.08); }
+.hero-proof { gap: clamp(18px, 2.3vw, 34px); }
+.hero-proof span { min-width: 0; }
+.hero-visual { min-height: inherit; }
+.impact-card, .live-giving { border: 1px solid rgba(255,255,255,.72); backdrop-filter: blur(16px); }
+.hero-caption button { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; font-size: 13px; }
+
+.cause-strip { border: 1px solid rgba(220,226,223,.75); }
+.cause-strip button { min-height: 104px; padding: 20px 12px; font-size: 13px; }
+.cause-strip button:focus-visible { position: relative; z-index: 1; }
+.section, .impact-section, .how-section, .updates-section { padding-top: clamp(78px, 8vw, 112px); padding-bottom: clamp(78px, 8vw, 112px); }
+.section-heading h2, .zakat-copy h2, .impact-intro h2, .organizations h2 { font-size: clamp(38px, 4vw, 52px); }
+.filter-row { display: flex; gap: 8px; overflow-x: auto; padding: 3px 3px 8px; scrollbar-width: none; }
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-row button { flex: 0 0 auto; min-height: 42px; padding: 9px 17px; font-size: 13px; }
+.filter-row button.active, .filter-row button[aria-pressed="true"] { box-shadow: 0 7px 18px rgba(15,121,93,.16); }
+.campaign-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; }
+.campaign-card { border-radius: 24px; box-shadow: 0 14px 38px rgba(7,26,44,.065); }
+.campaign-image { height: clamp(220px, 24vw, 285px); }
+.campaign-body { padding: 25px; }
+.campaign-card h3 { font-size: clamp(23px, 2vw, 28px); line-height: 1.2; }
+.campaign-signals span, .verified, .muted { font-size: 12px; }
+.campaign-signals span { padding: 7px 10px; }
+.money-row { margin-top: 22px; }
+.card-footer { gap: 10px; padding-top: 20px; }
+.card-footer button { min-height: 44px; padding: 10px 16px; border-radius: 11px; font-size: 13px; }
+.save { width: 44px; height: 44px; }
+.empty-state { padding: 42px 24px; border: 1px dashed #bed0c7; border-radius: 18px; background: #f6faf8; color: var(--muted); text-align: center; font-size: 15px; }
+
+.seasonal-heading > p:not(.eyebrow) { font-size: 16px; line-height: 1.7; }
+.seasonal-track { gap: 16px; }
+.seasonal-track article { min-height: 290px; padding: 28px; border-radius: 22px; }
+.seasonal-track article > span { font-size: 12px; }
+.seasonal-track h3 { font-size: 26px; }
+.seasonal-track article > b { font-size: 13px; }
+.seasonal-track article > p { min-height: 0; font-size: 14px; line-height: 1.65; }
+.seasonal-track article > button { min-height: 42px; font-size: 13px; }
+
+.calculator { border: 1px solid rgba(255,255,255,.16); box-shadow: 0 28px 70px rgba(0,0,0,.2); }
+.calc-grid label > span { font-size: 14px; }
+.calc-grid label > div { min-height: 48px; }
+.calc-grid input { font-size: 16px; }
+.zakat-total { min-height: 84px; padding: 20px 22px; }
+.zakat-total span { font-size: 14px; }
+.zakat-total small { font-size: 12px; }
+.zakat-total strong { font-size: clamp(25px, 3vw, 34px); white-space: nowrap; }
+.fine-print { font-size: 12px; line-height: 1.55; }
+.impact-intro > p:not(.eyebrow), .organizations > div > p { font-size: 16px; }
+.impact-timeline { padding: clamp(22px, 3vw, 34px); }
+.timeline-item p { font-size: 13px; line-height: 1.55; }
+.steps-grid article p, .update-card p, .donor-promise p { font-size: 14px; line-height: 1.65; }
+.promise-points span { min-height: 50px; font-size: 13px; }
+
+footer a, footer div > button:not(.button) { min-height: 30px; display: inline-flex; align-items: center; width: fit-content; font-size: 13px; line-height: 1.5; }
+footer a:hover, footer div > button:not(.button):hover { color: #fff; transform: translateX(3px); }
+.footer-brand p { font-size: 14px; line-height: 1.65; }
+.footer-bottom { font-size: 12px; }
+
+.overlay { background: rgba(2,16,25,.78); backdrop-filter: blur(12px); }
+:where(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { border: 1px solid rgba(255,255,255,.45); box-shadow: 0 32px 100px rgba(0,0,0,.34); }
+.close { width: 44px; height: 44px; border-radius: 13px; }
+.search-panel h2, .donation-panel h2, .dashboard-panel h2, .detail-content h2, .notification-panel h2 { text-wrap: balance; }
+.search-input { min-height: 54px; }
+.search-input input { font-size: 16px; }
+.search-results > button { min-height: 72px; border-radius: 12px; }
+.amount-grid button, .option-grid button, .payment-tabs button { min-height: 48px; font-size: 14px; }
+.amount-grid button.selected, .amount-grid button[aria-pressed="true"], .option-grid button.selected, .payment-tabs button.active { box-shadow: 0 0 0 2px rgba(15,121,93,.12), 0 8px 22px rgba(15,121,93,.1); }
+.check-row { min-height: 60px; }
+.check-row input { width: 20px; height: 20px; }
+.custom-amount input, .field input, .dedication-field input, .schedule-field select { min-height: 46px; font-size: 16px; }
+.toast { min-height: 48px; padding: 12px 18px; border: 1px solid rgba(255,255,255,.12); font-size: 14px; }
+
+.platform-content { max-width: 1480px; width: 100%; margin-inline: auto; }
+.portal-card { border-radius: 16px; }
+:is(.feature-catalog b, .task-list b, .schedule-list b, .governance-grid b, .control-grid b, .level-list b, .approval-stack b, .toggle-row, .request-types button, .portal-field, .portal-form label) { font-size: 13px; line-height: 1.45; }
+:is(.microcopy, .feature-catalog p, .feature-catalog small, .task-list small, .schedule-list small, .governance-grid p, .control-grid small, .level-list small, .restricted-note p, .safety-note p, .case-card > p, .module-card p, .tag-cloud span, .data-rows > button, .approval-stack small, .fund-pills span) { font-size: 12px; line-height: 1.6; }
+.portal-form :is(input, select, textarea), .portal-field textarea { min-height: 46px; font-size: 14px; }
+.feature-catalog > button, .control-grid button, .fund-pills button { min-height: 76px; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-copy { padding: 68px max(24px, 6vw) 58px; }
+  .hero h1 { max-width: 760px; }
+  .hero-visual { min-height: 560px; }
+  .campaign-grid { grid-template-columns: 1fr; max-width: 720px; margin-inline: auto; }
+  .campaign-image { height: clamp(230px, 52vw, 360px); }
+  .zakat-section, .impact-section { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 780px) {
+  body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .trustbar-primary { display: none; }
+  .trustbar-separator:nth-of-type(2) { display: none; }
+  .premium-header { min-height: 72px; padding-inline: 14px; }
+  .hero-copy { padding-top: 52px; }
+  .hero h1 { font-size: clamp(46px, 13vw, 68px); }
+  .hero-actions { gap: 12px; }
+  .hero-actions .button { width: 100%; }
+  .hero-actions .text-link { align-self: center; }
+  .hero-proof { margin-top: 30px; padding-top: 20px; }
+  .hero-proof b { font-size: 18px; }
+  .hero-visual { min-height: 500px; }
+  .impact-card { width: min(250px, calc(100% - 44px)); }
+  .cause-strip { width: min(calc(100% - 28px), 620px); margin-inline: auto; grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .cause-strip button { min-height: 94px; }
+  .seasonal-giving { padding-inline: 18px; }
+  .seasonal-track article { min-height: 0; }
+  .zakat-total { align-items: flex-start; gap: 12px; }
+  footer { gap: 36px 22px; }
+  .mobile-nav { height: calc(76px + env(safe-area-inset-bottom)); padding-top: 9px; background: rgba(255,255,255,.96); backdrop-filter: blur(18px); }
+  .mobile-nav a, .mobile-nav button { min-height: 54px; justify-content: flex-end; font-size: 11px; font-weight: 650; }
+  .mobile-nav .mobile-give { transform: translateY(-8px); }
+  .overlay:not(.platform-overlay) { place-items: end center; padding: 0; }
+  :where(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { width: 100%; max-width: none; max-height: 94dvh; border-radius: 24px 24px 0 0; border-bottom: 0; }
+}
+
+@media (max-width: 480px) {
+  .trustbar-inner { justify-content: space-between; }
+  .trustbar-item { font-size: 10px; }
+  .hero-copy { padding-inline: 18px; }
+  .hero h1 { font-size: clamp(43px, 13vw, 58px); }
+  .hero-lead { font-size: 16px; }
+  .quick-amounts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .quick-amounts button { width: 100%; }
+  .hero-proof { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+  .hero-proof span { font-size: 10px; }
+  .hero-proof b { font-size: 16px; }
+  .hero-visual { min-height: 450px; }
+  .live-giving { max-width: calc(100% - 28px); font-size: 11px; }
+  .impact-card { top: 68px; padding: 16px; }
+  .impact-card p { font-size: 16px; }
+  .hero-caption { left: 18px; right: 18px; bottom: 20px; }
+  .hero-caption p { font-size: 21px; }
+  .cause-strip { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .section, .impact-section, .how-section, .updates-section { padding-inline: 16px; }
+  .section-heading h2, .zakat-copy h2, .impact-intro h2, .organizations h2 { font-size: 35px; }
+  .campaign-body { padding: 20px; }
+  .campaign-image { height: 230px; }
+  .money-row { grid-template-columns: 1fr auto; }
+  .money-row span { grid-column: 1 / -1; grid-row: 2; }
+  .zakat-section { padding-inline: 12px; }
+  .calculator { padding: 20px 15px; }
+  .zakat-total { flex-direction: column; }
+  footer { grid-template-columns: 1fr; }
+  footer > div { min-width: 0; }
+  .footer-brand { grid-column: auto; }
+  .footer-cta { grid-column: auto; }
+  .seo-header .amanah-logo-wordmark { display: none; }
+}
+
+@media (hover: none) {
+  .campaign-card:hover, .seasonal-track article:hover, .cause-strip button:hover { transform: none; }
+}
