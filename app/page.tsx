@@ -7,7 +7,7 @@ import NotificationCenter from './NotificationCenter';
 import MobileNavigation from './MobileNavigation';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import PlatformConsole from './PlatformConsole';
+import PlatformConsole, { type Portal } from './PlatformConsole';
 import GivingPlanner from './GivingPlanner';
 import Image from 'next/image';
 
@@ -63,6 +63,7 @@ export default function Home() {
   const [toast, setToast] = useState('');
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [platformOpen, setPlatformOpen] = useState(false);
+  const [platformPortal, setPlatformPortal] = useState<Portal>('donor');
   const [plannerOpen, setPlannerOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [readNotifications, setReadNotifications] = useState<string[]>(['security']);
@@ -242,62 +243,69 @@ export default function Home() {
         {!filteredCampaigns.length && <div className="empty-state" role="status">No verified campaigns match this search yet.</div>}
       </section>
 
-      <section className="zakat-section" id="zakat">
-        <div className="zakat-copy"><p className="eyebrow light">Dedicated Zakat Center</p><h2>Calculate with clarity.<br/>Give with confidence.</h2><p>Your Zakat is recorded as a restricted giving type and never mixed with ordinary Sadaqah. Eligible campaigns are reviewed against versioned Shariah policy.</p><ul><li>2.5% calculation with configurable nisab</li><li>Separate ledger and distribution reporting</li><li>Calculation stays private on this device</li></ul></div>
+      <section className="zakat-section refined-zakat" id="zakat" aria-labelledby="zakat-title">
+        <div className="zakat-copy"><p className="eyebrow light">Dedicated Zakat Center</p><h2 id="zakat-title">Calculate with clarity.<br/>Give with confidence.</h2><p>Your Zakat is recorded as a restricted giving type and never mixed with ordinary Sadaqah. Eligible campaigns are reviewed against versioned Shariah policy.</p><ul><li><Icon name="giving"/>2.5% calculation using the current nisab</li><li><Icon name="wallet"/>Separate ledger and distribution reporting</li><li><Icon name="shield"/>Calculation stays private on this device</li></ul></div>
         <div className="calculator">
-          <div className="calculator-top"><div><span>Current nisab</span><b>KSh 650,000</b></div><span className="verified-pill">Policy reviewed</span></div>
+          <div className="calculator-top"><div><span>Current nisab</span><b>KSh 650,000</b></div><span className="verified-pill"><Icon name="shield"/>Policy reviewed</span></div>
           <div className="calc-grid">
-            {[['cash','Cash & savings'],['gold','Gold & silver value'],['investments','Investments'],['business','Business assets'],['receivables','Money owed to you'],['liabilities','Short-term liabilities']].map(([key,label]) => <label key={key}><span>{label}</span><div><small>KSh</small><input inputMode="numeric" value={zakat[key as keyof typeof zakat]} onChange={event => setZakat({...zakat, [key]: event.target.value.replace(/\D/g,'')})} placeholder="0" /></div></label>)}
+            {[['cash','Cash & savings'],['gold','Gold & silver value'],['investments','Investments'],['business','Business assets'],['receivables','Money owed to you'],['liabilities','Short-term liabilities']].map(([key,label]) => <label key={key}><span>{label}</span><div><small aria-hidden="true">KSh</small><input inputMode="numeric" aria-label={`${label} in Kenyan shillings`} autoComplete="off" value={zakat[key as keyof typeof zakat]} onChange={event => setZakat({...zakat, [key]: event.target.value.replace(/\D/g,'').slice(0,12)})} placeholder="0" /></div></label>)}
           </div>
-          <div className="zakat-total"><span>Estimated Zakat due <small>{zakatNet < nisab ? 'Below nisab threshold' : '2.5% of eligible net assets'}</small></span><strong>KSh {Math.round(zakatDue).toLocaleString()}</strong></div>
+          <div className="zakat-total" role="status" aria-live="polite" aria-atomic="true"><span>Estimated Zakat due <small>{zakatNet < nisab ? 'Below nisab threshold' : '2.5% of eligible net assets'}</small></span><strong>KSh {Math.round(zakatDue).toLocaleString('en-KE')}</strong></div>
           <button className="button full" disabled={!zakatDue} onClick={() => { startDonation(null, 'Zakat'); setAmount(String(Math.round(zakatDue))); }}>Give my Zakat <span><Icon name="↗"/></span></button>
           <p className="fine-print">This calculator is an estimate, not a personal religious ruling.</p>
         </div>
       </section>
 
-      <section className="impact-section" id="impact">
-        <div className="impact-intro"><p className="eyebrow">Your giving, accounted for</p><h2>See exactly what happened next.</h2><p>The donation button is only the beginning. Every verified update, approval, disbursement and outcome builds a traceable impact record.</p><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>Open your Impact Center <span><Icon name="↗"/></span></button></div>
+      <section className="impact-section refined-impact" id="impact" aria-labelledby="impact-title">
+        <div className="impact-intro"><p className="eyebrow">Your giving, accounted for</p><h2 id="impact-title">See exactly what happened next.</h2><p>The donation button is only the beginning. Every verified update, approval, disbursement and outcome builds a traceable impact record.</p><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>Open your Impact Center <span><Icon name="↗"/></span></button></div>
         <div className="impact-timeline">
-          <div className="timeline-head"><div><span>PROJECT TRACE</span><b>Al-Huda Water Project · WTR-284</b></div><span className="complete">Completed</span></div>
-          {[['14 Jan','You donated KSh 5,000','Payment confirmed and receipt issued.'],['28 Jan','Campaign fully funded','Restricted funds locked to WTR-284.'],['12 Feb','Borehole drilling approved','Maker, checker and approver controls passed.'],['05 Mar','Water test completed','Independent results uploaded and reviewed.'],['18 Mar','Project impact verified','Now serving 340 people in Garissa.']].map((item,index) => <div className="timeline-item" key={item[0]}><div className={`timeline-dot ${index === 4 ? 'last' : ''}`}>{index === 4 ? <Icon name="✓"/> : ''}</div><time>{item[0]}</time><div><b>{item[1]}</b><p>{item[2]}</p></div></div>)}
-          <div className="evidence-row"><span>4 photos</span><span>2 receipts</span><span>Water test report</span><button onClick={() => setSelected(campaigns[0])}>View evidence <Icon name="→"/></button></div>
+          <div className="timeline-head"><div><span>PROJECT TRACE</span><h3>Al-Huda Water Project</h3><small>WTR-284</small></div><span className="complete"><Icon name="✓"/>Completed</span></div>
+          <ol className="impact-stages">{[['14 Jan','You donated KSh 5,000','Payment confirmed and receipt issued.','2026-01-14'],['28 Jan','Campaign fully funded','Restricted funds locked to WTR-284.','2026-01-28'],['12 Feb','Borehole drilling approved','Maker, checker and approver controls passed.','2026-02-12'],['05 Mar','Water test completed','Independent results uploaded and reviewed.','2026-03-05'],['18 Mar','Project impact verified','Now serving 340 people in Garissa.','2026-03-18']].map((item,index) => <li className={`timeline-item ${index === 4 ? 'final-stage' : ''}`} key={item[0]}><span className={`timeline-dot ${index === 4 ? 'last' : ''}`} aria-hidden="true"><Icon name="✓"/></span><time dateTime={item[3]}>{item[0]}</time><div><b>{item[1]}</b><p>{item[2]}</p></div></li>)}</ol>
+          <div className="evidence-row"><div className="evidence-files"><span>4 photos</span><span>2 receipts</span><span>Water test report</span></div><button onClick={() => setSelected(campaigns[0])}>View evidence <Icon name="→"/></button></div>
         </div>
       </section>
 
-      <section className="stats-band">
+      <section className="stats-band refined-impact-stats" aria-label="Giving impact in numbers">
         {[['KSh 246,820,450','donated'],['18,742','families supported'],['2.4M','meals provided'],['189','water projects'],['4,280','orphans supported']].map(([value,label]) => <div key={label}><b>{value}</b><span>{label}</span></div>)}
       </section>
 
-      <section className="updates-section">
-        <div className="section-heading"><div><p className="eyebrow">Latest verified updates</p><h2>Proof of progress, not promises.</h2></div><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>See all your updates <span><Icon name="↗"/></span></button></div>
+      <section className="updates-section refined-updates" aria-labelledby="updates-title">
+        <div className="section-heading"><div><p className="eyebrow">Latest verified updates</p><h2 id="updates-title">Proof of progress, not promises.</h2></div><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>See all your updates <span><Icon name="↗"/></span></button></div>
         <div className="updates-grid">
           {[
             { campaign: campaigns[0], date: '18 Mar 2026', label: 'Impact verified', title: 'Clean water is now flowing for 340 people', body: 'Independent water testing passed and the final contractor payment was reconciled.' },
             { campaign: campaigns[2], date: '12 Mar 2026', label: 'Distribution verified', title: '250 food packs reached Mombasa households', body: 'Recipient counts, delivery photos and signed distribution records were reviewed.' },
             { campaign: campaigns[1], date: '06 Mar 2026', label: 'Milestone reached', title: 'Al-Rahmah mosque roofing is complete', body: 'The next approved release covers electrical work and the accessible water facility.' },
           ].map(update => <article className="update-card" key={update.title}>
-            <button className="update-image" onClick={() => setSelected(update.campaign)} aria-label={`View ${update.title}`}><Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 780px) 42vw, 33vw"/><span>{update.label}</span></button>
-            <div><time>{update.date} · {update.campaign.id}</time><h3>{update.title}</h3><p>{update.body}</p><button onClick={() => setSelected(update.campaign)}>View evidence <span><Icon name="↗"/></span></button></div>
+            <button className="update-image" onClick={() => setSelected(update.campaign)} aria-label={`View ${update.title}`}><Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/><span><Icon name="shield"/>{update.label}</span></button>
+            <div><p className="update-meta"><span>{update.date}</span><span>{update.campaign.id}</span></p><h3>{update.title}</h3><p>{update.body}</p><button onClick={() => setSelected(update.campaign)} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="→"/></span></button></div>
           </article>)}
         </div>
       </section>
 
-      <section className="how-section" id="how">
+      <section className="how-section refined-how" id="how">
         <div className="section-heading centered"><div><p className="eyebrow">A clearer way to give</p><h2>Discover. Give. Track. See impact.</h2></div></div>
         <div className="steps-grid">
           {[['01','Discover verified need','Search by cause, location, giving type and verification level.'],['02','Choose your intention','Keep Zakat, Sadaqah, Sadaqah Jariyah and Waqf clearly separated.'],['03','Give securely','Use M-PESA or card, anonymously or as a recurring gift.'],['04','Follow the outcome','Receive receipts, disbursement updates and verified completion evidence.']].map(step => <article key={step[0]}><span>{step[0]}</span><h3>{step[1]}</h3><p>{step[2]}</p></article>)}
         </div>
       </section>
 
-      <section className="donor-promise">
+      <section className="donor-promise refined-promise" aria-label="The Amanah promise">
         <div className="promise-mark"><AmanahLogo variant="light" size="lg" showTagline={false}/></div>
         <div><p className="eyebrow light">The Amanah promise</p><h2>Your intention stays clear. Your gift stays accountable.</h2></div>
-        <div className="promise-points"><span><b>01</b>Giving type recorded</span><span><b>02</b>Funds restricted correctly</span><span><b>03</b>Every release approved</span><span><b>04</b>Impact evidence returned</span></div>
+        <ol className="promise-points" aria-label="How your gift stays accountable">{['Giving type recorded', 'Funds restricted correctly', 'Every release approved', 'Impact evidence returned'].map((point, index) => <li key={point}><b aria-hidden="true">{String(index + 1).padStart(2, '0')}</b>{' '}<span className="promise-label">{point}</span></li>)}</ol>
       </section>
 
-      <section className="platform-preview">
-        <div className="platform-preview-copy"><p className="eyebrow">One mission. Six coordinated products.</p><h2>The complete giving ecosystem.</h2><p>Donors see impact. Beneficiaries request help privately. Organizations deliver transparently. Admin, finance and Shariah teams protect every decision behind the scenes.</p><button className="button" onClick={() => setPlatformOpen(true)}>Explore the full platform <Icon name="↗"/></button></div>
-        <div className="platform-preview-grid">{[['♡','Donor','Give, plan and trace'],['⌂','Beneficiary','Request help privately'],['◇','Organization','Deliver with evidence'],['◎','Admin','Verify and protect'],['≡','Finance','Reconcile every fund'],['✦','Shariah','Govern with clarity']].map(x => <button key={x[1]} onClick={() => setPlatformOpen(true)}><i><Icon name={x[0]}/></i><span><b>{x[1]}</b><small>{x[2]}</small></span><em><Icon name="→"/></em></button>)}</div>
+      <section className="platform-preview refined-ecosystem" aria-labelledby="ecosystem-title">
+        <div className="platform-preview-copy"><p className="eyebrow">One mission. Six coordinated products.</p><h2 id="ecosystem-title">The complete giving ecosystem.</h2><p>Donors see impact. Beneficiaries request help privately. Organizations deliver transparently. Admin, finance and Shariah teams protect every decision behind the scenes.</p><button className="button" onClick={() => { setPlatformPortal('donor'); setPlatformOpen(true); }}>Explore the full platform <Icon name="↗"/></button></div>
+        <div className="platform-preview-grid">{([
+          ['donor','heart','Donor','Give, plan and trace'],
+          ['beneficiary','giving','Beneficiary','Request help privately'],
+          ['organization','platform','Organization','Deliver with evidence'],
+          ['admin','shield','Admin','Verify and protect'],
+          ['finance','wallet','Finance','Reconcile every fund'],
+          ['shariah','book','Shariah','Govern with clarity'],
+        ] as const).map(([portal, icon, label, description]) => <button key={portal} onClick={() => { setPlatformPortal(portal); setPlatformOpen(true); }} aria-label={`Explore ${label} workspace: ${description}`}><i><Icon name={icon}/></i><span><b>{label}</b><small>{description}</small></span><em><Icon name="→"/></em></button>)}</div>
       </section>
 
       <section className="organizations refined-organizations" aria-labelledby="organizations-title">
@@ -311,8 +319,16 @@ export default function Home() {
         </article>
       </section>
 
-      <footer><div className="footer-brand"><a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a><p>Transparent, secure and Shariah-aware digital giving.</p></div><div><b>Give</b><a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="/sadaqah">Sadaqah giving</a></div><div><b>Platform</b><a href="#how">How it works</a><a href="/about">About Amanah</a><a href="/verified-charities">Verified charities</a><button onClick={() => setPlatformOpen(true)}>Request assistance</button><button onClick={() => setPlatformOpen(true)}>For organizations</button></div><div><b>Trust</b><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a><button onClick={() => setPlatformOpen(true)}>Shariah governance</button></div><div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div></footer>
-      <div className="footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><span>English · Kiswahili · Secure giving</span></div>
+      <footer className="refined-footer">
+        <div className="footer-brand"><a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a><p>Transparent, secure and Shariah-aware digital giving.</p></div>
+        <div className="footer-links">
+          <nav aria-label="Giving links"><h3>Give</h3><a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="/sadaqah">Sadaqah giving</a></nav>
+          <nav aria-label="Platform links"><h3>Platform</h3><a href="#how">How it works</a><a href="/about">About Amanah</a><a href="/verified-charities">Verified charities</a><button onClick={() => setPlatformOpen(true)}>Request assistance</button><button onClick={() => setPlatformOpen(true)}>For organizations</button></nav>
+          <nav aria-label="Trust and support links"><h3>Trust</h3><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a><button onClick={() => setPlatformOpen(true)}>Shariah governance</button></nav>
+        </div>
+        <div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div>
+      </footer>
+      <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span>English · Kiswahili</span><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
 
       <MobileNavigation onGive={() => startDonation()} onAccount={() => setDashboardOpen(true)} accountOpen={dashboardOpen}/>
 
@@ -324,7 +340,7 @@ export default function Home() {
 
       {dashboardOpen && <div className="overlay" role="dialog" aria-modal="true" aria-label="My Giving dashboard"><div className="dashboard-panel premium-dashboard"><button className="close" aria-label="Close dialog" onClick={() => setDashboardOpen(false)}><Icon name="×"/></button><div className="dashboard-welcome"><div><p className="eyebrow">My Giving</p><h2>Assalamu Alaikum, Amina</h2><span>Safar 1448 · Your private impact record</span></div><button onClick={() => setToast('Annual giving statement prepared')}><Icon name="▣"/> Download statement</button></div><div className="dashboard-stats"><div><span>Total given</span><b>KSh 72,450</b><small>Across 4 giving types</small></div><div><span>Projects supported</span><b>24</b><small>8 counties</small></div><div><span>Recurring gifts</span><b>4</b><small>Next gift Friday</small></div><div><span>Verified outcomes</span><b>18</b><small>75% complete</small></div></div><div className="dashboard-layout"><div><h3>Latest impact</h3><div className="dashboard-update"><img src="/water-community.jpg" alt=""/><div><span>IMPACT VERIFIED</span><b>Al-Huda Water Project completed</b><p>Your KSh 5,000 Sadaqah Jariyah now helps serve 340 people.</p><button onClick={() => { setDashboardOpen(false); setSelected(campaigns[0]); }}>View full trace <Icon name="→"/></button></div></div></div><aside><h3>Giving balance</h3><div className="giving-balance"><div><span>Zakat</span><b>KSh 28,000</b><i style={{width:'39%'}}/></div><div><span>Sadaqah</span><b>KSh 22,450</b><i style={{width:'31%'}}/></div><div><span>Jariyah</span><b>KSh 18,500</b><i style={{width:'25%'}}/></div><div><span>Other</span><b>KSh 3,500</b><i style={{width:'5%'}}/></div></div></aside></div><div className="dashboard-actions"><button onClick={() => { setDashboardOpen(false); setPlannerOpen(true); }}><Icon name="☾"/> Manage giving plans <span>4 active</span></button><button onClick={() => setToast('Tax and receipt center opened')}><Icon name="▣"/> Receipt center <span>24 receipts</span></button><button onClick={() => { setDashboardOpen(false); setNotificationsOpen(true); }}><Icon name="◉"/> Preferences <span>4 channels</span></button></div><h3>Saved causes</h3><p className="muted">{saved.length ? `${saved.length} campaign${saved.length > 1 ? 's' : ''} saved on this device.` : 'Save a campaign to find it here later.'}</p></div></div>}
 
-      {platformOpen && <PlatformConsole onClose={() => setPlatformOpen(false)} onGive={() => { setPlatformOpen(false); startDonation(); }}/>} 
+      {platformOpen && <PlatformConsole initialPortal={platformPortal} onClose={() => setPlatformOpen(false)} onGive={() => { setPlatformOpen(false); startDonation(); }}/>}
       {plannerOpen && <GivingPlanner onClose={() => setPlannerOpen(false)} onCreate={(plannedAmount,label) => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plannedAmount); setRecurring(true); setSchedule(label); }}/>} 
 
       {notificationsOpen && <NotificationCenter read={readNotifications} onRead={setReadNotifications} onClose={() => setNotificationsOpen(false)}/>}

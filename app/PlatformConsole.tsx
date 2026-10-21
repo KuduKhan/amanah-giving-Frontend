@@ -10,7 +10,7 @@ type ActionProps = { act: (message: string) => void };
 
 type DonorProps = ActionProps & { onGive: () => void; notifications: boolean; setNotifications: (value: boolean) => void; privateProfile: boolean; setPrivateProfile: (value: boolean) => void };
 
-type Portal = 'donor' | 'beneficiary' | 'organization' | 'admin' | 'finance' | 'shariah';
+export type Portal = 'donor' | 'beneficiary' | 'organization' | 'admin' | 'finance' | 'shariah';
 
 const portals: { id: Portal; label: string; icon: string; role: string }[] = [
   { id: 'donor', label: 'Donor', icon: '♡', role: 'Give, plan and trace impact' },
@@ -30,8 +30,8 @@ const featureCatalog = [
   { title: 'Corporate giving', text: 'Team budgets, matching, payroll giving and consolidated reporting.', status: 'Ready', icon: '▦' },
 ];
 
-export default function PlatformConsole({ onClose, onGive }: { onClose: () => void; onGive: () => void }) {
-  const [portal, setPortal] = useState<Portal>('donor');
+export default function PlatformConsole({ onClose, onGive, initialPortal = 'donor' }: { onClose: () => void; onGive: () => void; initialPortal?: Portal }) {
+  const [portal, setPortal] = useState<Portal>(initialPortal);
   const [message, setMessage] = useState('');
   const [notifications, setNotifications] = useState(true);
   const [privateProfile, setPrivateProfile] = useState(true);
