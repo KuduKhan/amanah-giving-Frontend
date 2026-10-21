@@ -1424,6 +1424,80 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .season-card-top { margin-bottom: 14px; }
 }
 
+/* Phone navigation has a stable baseline and respects the home indicator. */
+@media (max-width: 780px) {
+  body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .mobile-nav.refined-mobile-nav {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: center;
+    gap: 2px;
+    height: auto;
+    min-height: calc(76px + env(safe-area-inset-bottom));
+    padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+    border-top: 1px solid #dce7df;
+    background: rgba(252, 254, 251, .98);
+    box-shadow: 0 -5px 24px #071a2c0a;
+    backdrop-filter: blur(16px);
+    overflow: visible;
+  }
+  .refined-mobile-nav > :is(a, button) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    min-height: 64px;
+    padding: 3px 2px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #65776f;
+    text-decoration: none;
+    transform: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .refined-mobile-nav > :is(a, button) .mobile-nav-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 32px;
+    min-height: 32px;
+    margin: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: inherit;
+    transition: background .15s, color .15s;
+  }
+  .refined-mobile-nav > :is(a, button) .mobile-nav-icon .app-icon { width: 22px; height: 22px; stroke-width: 1.8; }
+  .refined-mobile-nav > :is(a, button) .mobile-nav-label {
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: inherit;
+    font-size: 11px;
+    font-weight: 650;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: normal;
+  }
+  .refined-mobile-nav > :is([aria-current], .is-active) { color: var(--emerald-dark); }
+  .refined-mobile-nav > :is([aria-current], .is-active) .mobile-nav-icon { background: #e4f0e7; }
+  .refined-mobile-nav > .mobile-give { color: var(--emerald-dark); transform: none; }
+  .refined-mobile-nav > .mobile-give .mobile-nav-icon { background: var(--emerald); color: #fff; border-radius: 12px; box-shadow: 0 3px 9px #0f795d26; }
+  .refined-mobile-nav > :is(a, button):active .mobile-nav-icon { background: #d8e9dc; color: var(--emerald-dark); }
+  .refined-mobile-nav > .mobile-give:active .mobile-nav-icon { background: var(--emerald-dark); color: #fff; }
+  .refined-mobile-nav > :is(a, button):focus-visible { outline: 2px solid var(--emerald); outline-offset: -2px; }
+}
+
 /* Verified opportunities stay compact while amounts and actions remain distinct. */
 .section.refined-opportunities { padding-block: 72px; }
 .refined-opportunities .section-heading { gap: 24px; margin-bottom: 24px; }
