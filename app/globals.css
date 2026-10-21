@@ -1364,6 +1364,206 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .steps-grid p { font-size: 12px; }
 }
 
+/* Trust, cause shortcuts and seasonal plans share a restrained visual rhythm. */
+.trustbar.refined-trustbar { min-height: 44px; padding: 0 16px; }
+.refined-trustbar .trustbar-inner { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: min(100%, 880px); min-height: 44px; gap: 0; }
+.refined-trustbar .trustbar-separator { display: none; }
+.refined-trustbar .trustbar-item { display: flex; align-items: center; justify-content: center; gap: 8px; height: 100%; padding: 10px 16px; color: #dbe9e3; font-size: 12px; line-height: 1.4; letter-spacing: .015em; text-transform: none; white-space: normal; }
+.refined-trustbar .trustbar-item + .trustbar-separator + .trustbar-item { border-inline-start: 1px solid #ffffff20; }
+.refined-trustbar .trustbar-item > span { min-width: 0; overflow-wrap: normal; word-break: normal; }
+.refined-trustbar .trustbar-item .app-icon { width: 16px; height: 16px; min-width: 16px; color: #8ad3b7; }
+
+.cause-strip.refined-causes { width: min(calc(100% - 48px), 1180px); grid-template-columns: repeat(6, minmax(0, 1fr)); margin: -28px auto 0; padding: 8px; gap: 4px; border-radius: 22px; box-shadow: 0 14px 42px #071a2c12; }
+.refined-causes button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 108px; padding: 14px 8px; border: 0; border-radius: 15px; background: transparent; transition: background .2s, color .2s; }
+.refined-causes button:hover { transform: none; background: #edf5f0; }
+.refined-causes button .cause-icon { display: grid; place-items: center; flex: 0 0 40px; width: 40px; height: 40px; margin: 0; border: 1px solid #dcebe2; border-radius: 13px; background: #f0f7f2; color: var(--emerald); }
+.refined-causes button .cause-icon .app-icon { width: 22px; height: 22px; }
+.refined-causes button .cause-label { margin: 0; color: var(--ink); font-size: 13px; line-height: 1.4; font-weight: 700; text-align: center; overflow-wrap: normal; word-break: normal; }
+
+.seasonal-giving.refined-seasonal { grid-template-columns: minmax(0, .85fr) minmax(0, 1.45fr); gap: clamp(28px, 4vw, 64px); padding-block: 80px; background: linear-gradient(135deg, #f6f2e9, #f4f7f1); overflow: visible; }
+.refined-seasonal::before { display: none; }
+.refined-seasonal .seasonal-heading { position: static; container-type: normal; align-self: center; }
+.refined-seasonal .eyebrow { line-height: 1.6; }
+.refined-seasonal .seasonal-heading h2 { margin-bottom: 18px; font-size: clamp(32px, 3.3vw, 50px); line-height: 1.1; letter-spacing: -.025em; overflow-wrap: normal; word-break: normal; text-wrap: pretty; }
+.refined-seasonal .seasonal-heading > p:not(.eyebrow) { margin: 0 0 22px; font-size: 16px; line-height: 1.7; }
+.refined-seasonal .seasonal-heading .button-link { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 46px; padding: 12px 16px; border: 1px solid #bacfc0; border-radius: 12px; background: #ffffffa6; font-size: 14px; text-align: start; }
+.refined-seasonal .seasonal-heading .button-link:hover { background: #fff; border-color: var(--emerald); }
+.refined-seasonal .seasonal-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.refined-seasonal .seasonal-track article { min-height: 0; padding: 22px; border: 1px solid #dce4d9; border-radius: 18px; background: #ffffffeb; box-shadow: 0 6px 20px #071a2c04; backdrop-filter: none; }
+.refined-seasonal .seasonal-track article:hover { transform: none; border-color: #a5c5b4; box-shadow: 0 10px 24px #071a2c09; }
+.season-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.refined-seasonal .season-icon { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 12px; }
+.refined-seasonal .season-icon .app-icon { width: 21px; height: 21px; }
+.season-card-top > span { color: #8a682f; font-size: 11px; line-height: 1.4; font-weight: 750; letter-spacing: .07em; text-align: end; }
+.refined-seasonal .seasonal-track h3 { margin: 0 0 7px; font-size: 25px; line-height: 1.18; }
+.refined-seasonal .seasonal-track article > b { font-size: 13px; line-height: 1.5; }
+.refined-seasonal .seasonal-track article > p { margin: 12px 0 16px; font-size: 14px; line-height: 1.65; overflow-wrap: normal; word-break: normal; }
+.refined-seasonal .seasonal-track article > button { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 44px; padding: 12px 0 0; border-top: 1px solid #e5ece6; font-size: 13px; line-height: 1.4; text-align: start; }
+.refined-seasonal .seasonal-track article > button em { flex: 0 0 auto; }
+@media (max-width: 1050px) {
+  .seasonal-giving.refined-seasonal { grid-template-columns: minmax(0, 1fr); padding-inline: 24px; padding-block: 56px; }
+  .refined-seasonal .seasonal-heading { max-width: 650px; }
+}
+@media (max-width: 780px) {
+  .trustbar.refined-trustbar { padding-inline: 8px; }
+  .refined-trustbar .trustbar-inner { min-height: 60px; }
+  .refined-trustbar .trustbar-item { flex-direction: column; gap: 5px; padding: 9px 6px; font-size: 10px; line-height: 1.3; text-align: center; }
+  .refined-trustbar .trustbar-item .app-icon { width: 14px; height: 14px; min-width: 14px; }
+  .cause-strip.refined-causes { width: calc(100% - 28px); grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: -18px; padding: 6px; gap: 4px; border-radius: 18px; }
+  .refined-causes button { min-height: 102px; padding: 12px 6px; gap: 8px; }
+  .refined-causes button .cause-label { font-size: 12px; }
+  .seasonal-giving.refined-seasonal { padding: 44px 18px; gap: 26px; }
+  .refined-seasonal .seasonal-heading h2 { font-size: clamp(32px, 7vw, 42px); }
+  .refined-seasonal .seasonal-track { gap: 12px; }
+  .refined-seasonal .seasonal-track article { padding: 20px; }
+}
+@media (max-width: 560px) {
+  .refined-seasonal .seasonal-track { grid-template-columns: minmax(0, 1fr); }
+  .refined-seasonal .seasonal-track h3 { font-size: 24px; }
+  .refined-seasonal .seasonal-track article > p { margin-block: 10px 14px; }
+  .season-card-top { margin-bottom: 14px; }
+}
+
+/* The hero uses content-sized rows so evidence and captions never compete. */
+.hero.refined-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 600px; isolation: isolate; }
+.refined-hero .hero-copy { padding: clamp(48px, 6vw, 90px) clamp(28px, 5vw, 80px); min-width: 0; }
+.refined-hero .eyebrow { max-width: 36rem; margin-bottom: 20px; font-size: 12px; line-height: 1.6; letter-spacing: .13em; }
+.refined-hero h1 { margin: 0; max-width: 640px; font-size: clamp(40px, 4.5vw, 70px); line-height: 1.07; letter-spacing: -.035em; text-wrap: pretty; overflow-wrap: normal; word-break: normal; }
+.refined-hero h1 em { display: block; margin-top: .12em; }
+.refined-hero .hero-lead { max-width: 480px; margin: 24px 0; font-size: 17px; line-height: 1.7; overflow-wrap: normal; }
+.refined-hero .hero-actions { display: flex; align-items: center; margin-top: 6px; }
+.refined-hero .hero-actions .text-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 18px; min-height: 48px; padding: 14px 20px; border: 1px solid var(--emerald); border-radius: 12px; background: var(--emerald); color: #fff; font-size: 14px; line-height: 1.4; text-align: start; box-shadow: 0 5px 16px #0f795d17; transition: background .2s, box-shadow .2s; }
+.refined-hero .hero-actions .text-link span { color: inherit; flex: 0 0 auto; }
+.refined-hero .hero-actions .text-link:hover { background: var(--emerald-dark); box-shadow: 0 8px 20px #0f795d26; }
+.refined-hero .hero-proof { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 32px; padding-top: 22px; text-align: start; }
+.refined-hero .hero-proof > div { min-width: 0; padding-inline: 16px; }
+.refined-hero .hero-proof > div:first-child { padding-inline-start: 0; }
+.refined-hero .hero-proof > div:last-child { padding-inline-end: 0; }
+.refined-hero .hero-proof > div + div { border-inline-start: 1px solid #d6cdbd; }
+.refined-hero .hero-proof b { display: block; margin: 0 0 6px; font-size: clamp(19px, 1.8vw, 27px); line-height: 1.15; white-space: nowrap; letter-spacing: -.025em; }
+.refined-hero .hero-proof small { display: block; color: #5c6b70; font-size: 12px; line-height: 1.4; overflow-wrap: normal; word-break: normal; }
+.refined-hero .hero-visual { display: grid; grid-template-rows: auto 1fr auto; align-content: stretch; gap: 20px; padding: 28px; min-height: 600px; }
+.refined-hero .hero-visual > img { object-position: center; animation: none; transform: none; filter: saturate(.9); }
+.refined-hero .hero-visual::after { background: linear-gradient(180deg, #071a2c12 20%, #071a2c20 48%, #041522e8 100%); }
+.refined-hero :is(.impact-card, .live-giving, .hero-caption) { position: relative; inset: auto; animation: none; min-width: 0; max-width: 100%; }
+.refined-hero .live-giving { grid-row: 1; justify-self: end; padding: 10px 13px; font-size: 12px; line-height: 1.4; border-color: #ffffff35; }
+.refined-hero .impact-card { grid-row: 2; align-self: start; justify-self: start; width: min(260px, 100%); padding: 18px; border-radius: 16px; background: #fffffff0; box-shadow: 0 10px 30px #071a2c20; }
+.hero-impact-label { display: flex; align-items: center; gap: 8px; color: var(--emerald-dark); }
+.hero-impact-label .app-icon { width: 18px; height: 18px; }
+.refined-hero .impact-card b { font-size: 13px; line-height: 1.4; }
+.refined-hero .impact-card p { margin: 10px 0; font-size: 20px; line-height: 1.35; overflow-wrap: normal; }
+.refined-hero .impact-card small { font-size: 12px; line-height: 1.5; }
+.refined-hero .hero-caption { grid-row: 3; padding-bottom: 18px; }
+.refined-hero .hero-caption > span { display: block; font-size: 11px; line-height: 1.5; letter-spacing: .1em; color: #d3e8df; }
+.refined-hero .hero-caption p { max-width: 430px; margin: 10px 0 12px; font-size: 30px; line-height: 1.2; text-wrap: pretty; overflow-wrap: normal; }
+.refined-hero .hero-caption button { gap: 10px; min-height: 44px; padding: 10px 14px; border: 1px solid #ffffff60; border-radius: 10px; background: #ffffff10; font-size: 13px; line-height: 1.4; }
+.refined-hero .hero-caption button:hover { background: #ffffff25; }
+@media (max-width: 1050px) {
+  .hero.refined-hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .refined-hero .hero-copy { padding: 54px clamp(24px, 6vw, 64px) 44px; }
+  .refined-hero h1 { max-width: 720px; font-size: clamp(40px, 6.5vw, 64px); }
+  .refined-hero .hero-lead { max-width: 580px; }
+  .refined-hero .hero-proof { max-width: 580px; }
+  .refined-hero .hero-visual { min-height: 460px; }
+}
+@media (max-width: 600px) {
+  .refined-hero .hero-copy { padding: 40px 20px 32px; }
+  .refined-hero .eyebrow { margin-bottom: 16px; font-size: 11px; letter-spacing: .1em; }
+  .refined-hero h1 { font-size: clamp(36px, 9vw, 52px); line-height: 1.09; }
+  .refined-hero .hero-lead { margin-block: 18px 22px; font-size: 16px; line-height: 1.65; }
+  .refined-hero .hero-actions .text-link { width: 100%; }
+  .refined-hero .hero-proof { margin-top: 26px; padding-top: 18px; }
+  .refined-hero .hero-proof > div { padding-inline: 7px; }
+  .refined-hero .hero-proof b { font-size: clamp(16px, 4.2vw, 23px); }
+  .refined-hero .hero-proof small { font-size: 11px; }
+  .refined-hero .hero-visual { min-height: 450px; padding: 18px; gap: 16px; }
+  .refined-hero .impact-card { width: min(230px, 100%); padding: 15px; }
+  .refined-hero .impact-card p { font-size: 18px; }
+  .refined-hero .hero-caption p { font-size: 26px; }
+  .refined-hero .hero-caption { padding-bottom: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-hero .live-pulse { animation: none; }
+}
+
+/* A unified header layout keeps the brand, navigation and actions in balance. */
+.site-header.refined-header {
+  display: block;
+  height: auto;
+  min-height: 0;
+  padding: 12px clamp(16px, 3vw, 56px);
+  background: rgba(251, 252, 250, .97);
+  box-shadow: 0 6px 28px rgba(7, 26, 44, .045);
+}
+.refined-header .header-layout {
+  width: 100%;
+  max-width: 1520px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.refined-header .brand { flex: 0 0 auto; padding-block: 3px; }
+.refined-header .amanah-logo { gap: 10px; }
+.refined-header .amanah-logo-mark { width: 46px; height: 46px; flex: 0 0 46px; object-fit: contain; }
+.refined-header .amanah-logo-wordmark b { font-size: 14px; letter-spacing: .17em; }
+.refined-header .amanah-logo-wordmark small { display: block; font-size: 8px; letter-spacing: .35em; margin-top: 5px; }
+.refined-header .desktop-links { display: flex; gap: 2px; margin-inline: auto; }
+.refined-header .desktop-links :is(a, button) { min-height: 44px; padding: 10px 11px; font-size: 14px; border-radius: 10px; }
+.refined-header .header-actions { flex: 0 0 auto; gap: 4px; margin-inline-start: 0; }
+.refined-header :is(.header-icon, .header-language) {
+  display: inline-flex;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+.refined-header .header-language { width: auto; gap: 6px; padding-inline: 10px; }
+.refined-header .header-language span { display: inline; font-size: 11px; }
+.refined-header .header-divider { display: block; margin-inline: 6px; }
+.refined-header .account-link { display: inline-flex; min-height: 44px; font-size: 13px; padding-inline: 10px; }
+.refined-header .header-give { display: inline-flex; gap: 10px; padding: 12px 18px; border-radius: 12px; margin-inline-start: 4px; }
+.refined-header .menu-trigger { display: none; }
+.refined-header .navigation-menu {
+  inset-inline: auto 20px;
+  width: min(520px, calc(100% - 40px));
+  max-height: calc(100dvh - 112px);
+  padding: 20px;
+  border-radius: 20px;
+}
+.refined-header .navigation-menu nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.refined-header .navigation-menu nav :is(a, button) { min-height: 48px; line-height: 1.4; }
+.refined-header .menu-utilities { display: grid; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.refined-header .menu-utilities button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px; border: 0; border-radius: 10px; color: var(--ink); background: transparent; text-align: start; font-size: 14px; }
+.refined-header .menu-utilities button:hover { background: #edf3ee; }
+.refined-header .menu-utilities small { margin-inline-start: auto; color: var(--muted); font-size: 12px; }
+.refined-header .menu-footer { flex-direction: column; align-items: stretch; gap: 12px; }
+.refined-header .menu-footer > span { justify-content: center; font-size: 12px; }
+.refined-header .menu-footer .button { width: 100%; min-height: 46px; }
+@media (max-width: 1359px) {
+  .refined-header .desktop-links { display: none; }
+  .refined-header .menu-trigger { display: inline-flex; margin-inline-start: 4px; }
+}
+@media (max-width: 780px) {
+  .site-header.refined-header { padding: 10px 16px; }
+  .refined-header .header-layout { gap: 10px; }
+  .refined-header .amanah-logo-mark { width: 40px; height: 40px; flex-basis: 40px; }
+  .refined-header .amanah-logo-wordmark b { font-size: 12px; letter-spacing: .14em; }
+  .refined-header .amanah-logo-wordmark small { font-size: 7px; }
+  .refined-header .header-actions { gap: 2px; }
+  .refined-header :is(.account-link, .header-give, .header-divider, .notification-trigger, .header-language) { display: none; }
+  .refined-header .navigation-menu { inset-inline: 12px; width: auto; max-height: calc(100dvh - 94px); padding: 16px; }
+}
+@media (max-width: 390px) {
+  .site-header.refined-header { padding-inline: 12px; }
+  .refined-header .amanah-logo { gap: 7px; }
+  .refined-header .navigation-menu nav { grid-template-columns: 1fr; }
+}
+
 /* Preserve the calculator's desktop two-column hierarchy on phones. */
 @media (max-width: 780px) {
   .calculator {

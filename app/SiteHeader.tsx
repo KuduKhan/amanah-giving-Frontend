@@ -46,7 +46,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     const escape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { setMenuOpen(false); menuButton.current?.focus(); }
     };
-    const desktop = window.matchMedia('(min-width: 1280px)');
+    const desktop = window.matchMedia('(min-width: 1360px)');
     const resize = () => { if (desktop.matches) setMenuOpen(false); };
     document.addEventListener('pointerdown', dismiss);
     document.addEventListener('keydown', escape);
@@ -61,22 +61,30 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
   const run = (action: () => void) => { setMenuOpen(false); action(); };
   const nextLanguage = language === 'en' ? 'Kiswahili' : language === 'sw' ? 'Arabic' : 'English';
 
-  return <header className="site-header premium-header" ref={header} onBlur={event => {
+  return <header className="site-header premium-header refined-header" ref={header} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
   }}>
+    <div className="header-layout">
     <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><AmanahLogo size="md"/></a>
     <nav className="desktop-links" aria-label="Main navigation">
       {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}><Icon name={link.icon}/>{link.label}</a>)}
       <button className="nav-platform" onClick={onPlatform}><Icon name="platform"/>Platform</button>
     </nav>
     <div className="header-actions">
-      <button className="header-icon" onClick={onSearch} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
+      <button className="header-icon" onClick={() => run(onSearch)} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
       <button className="header-icon notification-trigger" onClick={onNotifications} aria-label="Open notifications, 3 unread" title="Notifications"><Icon name="bell"/><span className="notification-dot"/></button>
       <button className="header-language" onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`} title={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
       <span className="header-divider" aria-hidden="true"/>
       <button className="account-link" onClick={onAccount}><Icon name="wallet"/>{labels.sign}</button>
       <button className="button button-small header-give" onClick={onGive}>{labels.give}<Icon name="↗"/></button>
-      <button className="header-icon menu-trigger" ref={menuButton} aria-expanded={menuOpen} aria-controls="navigation-menu" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} onClick={() => setMenuOpen(!menuOpen)}><Icon name={menuOpen ? 'close' : 'menu'}/></button>
+      <button className="header-icon menu-trigger" ref={menuButton} aria-expanded={menuOpen} aria-controls="navigation-menu" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} onClick={() => setMenuOpen(!menuOpen)} onKeyDown={event => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          setMenuOpen(true);
+          requestAnimationFrame(() => header.current?.querySelector<HTMLAnchorElement>('#navigation-menu nav a')?.focus());
+        }
+      }}><Icon name={menuOpen ? 'close' : 'menu'}/></button>
+    </div>
     </div>
     {menuOpen && <div id="navigation-menu" className="navigation-menu">
       <p className="menu-eyebrow">EXPLORE AMANAH</p>
@@ -85,6 +93,10 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
         <button onClick={() => run(onPlatform)}><Icon name="platform"/><span>Platform</span><Icon name="→"/></button>
         <button onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="→"/></button>
       </nav>
+      <div className="menu-utilities">
+        <button onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language === 'en' ? 'English' : language === 'sw' ? 'Kiswahili' : 'العربية'}</span><small>{nextLanguage}</small></button>
+        <button onClick={() => run(onNotifications)}><Icon name="bell"/><span>Notifications</span><small>3 unread</small></button>
+      </div>
       <div className="menu-footer"><span><Icon name="shield"/>Verified giving. Visible impact.</span><button className="button" onClick={() => run(onGive)}>{labels.give}<Icon name="↗"/></button></div>
     </div>}
   </header>;

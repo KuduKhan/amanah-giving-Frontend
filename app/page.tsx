@@ -176,45 +176,45 @@ export default function Home() {
     <main id="main-content">
       <a className="skip-link" href="#top">Skip to main content</a>
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
-      <div className="trustbar" role="note">
+      <div className="trustbar refined-trustbar" role="note" aria-label="Giving safeguards">
         <div className="trustbar-inner">
-          <span className="trustbar-item"><Icon name="shield" /> Verified campaigns</span>
+          <span className="trustbar-item"><Icon name="shield" /><span>Verified campaigns</span></span>
           <span className="trustbar-separator" aria-hidden="true" />
-          <span className="trustbar-item trustbar-primary">Zakat funds kept separate</span>
+          <span className="trustbar-item trustbar-primary"><Icon name="wallet" /><span>Zakat funds kept separate</span></span>
           <span className="trustbar-separator" aria-hidden="true" />
-          <span className="trustbar-item"><Icon name="phone" /> M-PESA ready</span>
+          <span className="trustbar-item"><Icon name="phone" /><span>M-PESA ready</span></span>
         </div>
       </div>
       <SiteHeader labels={t} language={language} onLanguage={() => setLanguage(language === 'en' ? 'sw' : language === 'sw' ? 'ar' : 'en')} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
-      <section className="hero" id="top">
+      <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
-          <h1>{t.titleA} <em>{t.titleB}</em></h1>
+          <h1 id="hero-title">{t.titleA} <em>{t.titleB}</em></h1>
           <p className="hero-lead">{t.lead}</p>
           <div className="hero-actions"><a className="text-link" href="#causes">Explore verified causes <span><Icon name="↓"/></span></a></div>
-          <div className="hero-proof"><span><b>4.9/5</b> donor trust</span><span><b>218</b> active campaigns</span><span><b>KSh 246M+</b> verified impact</span></div>
+          <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
         </div>
         <div className="hero-visual">
           <Image src="/water-community.jpg" alt="Children gathering at a rural community water well" width={1400} height={1200} priority sizes="(max-width: 900px) 100vw, 50vw" />
-          <div className="impact-card"><span className="status-dot" /> <b>Impact verified</b><p>Garissa water project now serves 340 people.</p><small>Evidence reviewed 2 days ago</small></div>
+          <div className="impact-card"><div className="hero-impact-label"><Icon name="shield"/><b>Impact verified</b></div><p>Garissa water project now serves 340 people.</p><small>Evidence reviewed 2 days ago</small></div>
           <div className="live-giving"><span className="live-pulse"/><b>38 donors</b> gave in the last hour</div>
           <div className="hero-caption"><span>WTR-284 · SADAQAH JARIYAH</span><p>From your giving to safe, flowing water.</p><button onClick={() => setSelected(campaigns[0])}>Trace this project <Icon name="→"/></button></div>
         </div>
       </section>
 
-      <section className="cause-strip" aria-label="Popular causes">
-        {[['Zakat','✦'],['Food','◌'],['Orphans','♡'],['Water','≈'],['Mosque','⌂'],["Qur'ans",'◫']].map(([cause, icon]) => <button key={cause} onClick={() => { setFilter(cause === "Qur'ans" ? 'All' : cause); document.querySelector('#causes')?.scrollIntoView(); }}><span><Icon name={icon}/></span>{cause === 'Food' ? 'Feed a family' : cause === 'Orphans' ? 'Sponsor an orphan' : cause === 'Water' ? 'Clean water' : cause === 'Mosque' ? 'Build a mosque' : cause}</button>)}
+      <section className="cause-strip refined-causes" aria-label="Popular causes">
+        {[['Zakat','giving'],['Food','◌'],['Orphans','users'],['Water','≈'],['Mosque','bank'],["Qur'ans",'book']].map(([cause, icon]) => <button key={cause} onClick={() => { setFilter(cause === "Qur'ans" ? 'All' : cause); document.querySelector('#causes')?.scrollIntoView(); }}><span className="cause-icon"><Icon name={icon}/></span><span className="cause-label">{cause === 'Food' ? 'Feed a family' : cause === 'Orphans' ? 'Sponsor an orphan' : cause === 'Water' ? 'Clean water' : cause === 'Mosque' ? 'Build a mosque' : cause}</span></button>)}
       </section>
 
-      <section className="seasonal-giving">
-        <div className="seasonal-heading"><p className="eyebrow">Give in every season</p><h2>Timely worship, thoughtfully prepared.</h2><p>Create plans for sacred days and recurring acts of generosity—without losing oversight or intention.</p><button className="text-link button-link" onClick={() => setPlannerOpen(true)}>Build my giving plan <span><Icon name="↗"/></span></button></div>
+      <section className="seasonal-giving refined-seasonal" aria-labelledby="seasonal-title">
+        <div className="seasonal-heading"><p className="eyebrow">Give in every season</p><h2 id="seasonal-title">Timely worship, thoughtfully prepared.</h2><p>Create plans for sacred days and recurring acts of generosity—without losing oversight or intention.</p><button className="text-link button-link" onClick={() => setPlannerOpen(true)}>Build my giving plan <span><Icon name="↗"/></span></button></div>
         <div className="seasonal-track">{[
           ['NOW','Jumu’ah giving','Every Friday','A small, consistent Sadaqah can become a lasting rhythm.','Create weekly plan'],
           ['RAMADAN','Last 10 nights','Nightly giving','Schedule across the final nights so no opportunity is missed.','Prepare Ramadan plan'],
           ['DHUL HIJJAH','Qurbani','Verified distribution','Reserve ahead and follow verified livestock and distribution evidence.','Plan Qurbani'],
           ['ANY TIME','Fidyah & Kaffarah','Guided calculation','Understand the category, choose a verified program, and retain a receipt.','Open guided flow'],
-        ].map((item,index) => <article key={item[1]} style={{'--delay':`${index * 90}ms`} as React.CSSProperties}><div className="season-icon">{index === 0 ? <Icon name="☾"/> : index === 1 ? <Icon name="✦"/> : index === 2 ? <Icon name="◇"/> : <Icon name="○"/>}</div><span>{item[0]}</span><h3>{item[1]}</h3><b>{item[2]}</b><p>{item[3]}</p><button onClick={() => setPlannerOpen(true)}>{item[4]} <em><Icon name="↗"/></em></button></article>)}</div>
+        ].map((item,index) => <article key={item[1]} style={{'--delay':`${index * 90}ms`} as React.CSSProperties}><div className="season-card-top"><div className="season-icon"><Icon name={['calendar','☾','gift','giving'][index]}/></div><span>{item[0]}</span></div><h3>{item[1]}</h3><b>{item[2]}</b><p>{item[3]}</p><button onClick={() => setPlannerOpen(true)}>{item[4]} <em><Icon name="↗"/></em></button></article>)}</div>
       </section>
 
       <section className="section" id="causes">
