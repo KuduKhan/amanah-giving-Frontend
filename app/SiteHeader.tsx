@@ -10,12 +10,13 @@ type Props = {
   onLanguage: () => void;
   onSearch: () => void;
   onNotifications: () => void;
+  unreadCount?: number;
   onAccount: () => void;
   onGive: () => void;
   onPlatform: () => void;
 };
 
-export default function SiteHeader({ labels, language, onLanguage, onSearch, onNotifications, onAccount, onGive, onPlatform }: Props) {
+export default function SiteHeader({ labels, language, onLanguage, onSearch, onNotifications, onAccount, onGive, onPlatform, unreadCount = 3 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('top');
   const header = useRef<HTMLElement>(null);
@@ -72,7 +73,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     </nav>
     <div className="header-actions">
       <button className="header-icon" onClick={() => run(onSearch)} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
-      <button className="header-icon notification-trigger" onClick={onNotifications} aria-label="Open notifications, 3 unread" title="Notifications"><Icon name="bell"/><span className="notification-dot"/></button>
+      <button className="header-icon notification-trigger" onClick={onNotifications} aria-label={`Open notifications, ${unreadCount} unread`} title="Notifications"><Icon name="bell"/>{unreadCount > 0 && <span className="notification-dot"/>}</button>
       <button className="header-language" onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`} title={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
       <span className="header-divider" aria-hidden="true"/>
       <button className="account-link" onClick={onAccount}><Icon name="wallet"/>{labels.sign}</button>
@@ -95,7 +96,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
       </nav>
       <div className="menu-utilities">
         <button onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language === 'en' ? 'English' : language === 'sw' ? 'Kiswahili' : 'العربية'}</span><small>{nextLanguage}</small></button>
-        <button onClick={() => run(onNotifications)}><Icon name="bell"/><span>Notifications</span><small>3 unread</small></button>
+        <button onClick={() => run(onNotifications)}><Icon name="bell"/><span>Notifications</span><small>{unreadCount ? `${unreadCount} unread` : 'All read'}</small></button>
       </div>
       <div className="menu-footer"><span><Icon name="shield"/>Verified giving. Visible impact.</span><button className="button" onClick={() => run(onGive)}>{labels.give}<Icon name="↗"/></button></div>
     </div>}

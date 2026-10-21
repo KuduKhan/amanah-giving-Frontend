@@ -3,6 +3,7 @@
 import Icon from './Icon';
 import SiteHeader from './SiteHeader';
 import AmanahLogo from './AmanahLogo';
+import NotificationCenter from './NotificationCenter';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import PlatformConsole from './PlatformConsole';
@@ -63,6 +64,7 @@ export default function Home() {
   const [platformOpen, setPlatformOpen] = useState(false);
   const [plannerOpen, setPlannerOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [readNotifications, setReadNotifications] = useState<string[]>(['security']);
   const [dedication, setDedication] = useState('');
   const [onBehalf, setOnBehalf] = useState(false);
   const [schedule, setSchedule] = useState('Monthly');
@@ -185,7 +187,7 @@ export default function Home() {
           <span className="trustbar-item"><Icon name="phone" /><span>M-PESA ready</span></span>
         </div>
       </div>
-      <SiteHeader labels={t} language={language} onLanguage={() => setLanguage(language === 'en' ? 'sw' : language === 'sw' ? 'ar' : 'en')} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
+      <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguage(language === 'en' ? 'sw' : language === 'sw' ? 'ar' : 'en')} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
@@ -217,15 +219,22 @@ export default function Home() {
         ].map((item,index) => <article key={item[1]} style={{'--delay':`${index * 90}ms`} as React.CSSProperties}><div className="season-card-top"><div className="season-icon"><Icon name={['calendar','☾','gift','giving'][index]}/></div><span>{item[0]}</span></div><h3>{item[1]}</h3><b>{item[2]}</b><p>{item[3]}</p><button onClick={() => setPlannerOpen(true)}>{item[4]} <em><Icon name="↗"/></em></button></article>)}</div>
       </section>
 
-      <section className="section" id="causes">
-        <div className="section-heading"><div><p className="eyebrow">Verified opportunities</p><h2>Give where it matters most</h2></div><button className="text-link button-link" onClick={() => setSearchOpen(true)}>Search all causes <span><Icon name="↗"/></span></button></div>
+      <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
+        <div className="section-heading"><div><p className="eyebrow">Verified opportunities</p><h2 id="causes-title">Give where it matters most</h2></div><button className="text-link button-link" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
         <div className="filter-row" aria-label="Filter verified causes">{['All','Zakat','Food','Orphans','Water','Mosque'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div>
         <div className="campaign-grid">
           {filteredCampaigns.map(campaign => {
             const progress = Math.round(campaign.raised / campaign.goal * 100);
-            return <article className="campaign-card" key={campaign.id}>
+            return <article className="campaign-card" key={campaign.id} aria-labelledby={`title-${campaign.id}`}>
               <div className="campaign-image"><Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaign.id === 'EDU-390' ? '50% 34%' : 'center' }} /><span className="badge">{campaign.badge}</span><button className={`save ${saved.includes(campaign.id) ? 'saved' : ''}`} aria-pressed={saved.includes(campaign.id)} onClick={() => toggleSaved(campaign.id)} aria-label={`${saved.includes(campaign.id) ? 'Remove' : 'Save'} ${campaign.title}`}>{saved.includes(campaign.id) ? <Icon name="♥"/> : <Icon name="♡"/>}</button></div>
-              <div className="campaign-body"><p className="verified"><Icon name="●"/> Campaign verified · {campaign.id}</p><h3>{campaign.title}</h3><p className="muted">{campaign.meta} · {campaign.donors.toLocaleString()} donors</p><div className="campaign-signals"><span><Icon name="◷"/> {campaign.days} days left</span>{campaign.zakat && <span className="zakat-signal"><Icon name="✦"/> Zakat eligible</span>}</div><div className="money-row"><strong>{money(campaign.raised)}</strong><span>raised of {money(campaign.goal)}</span><b>{progress}%</b></div><div className="progress"><span style={{width: `${progress}%`}} /></div><div className="card-footer"><button onClick={() => setSelected(campaign)}>View details</button><button className="donate-mini" onClick={() => startDonation(campaign)}>Donate</button></div></div>
+              <div className="campaign-body">
+                <p className="verified"><Icon name="shield"/><span>Campaign verified <span className="campaign-code">· {campaign.id}</span></span></p>
+                <h3 id={`title-${campaign.id}`}>{campaign.title}</h3>
+                <p className="muted campaign-location">{campaign.meta}<span aria-hidden="true">·</span>{campaign.donors.toLocaleString()} donors</p>
+                <div className="campaign-signals"><span className={campaign.days <= 12 ? 'deadline-soon' : ''}><Icon name="◷"/>{campaign.days} days left</span>{campaign.zakat && campaign.badge !== 'Zakat eligible' && <span className="zakat-signal"><Icon name="shield"/>Zakat eligible</span>}</div>
+                <div className="campaign-funding"><div className="money-row"><strong>{money(campaign.raised)}</strong><b>{progress}% funded</b></div><p>raised of {money(campaign.goal)}</p><div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div></div>
+                <div className="card-footer"><button onClick={() => setSelected(campaign)} aria-label={`View details: ${campaign.title}`}>View details<Icon name="→"/></button><button className="donate-mini" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="↗"/></button></div>
+              </div>
             </article>;
           })}
         </div>
@@ -290,9 +299,15 @@ export default function Home() {
         <div className="platform-preview-grid">{[['♡','Donor','Give, plan and trace'],['⌂','Beneficiary','Request help privately'],['◇','Organization','Deliver with evidence'],['◎','Admin','Verify and protect'],['≡','Finance','Reconcile every fund'],['✦','Shariah','Govern with clarity']].map(x => <button key={x[1]} onClick={() => setPlatformOpen(true)}><i><Icon name={x[0]}/></i><span><b>{x[1]}</b><small>{x[2]}</small></span><em><Icon name="→"/></em></button>)}</div>
       </section>
 
-      <section className="organizations">
-        <div><p className="eyebrow light">Verified organizations</p><h2>Trusted locally.<br/>Accountable publicly.</h2><p>Every organization profile clearly shows what was checked, who is responsible, and the latest verified impact.</p><button className="outline-button" onClick={() => setToast('Organization directory opened')}>Explore organizations <Icon name="→"/></button></div>
-        <div className="org-card"><span className="org-logo">AR</span><div><p className="verified"><Icon name="●"/> Organization verified</p><h3>Al-Rahmah Community Trust</h3><p>Nairobi · 12 active projects · 94% reporting score</p></div><span className="score">A+</span></div>
+      <section className="organizations refined-organizations" aria-labelledby="organizations-title">
+        <div className="organizations-copy"><p className="eyebrow light">Verified organizations</p><h2 id="organizations-title">Trusted locally.<br/>Accountable publicly.</h2><p>Every organization profile clearly shows what was checked, who is responsible, and the latest verified impact.</p><a className="outline-button" href="/verified-charities">Explore organizations <Icon name="→"/></a></div>
+        <article className="org-card" aria-labelledby="featured-org-title">
+          <div className="org-card-heading"><span className="org-logo" aria-hidden="true">AR</span><span className="org-verification"><Icon name="shield"/>Organization verified</span><span className="score" aria-label="Organization rating A plus">A+<small>Rating</small></span></div>
+          <h3 id="featured-org-title">Al-Rahmah Community Trust</h3>
+          <p className="org-location"><Icon name="home"/>Nairobi, Kenya</p>
+          <dl className="org-metrics"><div><dt>Active projects</dt><dd>12</dd></div><div><dt>Reporting score</dt><dd>94<small>%</small></dd></div></dl>
+          <div className="org-reporting" role="meter" aria-label="Reporting score" aria-valuemin={0} aria-valuemax={100} aria-valuenow={94}><span/></div>
+        </article>
       </section>
 
       <footer><div className="footer-brand"><a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a><p>Transparent, secure and Shariah-aware digital giving.</p></div><div><b>Give</b><a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="/sadaqah">Sadaqah giving</a></div><div><b>Platform</b><a href="#how">How it works</a><a href="/about">About Amanah</a><a href="/verified-charities">Verified charities</a><button onClick={() => setPlatformOpen(true)}>Request assistance</button><button onClick={() => setPlatformOpen(true)}>For organizations</button></div><div><b>Trust</b><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a><button onClick={() => setPlatformOpen(true)}>Shariah governance</button></div><div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div></footer>
@@ -311,12 +326,7 @@ export default function Home() {
       {platformOpen && <PlatformConsole onClose={() => setPlatformOpen(false)} onGive={() => { setPlatformOpen(false); startDonation(); }}/>} 
       {plannerOpen && <GivingPlanner onClose={() => setPlannerOpen(false)} onCreate={(plannedAmount,label) => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plannedAmount); setRecurring(true); setSchedule(label); }}/>} 
 
-      {notificationsOpen && <div className="overlay notification-overlay" role="dialog" aria-modal="true" aria-label="Notifications"><div className="notification-panel"><button className="close" aria-label="Close dialog" onClick={() => setNotificationsOpen(false)}><Icon name="×"/></button><div className="notification-head"><div><p className="eyebrow">Notification center</p><h2>Peace of mind, delivered.</h2></div><button onClick={() => setToast('All notifications marked as read')}>Mark all read</button></div><div className="notification-tabs"><button className="active">All <span>3</span></button><button>Impact</button><button>Payments</button><button>Plans</button></div><div className="notification-list">{[
-        ['impact','Impact verified','Clean water is now flowing in Garissa','Your WTR-284 gift now helps serve 340 people.','2h'],
-        ['receipt','Receipt ready','Your Jumu’ah Sadaqah was confirmed','KSh 500 · AMN-948231','Fri'],
-        ['plan','Giving plan reminder','Last 10 nights plan begins in 5 days','Review your amount and payment method.','1d'],
-        ['security','New sign-in protected','A sign-in from Nairobi was verified','If this was not you, secure your account.','3d'],
-      ].map((item,index) => <button key={item[1]} className={index < 3 ? 'unread' : ''} onClick={() => setToast(`${item[1]} opened`)}><i>{item[0] === 'impact' ? <Icon name="✓"/> : item[0] === 'receipt' ? <Icon name="▣"/> : item[0] === 'plan' ? <Icon name="☾"/> : <Icon name="○"/>}</i><span><b>{item[1]}</b><strong>{item[2]}</strong><small>{item[3]}</small></span><time>{item[4]}</time></button>)}</div><div className="notification-settings"><span><b>Delivery preferences</b><small>In-app · Email · SMS · WhatsApp</small></span><button onClick={() => { setNotificationsOpen(false); setPlatformOpen(true); }}>Manage <Icon name="→"/></button></div></div></div>}
+      {notificationsOpen && <NotificationCenter read={readNotifications} onRead={setReadNotifications} onClose={() => setNotificationsOpen(false)}/>}
 
       {toast && <div className="toast" role="status" aria-live="polite"><span><Icon name="✓"/></span>{toast}</div>}
       <a className="back-to-top" href="#top" aria-label="Back to top"><Icon name="↑"/></a>
