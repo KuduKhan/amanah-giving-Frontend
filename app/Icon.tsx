@@ -21,8 +21,19 @@ const icons: Record<string, LucideIcon> = {
   '●': CircleCheck, '+': Plus, gift: Gift,
 };
 
+// Assign the same palette to every alias of a shared icon.
+const tones = new Map<LucideIcon, string>([
+  [Heart, 'rose'], [HandHeart, 'rose'], [Users, 'violet'],
+  [Droplets, 'blue'], [House, 'blue'], [Search, 'blue'], [Globe2, 'blue'],
+  [ShieldCheck, 'emerald'], [CircleCheck, 'emerald'], [Smartphone, 'emerald'],
+  [Wallet, 'amber'], [CreditCard, 'amber'], [Landmark, 'amber'], [Gift, 'amber'], [Bell, 'amber'],
+  [BookOpen, 'violet'], [Moon, 'violet'], [InfinityIcon, 'violet'],
+  [Building2, 'teal'], [LayoutGrid, 'teal'], [Repeat2, 'teal'],
+  [CalendarDays, 'orange'], [Clock3, 'orange'], [Package, 'orange'], [Sparkles, 'amber'],
+]);
+
 /** Decorative icons inherit their accessible name from the surrounding control. */
 export default function Icon({ name, className = '' }: { name: string; className?: string }) {
   const Glyph = icons[name] || CircleCheck;
-  return <Glyph className={`app-icon ${className}`} size={20} strokeWidth={1.7} aria-hidden="true" focusable="false" />;
+  return <Glyph className={`app-icon ${className}`} data-icon-tone={tones.get(Glyph)} size={20} strokeWidth={1.7} aria-hidden="true" focusable="false" />;
 }

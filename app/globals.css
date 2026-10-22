@@ -1424,6 +1424,51 @@ footer a:hover, footer div > button:not(.button):hover { color: #fff; transform:
   .season-card-top { margin-bottom: 14px; }
 }
 
+/* Donation intentions use native radio selection and a labelled step indicator. */
+.donation-panel.refined-checkout { width: min(680px, 100%); padding: 60px 28px 28px; border-radius: 24px; background: #fcfefb; }
+.refined-checkout .checkout-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 0; margin-bottom: 24px; }
+.refined-checkout .checkout-heading .eyebrow { margin: 0; font-size: 11px; line-height: 1.5; }
+.refined-checkout .checkout-assurance { display: flex; flex-wrap: wrap; gap: 10px; }
+.refined-checkout .checkout-assurance span { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; line-height: 1.5; color: #60766a; }
+.refined-checkout .checkout-assurance .app-icon { width: 13px; height: 13px; color: var(--emerald); }
+.checkout-stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 14px 10px; margin: 0 0 26px; border: 1px solid #e1e9e1; border-radius: 14px; list-style: none; background: #f3f7f0; }
+.checkout-stages li { display: flex; align-items: center; justify-content: center; gap: 7px; color: #718175; }
+.checkout-stages li > span { display: grid; place-items: center; flex: 0 0 26px; width: 26px; height: 26px; border: 1px solid #d5dfd5; border-radius: 50%; background: #fff; font-size: 12px; font-weight: 700; }
+.checkout-stages b { font-size: 12px; line-height: 1.4; font-weight: 600; }
+.checkout-stages .current { color: var(--emerald-dark); }
+.checkout-stages .current > span { background: var(--emerald); color: #fff; border-color: var(--emerald); }
+.checkout-stages .done > span { background: #e0efe3; color: var(--emerald-dark); border-color: #c3dbc9; }
+.checkout-stages .app-icon { width: 14px; height: 14px; }
+.refined-checkout .intention-step h2 { margin: 0 0 12px; font-size: clamp(28px, 5vw, 36px); line-height: 1.15; text-wrap: pretty; }
+.refined-checkout .intention-step > p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.intention-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; min-width: 0; padding: 0; margin: 22px 0; border: 0; }
+.intention-option { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 18px; border: 1px solid #d6e2d8; border-radius: 14px; background: #fff; cursor: pointer; transition: background .15s, border-color .15s; }
+.intention-option:hover { background: #f5faf4; border-color: #a3c4ae; }
+.intention-option.selected { border-color: var(--emerald); background: #edf6ed; box-shadow: inset 0 0 0 1px var(--emerald); }
+.intention-option:focus-within { outline: 2px solid var(--emerald); outline-offset: 3px; }
+.intention-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.intention-icon { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 14px; border-radius: 10px; color: var(--emerald-dark); background: #edf4ec; }
+.intention-icon .app-icon { width: 21px; height: 21px; }
+.intention-check { position: absolute; top: 16px; inset-inline-end: 16px; display: grid; place-items: center; width: 19px; height: 19px; border: 1px solid #cddbcf; border-radius: 50%; background: #fff; }
+.selected .intention-check { border-color: var(--emerald); background: var(--emerald); color: #fff; }
+.intention-check .app-icon { width: 12px; height: 12px; }
+.intention-option b { color: var(--navy); font-size: 15px; line-height: 1.4; overflow-wrap: normal; word-break: normal; }
+.intention-option small { margin-top: 5px; font-size: 12px; line-height: 1.5; color: #62756a; }
+.refined-checkout .intention-step > .button { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 14px 18px; border-radius: 12px; font-size: 14px; }
+@media (max-width: 780px) {
+  .donation-panel.refined-checkout { width: 100%; max-height: 94dvh; padding: 58px 18px calc(22px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; }
+}
+@media (max-width: 390px) {
+  .intention-options { gap: 10px; }
+  .intention-option { padding: 14px 12px; }
+  .intention-option b { font-size: 14px; }
+  .intention-option small { font-size: 11px; }
+  .intention-check { top: 13px; inset-inline-end: 12px; }
+  .checkout-stages { padding-inline: 5px; gap: 4px; }
+  .checkout-stages li { gap: 5px; }
+  .checkout-stages b { font-size: 11px; }
+}
+
 /* Six workspaces, with a consistent card hierarchy and a direct entry point. */
 .platform-preview.refined-ecosystem { grid-template-columns: minmax(0, .9fr) minmax(0, 1.2fr); gap: clamp(30px, 5vw, 64px); padding: 72px max(24px, calc((100vw - 1180px) / 2)); background: linear-gradient(135deg, #edf5ef, #f6f8f0); }
 .refined-ecosystem .eyebrow { font-size: 12px; line-height: 1.6; }
@@ -2128,4 +2173,510 @@ footer.refined-footer { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) min
   .zakat-total span { font-size: 12px; }
   .zakat-total small { font-size: 10px; }
   .zakat-total strong { font-size: 22px; }
+}
+
+/* Shared density: use available width and let text determine component height. */
+:root {
+  --content-width: 1360px;
+  --page-gutter: clamp(16px, 3vw, 40px);
+  --section-inset: max(var(--page-gutter), calc((100% - var(--content-width)) / 2));
+  --section-space: clamp(36px, 4.2vw, 60px);
+}
+.section.refined-opportunities,
+.impact-section.refined-impact,
+.updates-section.refined-updates,
+.how-section.refined-how {
+  width: min(100%, calc(var(--content-width) + 2 * var(--page-gutter)));
+  max-width: none;
+  padding: var(--section-space) var(--page-gutter);
+}
+.seasonal-giving.refined-seasonal,
+.zakat-section.refined-zakat,
+.platform-preview.refined-ecosystem,
+.organizations.refined-organizations {
+  padding: var(--section-space) var(--section-inset);
+  gap: clamp(24px, 3.5vw, 48px);
+}
+.refined-opportunities .section-heading,
+.refined-updates .section-heading,
+.refined-how .section-heading { margin-bottom: 20px; gap: 18px; }
+.refined-opportunities .filter-row { margin-bottom: 18px; }
+.refined-opportunities .campaign-grid,
+.refined-updates .updates-grid { gap: 16px; }
+.refined-opportunities .campaign-image { height: 160px; }
+.refined-opportunities .campaign-body,
+.refined-updates .update-card > div { padding: 16px; }
+.refined-opportunities .campaign-signals { margin-top: 10px; }
+.campaign-funding { margin-top: 14px; }
+.refined-opportunities .card-footer { margin-top: 12px; padding-top: 10px; }
+.refined-updates .update-image { height: 152px; }
+.refined-updates .update-card p:not(.update-meta) { margin-bottom: 12px; }
+.refined-seasonal .seasonal-track { gap: 12px; }
+.refined-seasonal .seasonal-track article { padding: 20px; }
+.refined-seasonal .season-card-top { margin-bottom: 12px; }
+.refined-seasonal .seasonal-track article > p { margin-block: 10px 12px; }
+.cause-strip.refined-causes { width: min(calc(100% - 2 * var(--page-gutter)), var(--content-width)); padding: 6px; }
+.refined-causes button { min-height: 90px; padding-block: 10px; gap: 7px; }
+.hero.refined-hero { min-height: 520px; }
+.refined-hero .hero-copy { padding: clamp(36px, 4vw, 64px) var(--page-gutter) clamp(34px, 4vw, 60px) var(--section-inset); }
+.refined-hero .hero-visual { min-height: 520px; padding: 24px; gap: 16px; }
+.refined-hero .hero-lead { margin-block: 18px 20px; }
+.refined-hero .hero-proof { margin-top: 24px; padding-top: 18px; }
+.refined-hero .hero-caption { padding-bottom: 12px; }
+.refined-zakat .calculator { padding: 24px; }
+.refined-zakat .calculator-top { padding-bottom: 16px; }
+.refined-zakat .calc-grid { padding-block: 20px; gap: 14px 12px; }
+.refined-zakat .zakat-copy ul { margin-top: 20px; gap: 12px; }
+.refined-impact .impact-timeline { padding: 22px; }
+.refined-impact .timeline-head { padding-bottom: 16px; margin-bottom: 18px; }
+.refined-impact .timeline-item { padding-bottom: 18px; }
+.stats-band.refined-impact-stats { padding: 22px var(--section-inset); }
+.refined-how .steps-grid { gap: 12px; }
+.refined-how .steps-grid article,
+.refined-how .steps-grid article:first-child,
+.refined-how .steps-grid article:last-child { padding: 20px 18px; }
+.refined-how .steps-grid h3 { margin-top: 16px; }
+.donor-promise.refined-promise { padding: 32px var(--section-inset); gap: 22px; }
+.refined-promise .promise-points > li { min-height: 54px; padding-block: 11px; }
+.refined-ecosystem .platform-preview-grid button { min-height: 96px; padding: 16px; }
+.refined-organizations .org-card { padding: 24px; }
+.org-card-heading { margin-bottom: 18px; }
+.org-metrics { margin-top: 20px; padding-top: 16px; }
+footer.refined-footer { padding: 40px var(--section-inset) 30px; gap: 32px; }
+.footer-bottom.refined-footer-bottom { padding: 16px var(--section-inset); }
+.donation-panel.refined-checkout,
+.notification-panel.refined-notifications { padding: 52px 24px 24px; }
+.refined-checkout .checkout-heading { margin-bottom: 18px; }
+.checkout-stages { padding-block: 12px; margin-bottom: 20px; }
+.intention-options { margin-block: 18px; gap: 10px; }
+.intention-option { padding: 15px; }
+.intention-icon { margin-bottom: 10px; }
+.notification-entry { padding: 14px; }
+.refined-notifications .notification-settings { padding: 14px; margin-top: 14px; }
+.site-header.refined-header { padding-block: 8px; }
+:is(.search-panel, .dashboard-panel) { padding: 52px 24px 24px; }
+.dashboard-panel { width: min(960px, 100%); }
+.detail-content { padding: 32px 26px; }
+.planner-intro { padding: 40px 28px; }
+.planner-orbit { margin-bottom: 32px; }
+.planner-form { padding: 28px 24px; }
+.platform-content { padding: 24px; }
+.portal-welcome { padding: 24px; }
+.portal-card { padding: 18px; }
+@media (max-width: 1050px) {
+  .hero.refined-hero { min-height: 0; }
+  .refined-hero .hero-copy { padding: 40px var(--page-gutter) 34px; }
+  .refined-hero .hero-visual { min-height: 410px; }
+  .refined-zakat .calculator,
+  .refined-organizations .org-card { max-width: none; }
+}
+@media (max-width: 700px) {
+  :root { --section-space: 36px; }
+  .refined-opportunities .campaign-grid,
+  .refined-updates .updates-grid { max-width: none; gap: 14px; }
+  .refined-opportunities .campaign-image,
+  .refined-updates .update-image { height: clamp(144px, 32vw, 184px); }
+  .refined-opportunities .campaign-body,
+  .refined-updates .update-card > div { padding: 14px; }
+  .refined-opportunities .section-heading,
+  .refined-updates .section-heading { gap: 14px; }
+  .refined-hero .hero-copy { padding: 32px var(--page-gutter) 28px; }
+  .refined-hero .hero-visual { min-height: 380px; padding: 16px; gap: 14px; }
+  .refined-hero .hero-proof { margin-top: 22px; padding-top: 16px; }
+  .refined-hero .impact-card { padding: 14px; }
+  .refined-hero .hero-caption { padding-bottom: 10px; }
+  .refined-causes button { min-height: 86px; padding-block: 9px; }
+  .refined-seasonal .seasonal-track article { padding: 18px; }
+  .refined-seasonal .seasonal-heading > p:not(.eyebrow),
+  .refined-zakat .zakat-copy > p:not(.eyebrow),
+  .refined-impact .impact-intro > p:not(.eyebrow),
+  .refined-organizations .organizations-copy > p:not(.eyebrow) { margin-block: 16px 18px; }
+  .refined-zakat .calculator { padding: 18px 14px; }
+  .refined-zakat .calc-grid { padding-block: 18px; gap: 12px 10px; }
+  .refined-impact .impact-timeline { padding: 18px 14px; }
+  .refined-impact .timeline-item { padding-bottom: 16px; }
+  .refined-how .steps-grid article,
+  .refined-how .steps-grid article:first-child,
+  .refined-how .steps-grid article:last-child { padding: 16px 13px; }
+  .refined-how .steps-grid h3 { margin-top: 14px; }
+  .donor-promise.refined-promise { padding-block: 28px; gap: 18px 14px; }
+  .refined-ecosystem .platform-preview-grid button { min-height: 80px; padding: 14px; }
+  .refined-organizations .org-card { padding: 18px; }
+  footer.refined-footer { padding-block: 30px 24px; gap: 24px; }
+  .footer-bottom.refined-footer-bottom { padding-block: 14px; }
+  .donation-panel.refined-checkout,
+  .notification-panel.refined-notifications { padding: 52px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .intention-option { padding: 14px 12px; }
+  .notification-entry { padding: 12px; }
+  :is(.search-panel, .dashboard-panel) { padding: 52px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .detail-content { padding: 24px 16px; }
+  .planner-intro { padding: 52px 20px 24px; }
+  .planner-form { padding: 24px 16px; }
+  .planner-orbit { margin-bottom: 24px; }
+  .platform-content { padding: 18px 14px 32px; }
+  .portal-welcome { padding: 18px; }
+  .portal-card { padding: 16px; }
+}
+
+/* Modal density: content-sized panels, generous widths and one scroll surface. */
+.overlay:not(.platform-overlay) { padding: 16px; }
+.overlay :is(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) {
+  max-height: calc(100dvh - 32px);
+  min-height: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.overlay :is(.search-panel, .donation-panel, .dashboard-panel, .notification-panel) { padding: 54px 24px 22px; }
+.overlay .search-panel { width: min(840px, 100%); }
+.overlay .donation-panel { width: min(760px, 100%); }
+.overlay .notification-panel { width: min(720px, 100%); }
+.overlay .dashboard-panel { width: min(1080px, 100%); }
+.overlay .detail-panel { width: min(1120px, 100%); grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+.overlay .planner-panel { width: min(1080px, 100%); grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); }
+.overlay .close { top: 6px; inset-inline-end: 10px; width: 44px; height: 44px; margin: 0; border-radius: 12px; }
+.overlay :is(.search-panel, .dashboard-panel, .donation-step, .detail-content) h2 { margin-bottom: 14px; line-height: 1.15; font-size: clamp(27px, 3vw, 34px); }
+.overlay .search-input { min-height: 46px; margin-block: 16px 12px; }
+.overlay .search-input input { padding-block: 12px; }
+.overlay .search-panel .filter-row { margin-bottom: 14px; }
+.overlay .search-results { gap: 8px; }
+.overlay .search-results > button { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; padding: 12px; }
+.overlay .search-results img { width: 56px; height: 52px; object-fit: cover; }
+.overlay .search-results b { font-size: 14px; line-height: 1.4; }
+.overlay .search-results small { font-size: 12px; line-height: 1.5; }
+.overlay .checkout-heading { margin-bottom: 14px; }
+.overlay .checkout-stages { margin-bottom: 18px; padding-block: 10px; }
+.overlay .intention-options { margin-block: 16px; gap: 10px; }
+.overlay .intention-option { padding: 14px; }
+.overlay .intention-icon { width: 32px; height: 32px; margin-bottom: 9px; }
+.overlay .amount-grid { gap: 8px; margin-bottom: 14px; }
+.overlay .custom-amount, .overlay .field { margin-bottom: 14px; }
+.overlay .check-row { padding-block: 10px; }
+.overlay .payment-tabs { margin-bottom: 16px; }
+.overlay .payment-summary { padding: 14px; margin-block: 12px; }
+.overlay .dashboard-stats { margin-block: 18px; gap: 10px; }
+.overlay .dashboard-stats > div { padding: 14px; }
+.overlay .dashboard-layout, .overlay .dashboard-actions { gap: 14px; }
+.overlay .dashboard-update { gap: 12px; }
+.overlay .dashboard-update div { padding: 14px 14px 14px 0; }
+.overlay .dashboard-panel > h3 { margin-top: 20px; }
+.overlay .detail-content { padding: 28px 24px; }
+.overlay .detail-facts { margin-block: 18px; gap: 12px; }
+.overlay .budget, .overlay .verification-box { margin-block: 16px; padding: 14px; }
+.overlay .planner-intro { padding: 38px 26px; }
+.overlay .planner-intro h2 { margin-bottom: 14px; font-size: 34px; line-height: 1.15; }
+.overlay .planner-orbit { width: 64px; height: 64px; margin-bottom: 24px; }
+.overlay .planner-orbit i { width: 44px; height: 44px; }
+.overlay .planner-orbit::before, .overlay .planner-orbit::after { display: none; }
+.overlay .planner-form { padding: 54px 24px 22px; }
+.overlay .occasion-grid { gap: 8px; margin-bottom: 18px; }
+.overlay .occasion-grid button { min-height: 64px; padding: 10px; }
+.overlay .planner-toggle { margin-top: 14px; padding-block: 12px; }
+.overlay .planner-summary { padding: 12px; }
+.overlay .notification-tabs { margin-block: 14px 12px; }
+.overlay .notification-entry { padding: 12px; }
+@media (max-width: 780px) {
+  .overlay:not(.platform-overlay) { padding: 0; place-items: end center; }
+  .overlay :is(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) {
+    width: 100%;
+    max-height: 96dvh;
+    border-radius: 20px 20px 0 0;
+    scrollbar-gutter: auto;
+  }
+  .overlay :is(.search-panel, .donation-panel, .dashboard-panel, .notification-panel) { padding: 54px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .overlay .detail-panel, .overlay .planner-panel { grid-template-columns: minmax(0, 1fr); }
+  .overlay .detail-media { height: clamp(170px, 32vw, 240px); min-height: 0; }
+  .overlay .detail-content { padding: 22px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .overlay .dashboard-update img { height: 140px; }
+  .overlay .dashboard-update div { padding: 0 14px 14px; }
+  .overlay .planner-intro { padding: 54px 20px 22px; }
+  .overlay .planner-intro h2 { max-width: 540px; font-size: 29px; }
+  .overlay .planner-orbit { display: none; }
+  .overlay .planner-form { padding: 22px 16px calc(18px + env(safe-area-inset-bottom)); }
+  .overlay .planner-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .overlay .occasion-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .overlay .occasion-grid button { grid-template-columns: minmax(0, 1fr); gap: 7px; }
+  .overlay .occasion-grid i { width: 28px; height: 28px; }
+  .overlay .intention-option { padding: 13px 12px; }
+}
+@media (max-width: 360px) {
+  .overlay .planner-fields { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-height: 520px) and (min-width: 781px) {
+  .overlay:not(.platform-overlay) { padding: 8px; }
+  .overlay :is(.search-panel, .donation-panel, .dashboard-panel, .detail-panel, .planner-panel, .notification-panel) { max-height: calc(100dvh - 16px); }
+}
+
+/* Compact intention choices without reducing the selectable area. */
+.refined-notifications .notification-list { gap: 6px; }
+.refined-notifications .notification-entry {
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 9px;
+  padding: 10px 12px;
+  border-radius: 11px;
+}
+.refined-notifications .notice-icon { width: 30px; height: 30px; border-radius: 9px; }
+.refined-notifications .notice-icon .app-icon { width: 17px; height: 17px; }
+.refined-notifications .notice-content h3 { margin-block: 4px; font-size: 14px; line-height: 1.4; }
+.refined-notifications .notice-content p { font-size: 12px; line-height: 1.5; }
+.refined-notifications .notice-read { min-height: 32px; margin-top: 3px; padding-block: 5px; }
+.refined-notifications .notice-dot { top: 17px; inset-inline-start: 4px; width: 4px; height: 4px; }
+.refined-notifications .notification-summary { margin-top: 12px; }
+.refined-notifications .notification-tabs { margin-block: 12px 10px; }
+.refined-notifications .notification-settings { gap: 10px; padding: 10px 12px; margin-top: 12px; }
+.refined-notifications .notice-preferences { margin-top: 10px; padding: 12px; }
+
+.refined-checkout .intention-options { gap: 8px; margin-block: 14px; }
+.refined-checkout .intention-option {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 16px;
+  grid-template-rows: auto auto;
+  align-content: center;
+  align-items: center;
+  gap: 3px 9px;
+  min-height: 76px;
+  padding: 12px;
+  border-radius: 12px;
+}
+.refined-checkout .intention-icon { grid-column: 1; grid-row: 1 / 3; width: 28px; height: 28px; margin: 0; border-radius: 8px; }
+.refined-checkout .intention-icon .app-icon { width: 18px; height: 18px; }
+.refined-checkout .intention-check { position: static; grid-column: 3; grid-row: 1 / 3; width: 16px; height: 16px; }
+.refined-checkout .intention-option b { grid-column: 2; grid-row: 1; font-size: 14px; line-height: 1.35; }
+.refined-checkout .intention-option small { grid-column: 2; grid-row: 2; margin: 0; font-size: 12px; line-height: 1.4; }
+@media (max-width: 600px) {
+  .refined-checkout .intention-option { grid-template-columns: minmax(0, 1fr) 16px; min-height: 72px; padding: 11px 10px; gap: 4px 6px; }
+  .refined-checkout .intention-icon { display: none; }
+  .refined-checkout .intention-option b { grid-column: 1; }
+  .refined-checkout .intention-option small { grid-column: 1; font-size: 11px; }
+  .refined-checkout .intention-check { grid-column: 2; }
+}
+
+/* Purposeful icon colors are shared by every occurrence and alias. */
+.app-icon[data-icon-tone='rose'] { --icon-ink: #b94b68; --icon-light: #f4adc0; }
+.app-icon[data-icon-tone='blue'] { --icon-ink: #326fba; --icon-light: #a3ccff; }
+.app-icon[data-icon-tone='violet'] { --icon-ink: #7954ad; --icon-light: #d4b9ff; }
+.app-icon[data-icon-tone='emerald'] { --icon-ink: #147554; --icon-light: #93d9b7; }
+.app-icon[data-icon-tone='amber'] { --icon-ink: #9b7125; --icon-light: #edd08d; }
+.app-icon[data-icon-tone='teal'] { --icon-ink: #287f87; --icon-light: #94d9df; }
+.app-icon[data-icon-tone='orange'] { --icon-ink: #b46a34; --icon-light: #f0bd96; }
+.app-icon[data-icon-tone] { color: var(--icon-ink); }
+:has(> .app-icon[data-icon-tone='rose']) { --icon-surface: #f9eaf0; --icon-surface-ink: #b94b68; }
+:has(> .app-icon[data-icon-tone='blue']) { --icon-surface: #eaf2fc; --icon-surface-ink: #326fba; }
+:has(> .app-icon[data-icon-tone='violet']) { --icon-surface: #f0eafb; --icon-surface-ink: #7954ad; }
+:has(> .app-icon[data-icon-tone='emerald']) { --icon-surface: #e6f3ea; --icon-surface-ink: #147554; }
+:has(> .app-icon[data-icon-tone='amber']) { --icon-surface: #f8f0df; --icon-surface-ink: #9b7125; }
+:has(> .app-icon[data-icon-tone='teal']) { --icon-surface: #e5f3f3; --icon-surface-ink: #287f87; }
+:has(> .app-icon[data-icon-tone='orange']) { --icon-surface: #fbefe4; --icon-surface-ink: #b46a34; }
+.refined-causes .cause-icon,
+.refined-checkout .intention-icon,
+.refined-seasonal .season-icon,
+.refined-notifications .notice-icon,
+.refined-ecosystem .platform-preview-grid i { background: var(--icon-surface, #edf5ed); border-color: #071a2c0b; box-shadow: none; }
+.refined-trustbar .trustbar-item .app-icon[data-icon-tone],
+.refined-zakat .zakat-copy li .app-icon[data-icon-tone],
+:is(.platform-sidebar, .footer-security, .donor-promise, .platform-topbar) .app-icon[data-icon-tone] { color: var(--icon-light); }
+.platform-topbar .app-icon[data-icon-tone] { color: var(--icon-ink); }
+.platform-sidebar nav i { background: #ffffff0d; }
+.refined-mobile-nav > :is(a, button) .mobile-nav-icon .app-icon[data-icon-tone] { color: var(--icon-ink); }
+.refined-mobile-nav > :is([aria-current], .is-active) .mobile-nav-icon { background: var(--icon-surface, #e4f0e7); }
+.refined-mobile-nav > .mobile-give .mobile-nav-icon .app-icon[data-icon-tone],
+.button .app-icon[data-icon-tone] { color: inherit; }
+.refined-checkout .checkout-assurance .app-icon[data-icon-tone] { color: var(--icon-ink); }
+
+/* Shared interaction language across the page, dialogs and workspaces. */
+:root {
+  --control-radius: 12px;
+  --card-radius: 18px;
+  --control-focus: #208462;
+  --control-border: #d6e2d8;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  max-width: 100%;
+  border-radius: var(--control-radius);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  transition: background .18s, border-color .18s, box-shadow .18s;
+}
+.button:hover { transform: none; }
+.button.full { display: flex; width: 100%; }
+.outline-button { border-radius: var(--control-radius); line-height: 1.4; text-decoration: none; }
+.text-link { line-height: 1.4; }
+.button:disabled { background: #dbe7dd; color: #617367; opacity: 1; box-shadow: none; transform: none; }
+.button:disabled:hover { background: #dbe7dd; }
+.button .app-icon, .outline-button .app-icon { flex: 0 0 auto; width: 17px; height: 17px; }
+.refined-header :is(.header-icon, .header-language),
+.overlay .close,
+.platform-close { border-radius: var(--control-radius); }
+.refined-opportunities .campaign-card,
+.refined-updates .update-card,
+.refined-seasonal .seasonal-track article { border-radius: var(--card-radius); }
+.amount-grid button,
+.payment-tabs button,
+.occasion-grid button { transition: background .18s, border-color .18s, box-shadow .18s; }
+.amount-grid button.selected,
+.occasion-grid button.selected { border: 1px solid var(--emerald); box-shadow: inset 0 0 0 1px var(--emerald); background: #edf6ed; }
+.occasion-grid button:hover { transform: none; }
+.overlay :is(input, select, textarea):not([type='checkbox']):not([type='radio']):not([type='range']) { font-size: 16px; }
+.overlay :is(input, select, textarea)::placeholder { color: #7a8b80; opacity: 1; }
+.overlay :is(.planner-fields select, .planner-amount) { min-height: 46px; }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible { outline: 2px solid var(--control-focus); outline-offset: 3px; }
+:is(.refined-footer, .refined-promise, .refined-zakat .zakat-copy, .platform-sidebar) :is(button, a):focus-visible { outline-color: #a6dec2; }
+.refined-opportunities .save:hover { transform: none; background: #fff; }
+.refined-opportunities .save.saved { animation: none; background: #fff2f5; }
+.refined-opportunities .save.saved .app-icon { color: #b94b68; }
+.refined-opportunities .card-footer .app-icon,
+.refined-updates .update-card > div > button .app-icon,
+.refined-seasonal .seasonal-track article > button .app-icon { width: 16px; height: 16px; }
+.refined-seasonal .seasonal-track article:hover .season-icon,
+.refined-seasonal .seasonal-track article > button:hover em { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .app-icon,
+  .button,
+  .intention-option,
+  .occasion-grid button { transition: none; }
+}
+
+/* Every icon well uses the same hue as its glyph, including hover states. */
+:is(.refined-causes .cause-icon, .refined-checkout .intention-icon,
+    .refined-seasonal .season-icon, .refined-notifications .notice-icon,
+    .refined-ecosystem .platform-preview-grid i,
+    .refined-header .header-icon, .refined-header .header-language,
+    .occasion-grid i, .feature-catalog i, .schedule-list i,
+    .module-card i, .governance-grid i, .approval-stack i,
+    .planner-orbit i, .trace-node i, .refined-mobile-nav .mobile-nav-icon):has(> .app-icon[data-icon-tone]) {
+  background: var(--icon-surface);
+  border-color: color-mix(in srgb, var(--icon-surface-ink) 18%, transparent);
+  box-shadow: none;
+}
+.platform-sidebar nav i:has(> .app-icon[data-icon-tone]) {
+  background: color-mix(in srgb, var(--icon-surface-ink) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--icon-surface-ink) 32%, transparent);
+}
+.refined-mobile-nav > .mobile-give .mobile-nav-icon:has(> .app-icon[data-icon-tone]) {
+  background: var(--icon-surface-ink);
+  border-color: transparent;
+  box-shadow: 0 3px 9px color-mix(in srgb, var(--icon-surface-ink) 20%, transparent);
+}
+
+/* The promise mark sits directly on the section, without a padded tile. */
+.refined-promise .promise-mark {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  align-self: center;
+}
+.refined-promise .promise-mark .amanah-logo {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  gap: 0;
+}
+.refined-promise .promise-mark .amanah-logo-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
+  border: 0;
+}
+
+/* Campaign cards group metadata and funding instead of stacking spare rows. */
+.refined-opportunities .campaign-grid { gap: 14px; align-items: start; }
+.refined-opportunities .campaign-card { height: auto; align-self: start; }
+.refined-opportunities .campaign-image { height: 120px; }
+.refined-opportunities .campaign-body { padding: 12px; flex: 0 0 auto; }
+.campaign-meta-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 5px 10px; margin-bottom: 7px; }
+.refined-opportunities .campaign-meta-row .verified { margin: 0; gap: 4px; font-size: 10px; line-height: 1.4; }
+.refined-opportunities .campaign-meta-row .verified > .app-icon { width: 13px; height: 13px; }
+.campaign-deadline { display: inline-flex; align-items: center; gap: 4px; color: #6c7d74; font-size: 10px; line-height: 1.4; white-space: nowrap; }
+.campaign-deadline .app-icon { width: 12px; height: 12px; }
+.campaign-deadline.deadline-soon { color: #965c26; }
+.refined-opportunities .campaign-card h3 { min-height: 2.36em; margin-bottom: 7px; font-size: 22px; line-height: 1.18; }
+.refined-opportunities .campaign-location { gap: 3px 6px; align-items: baseline; font-size: 11px; line-height: 1.5; }
+.campaign-eligibility { color: var(--emerald-dark); font-size: 11px; line-height: 1.5; font-weight: 650; padding: 0 5px; border-radius: 5px; background: #e6f3ea; }
+.refined-opportunities .campaign-funding { margin-top: 10px; }
+.refined-opportunities .money-row { gap: 4px 10px; }
+.funding-amount { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 6px; min-width: 0; }
+.refined-opportunities .money-row strong { font-size: 19px; }
+.funding-amount small { color: var(--muted); font-size: 11px; line-height: 1.4; }
+.refined-opportunities .money-row b { font-size: 10px; }
+.refined-opportunities .progress { margin-top: 8px; height: 4px; }
+.refined-opportunities .card-footer { margin-top: 8px; padding-top: 8px; gap: 8px; }
+.refined-opportunities .card-footer button { min-height: 44px; padding: 8px; font-size: 12px; }
+@media (max-width: 700px) {
+  .refined-opportunities .campaign-image { height: clamp(120px, 28vw, 152px); }
+  .refined-opportunities .campaign-body { padding: 12px; }
+  .refined-opportunities .campaign-card h3 { font-size: 21px; }
+}
+
+/* Similar cards share the campaign card's compact content spacing. */
+:root { --compact-card-padding: 14px; --compact-card-gap: 10px; }
+.refined-updates .updates-grid,
+.refined-seasonal .seasonal-track,
+.refined-how .steps-grid,
+.refined-ecosystem .platform-preview-grid { gap: 14px; align-items: start; }
+.refined-updates .update-card { height: auto; align-self: start; }
+.refined-updates .update-image { height: 136px; min-height: 0; }
+.refined-updates .update-card > div { padding: var(--compact-card-padding); }
+.refined-updates .update-card .update-meta { margin-bottom: 7px; }
+.refined-updates .update-card h3 { margin-bottom: 7px; font-size: 22px; line-height: 1.2; }
+.refined-updates .update-card p:not(.update-meta) { margin-bottom: 10px; font-size: 13px; line-height: 1.6; }
+.refined-updates .update-card > div > button { min-height: 44px; padding-top: 8px; }
+.refined-seasonal .seasonal-track article { min-height: 0; height: auto; padding: var(--compact-card-padding); }
+.refined-seasonal .season-card-top { margin-bottom: 10px; gap: var(--compact-card-gap); }
+.refined-seasonal .season-icon { width: 32px; height: 32px; flex-basis: 32px; border-radius: 10px; }
+.refined-seasonal .season-icon .app-icon { width: 19px; height: 19px; }
+.refined-seasonal .seasonal-track h3 { margin-bottom: 5px; font-size: 23px; }
+.refined-seasonal .seasonal-track article > p { margin-block: 8px 10px; font-size: 13px; line-height: 1.6; }
+.refined-seasonal .seasonal-track article > button { margin-top: 0; padding-top: 8px; min-height: 44px; }
+.refined-how .steps-grid article,
+.refined-how .steps-grid article:first-child,
+.refined-how .steps-grid article:last-child { min-height: 0; height: auto; padding: var(--compact-card-padding); }
+.refined-how .steps-grid article > span { width: 32px; height: 32px; border-radius: 10px; font-size: 17px; }
+.refined-how .steps-grid h3 { margin: 12px 0 7px; font-size: 22px; }
+.refined-how .steps-grid p { font-size: 13px; line-height: 1.6; }
+.refined-ecosystem .platform-preview-grid button { min-height: 76px; height: auto; padding: var(--compact-card-padding); gap: 10px; grid-template-columns: 34px minmax(0, 1fr) 16px; }
+.refined-ecosystem .platform-preview-grid i { width: 34px; height: 34px; border-radius: 10px; }
+.refined-ecosystem .platform-preview-grid small { margin-top: 3px; }
+.refined-organizations .org-card { padding: var(--compact-card-padding); }
+.refined-organizations .org-card-heading { margin-bottom: 12px; }
+.refined-organizations .org-logo { width: 42px; height: 42px; flex-basis: 42px; font-size: 21px; border-radius: 12px; }
+.refined-organizations .org-card h3 { margin-bottom: 7px; font-size: 25px; }
+.refined-organizations .org-metrics { margin: 16px 0 12px; padding-top: 14px; }
+.portal-grid { align-items: start; }
+.portal-card, .overlay .portal-card, .case-card { padding: var(--compact-card-padding); }
+.compact-card { min-height: 0; }
+.feature-catalog > button, .control-grid button { padding: var(--compact-card-padding); min-height: 64px; }
+.module-card p { min-height: 0; }
+.overlay .dashboard-update { gap: 12px; }
+.overlay .dashboard-update img { height: 136px; object-fit: cover; }
+.overlay .dashboard-update div { padding: 12px 12px 12px 0; }
+@media (max-width: 700px) {
+  :root { --compact-card-padding: 12px; }
+  .refined-updates .update-image { height: clamp(120px, 28vw, 152px); }
+  .refined-updates .update-card h3 { font-size: 21px; }
+  .refined-how .steps-grid { gap: 10px; }
+  .refined-how .steps-grid h3 { margin-top: 10px; font-size: 20px; }
+  .refined-seasonal .seasonal-track,
+  .refined-ecosystem .platform-preview-grid { gap: 10px; }
+  .overlay .dashboard-update div { padding: 0 12px 12px; }
 }
