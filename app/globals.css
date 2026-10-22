@@ -2680,3 +2680,88 @@ textarea:focus-visible { outline: 2px solid var(--control-focus); outline-offset
   .refined-ecosystem .platform-preview-grid { gap: 10px; }
   .overlay .dashboard-update div { padding: 0 12px 12px; }
 }
+
+/* Photo-led opportunities: three quarters imagery, one quarter funding and actions. */
+.refined-opportunities .campaign-image { height: 336px; isolation: isolate; }
+.refined-opportunities .campaign-image::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #071a2c20 0%, transparent 28%, #071a2c80 51%, #071a2cf5 100%); pointer-events: none; }
+.refined-opportunities .campaign-image > img { position: absolute; inset: 0; }
+.refined-opportunities .campaign-image .badge,
+.refined-opportunities .campaign-image .save { z-index: 2; }
+.campaign-image-content { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 1; text-align: start; }
+.refined-opportunities .campaign-image-content .campaign-meta-row { margin-bottom: 8px; gap: 6px 10px; }
+.refined-opportunities .campaign-image-content .verified { color: #b8ecd6; font-size: 10px; }
+.refined-opportunities .campaign-image-content .verified .app-icon { color: #b8ecd6; }
+.refined-opportunities .campaign-image-content .campaign-code { color: #d7e8e1; }
+.refined-opportunities .campaign-image-content .campaign-deadline { color: #fff2d4; }
+.refined-opportunities .campaign-image-content .campaign-deadline .app-icon { color: inherit; }
+.refined-opportunities .campaign-image-content h3 { color: #fff; font-size: clamp(22px, 1.8vw, 26px); line-height: 1.15; min-height: 2.3em; margin: 0 0 9px; text-shadow: 0 1px 8px #0005; }
+.refined-opportunities .campaign-image-content .campaign-location { margin: 0; color: #edf3f0; font-size: 11px; gap: 3px 6px; }
+.refined-opportunities .campaign-image-content .campaign-eligibility { color: #c7f4de; background: #ffffff1f; border: 1px solid #ffffff25; padding: 0 5px; font-size: 10px; }
+.refined-opportunities .campaign-body { padding: 12px; }
+.refined-opportunities .campaign-funding { margin-top: 0; }
+.refined-opportunities .card-footer { margin-top: 8px; padding-top: 0; border-top: 0; }
+@media (max-width: 700px) {
+  .refined-opportunities .campaign-image { height: 324px; }
+  .campaign-image-content { inset-inline: 14px; bottom: 14px; }
+  .refined-opportunities .campaign-image-content h3 { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-opportunities .campaign-image img { transition: none; }
+}
+
+/* Verified updates use the same photo-led composition as opportunities. */
+.refined-updates .update-card > .update-image { position: relative; display: block; height: 336px; padding: 0; isolation: isolate; }
+.refined-updates .update-image > img { position: absolute; inset: 0; }
+.refined-updates .update-image::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #071a2c20 0%, transparent 28%, #071a2c80 51%, #071a2cf5 100%); pointer-events: none; }
+.refined-updates .update-image > .update-photo-badge { top: 12px; bottom: auto; inset-inline-start: 12px; z-index: 1; background: #fffcf1f5; color: #12634d; }
+.refined-updates .update-image-content { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 1; pointer-events: none; text-align: start; }
+.refined-updates .update-image-content .update-meta { margin: 0 0 8px; color: #c4e8d9; font-size: 11px; }
+.refined-updates .update-image-content .update-meta span { position: static; display: inline; background: transparent; color: inherit; padding: 0; border-radius: 0; font-size: inherit; font-weight: 600; }
+.refined-updates .update-image-content h3 { color: #fff; min-height: 2.3em; margin: 0; font-size: clamp(22px, 1.8vw, 26px); line-height: 1.15; text-shadow: 0 1px 8px #0005; }
+.refined-updates .update-card .update-image > .update-photo-action { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: pointer; }
+.refined-updates .update-photo-action:focus-visible { outline: 3px solid #d8bd78; outline-offset: -5px; }
+.refined-updates .update-card > .update-summary { padding: 12px; }
+.refined-updates .update-summary p { min-height: 3.2em; }
+.refined-updates .update-card .update-summary > p { margin: 0 0 6px; font-size: 12px; line-height: 1.6; }
+.refined-updates .update-card .update-summary > button { min-height: 44px; padding: 6px 0 0; }
+@media (max-width: 700px) {
+  .refined-updates .update-card > .update-image { height: 324px; }
+  .refined-updates .update-image-content { inset-inline: 14px; bottom: 14px; }
+  .refined-updates .update-image-content h3 { font-size: 24px; }
+}
+
+/* Square photo cards keep their rounded shell and let the image use spare space. */
+.refined-opportunities .campaign-card,
+.refined-updates .update-card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  min-width: 0;
+  border-radius: 18px;
+}
+.refined-opportunities .campaign-card > .campaign-image,
+.refined-updates .update-card > .update-image { height: 100%; min-height: 0; }
+.refined-opportunities .campaign-body,
+.refined-updates .update-card > .update-summary { min-width: 0; padding: 10px 12px; }
+.refined-opportunities .campaign-image-content h3,
+.refined-updates .update-image-content h3 { min-height: 0; font-size: clamp(20px, 1.65vw, 24px); }
+.campaign-image-content,
+.refined-updates .update-image-content { bottom: 12px; }
+.refined-opportunities .campaign-image-content .campaign-meta-row { margin-bottom: 6px; }
+.refined-updates .update-card .update-summary > p { margin-bottom: 4px; }
+@media (max-width: 700px) {
+  .refined-opportunities .campaign-image-content h3,
+  .refined-updates .update-image-content h3 { font-size: 22px; }
+}
+@media (max-width: 380px) {
+  .refined-opportunities .campaign-image-content h3,
+  .refined-updates .update-image-content h3 { font-size: 20px; }
+  .campaign-image-content,
+  .refined-updates .update-image-content { inset-inline: 12px; bottom: 10px; }
+  .refined-opportunities .campaign-image-content .campaign-meta-row { gap: 3px 6px; }
+  .refined-opportunities .campaign-image-content .verified,
+  .refined-opportunities .campaign-image-content .campaign-deadline { font-size: 9px; }
+  .refined-opportunities .campaign-image-content .campaign-location { font-size: 10px; }
+  .refined-opportunities .campaign-image-content h3 { margin-bottom: 6px; }
+}

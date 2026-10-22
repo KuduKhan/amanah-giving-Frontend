@@ -228,11 +228,14 @@ export default function Home() {
           {filteredCampaigns.map(campaign => {
             const progress = Math.round(campaign.raised / campaign.goal * 100);
             return <article className="campaign-card" key={campaign.id} aria-labelledby={`title-${campaign.id}`}>
-              <div className="campaign-image"><Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaign.id === 'EDU-390' ? '50% 34%' : 'center' }} /><span className="badge">{campaign.badge}</span><button className={`save ${saved.includes(campaign.id) ? 'saved' : ''}`} aria-pressed={saved.includes(campaign.id)} onClick={() => toggleSaved(campaign.id)} aria-label={`${saved.includes(campaign.id) ? 'Remove' : 'Save'} ${campaign.title}`}>{saved.includes(campaign.id) ? <Icon name="♥"/> : <Icon name="♡"/>}</button></div>
-              <div className="campaign-body">
+              <div className="campaign-image"><Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaign.id === 'EDU-390' ? '50% 34%' : 'center' }} /><span className="badge">{campaign.badge}</span><button className={`save ${saved.includes(campaign.id) ? 'saved' : ''}`} aria-pressed={saved.includes(campaign.id)} onClick={() => toggleSaved(campaign.id)} aria-label={`${saved.includes(campaign.id) ? 'Remove' : 'Save'} ${campaign.title}`}>{saved.includes(campaign.id) ? <Icon name="♥"/> : <Icon name="♡"/>}</button>
+                <div className="campaign-image-content">
                 <div className="campaign-meta-row"><p className="verified"><Icon name="shield"/><span>Campaign verified <span className="campaign-code">· {campaign.id}</span></span></p><span className={`campaign-deadline ${campaign.days <= 12 ? 'deadline-soon' : ''}`}><Icon name="◷"/>{campaign.days} days left</span></div>
                 <h3 id={`title-${campaign.id}`}>{campaign.title}</h3>
                 <p className="muted campaign-location"><span>{campaign.meta}</span><span aria-hidden="true">·</span><span>{campaign.donors.toLocaleString()} donors</span>{campaign.zakat && campaign.badge !== 'Zakat eligible' && <span className="campaign-eligibility">Zakat eligible</span>}</p>
+                </div>
+              </div>
+              <div className="campaign-body">
                 <div className="campaign-funding"><div className="money-row"><div className="funding-amount"><strong>{money(campaign.raised)}</strong><small>raised of {money(campaign.goal)}</small></div><b>{progress}% funded</b></div><div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div></div>
                 <div className="card-footer"><button onClick={() => setSelected(campaign)} aria-label={`View details: ${campaign.title}`}>View details<Icon name="→"/></button><button className="donate-mini" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="↗"/></button></div>
               </div>
@@ -276,8 +279,13 @@ export default function Home() {
             { campaign: campaigns[2], date: '12 Mar 2026', label: 'Distribution verified', title: '250 food packs reached Mombasa households', body: 'Recipient counts, delivery photos and signed distribution records were reviewed.' },
             { campaign: campaigns[1], date: '06 Mar 2026', label: 'Milestone reached', title: 'Al-Rahmah mosque roofing is complete', body: 'The next approved release covers electrical work and the accessible water facility.' },
           ].map(update => <article className="update-card" key={update.title}>
-            <button className="update-image" onClick={() => setSelected(update.campaign)} aria-label={`View ${update.title}`}><Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/><span><Icon name="shield"/>{update.label}</span></button>
-            <div><p className="update-meta"><span>{update.date}</span><span>{update.campaign.id}</span></p><h3>{update.title}</h3><p>{update.body}</p><button onClick={() => setSelected(update.campaign)} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="→"/></span></button></div>
+            <div className="update-image">
+              <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
+              <span className="update-photo-badge"><Icon name="shield"/>{update.label}</span>
+              <div className="update-image-content"><p className="update-meta"><span>{update.date}</span><span>{update.campaign.id}</span></p><h3>{update.title}</h3></div>
+              <button className="update-photo-action" onClick={() => setSelected(update.campaign)} aria-label={`View ${update.title}`} />
+            </div>
+            <div className="update-summary"><p>{update.body}</p><button onClick={() => setSelected(update.campaign)} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="→"/></span></button></div>
           </article>)}
         </div>
       </section>
