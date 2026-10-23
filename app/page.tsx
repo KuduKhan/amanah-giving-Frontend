@@ -4,12 +4,14 @@ import Icon from './Icon';
 import SiteHeader from './SiteHeader';
 import AmanahLogo from './AmanahLogo';
 import NotificationCenter from './NotificationCenter';
+import MyGiving from './MyGiving';
 import MobileNavigation from './MobileNavigation';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import PlatformConsole, { type Portal } from './PlatformConsole';
 import GivingPlanner from './GivingPlanner';
 import Image from 'next/image';
+import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
 
 type Campaign = {
   id: string;
@@ -35,6 +37,10 @@ const campaigns: Campaign[] = [
   { id: 'EDU-390', title: 'Equip a community Qur’an learning centre', category: 'Education', meta: 'Nakuru, Kenya', raised: 925000, goal: 1600000, donors: 318, days: 19, image: '/quran-learning.jpg', badge: 'Sadaqah Jariyah', zakat: false, story: 'Provide Qur’ans, desks, lighting and accessible learning materials for children and adult students in the local community.' },
 ];
 
+const completedWater: Campaign = { ...campaigns[0], id: 'WTR-183', title: 'Al-Huda water project in Garissa', raised: 5000000, goal: 5000000, days: 0, badge: 'Completed', story: 'This example completed project serves 340 people. The timeline illustrates how a completed delivery is recorded separately from an active appeal.' };
+
+const completedFood: Campaign = { ...campaigns[2], id: 'FOD-398', title: 'Food distribution to 250 Mombasa households', raised: 1250000, goal: 1250000, days: 0, badge: 'Completed', story: 'This example completed distribution reached 250 households. Delivery counts and distribution records illustrate a closed delivery, separate from the current appeal.' };
+
 const money = (value: number) => value >= 1000000 ? `KSh ${(value / 1000000).toFixed(value % 1000000 ? 1 : 0)}M` : `KSh ${Math.round(value / 1000)}K`;
 
 const copy = {
@@ -44,7 +50,15 @@ const copy = {
 };
 
 export default function Home() {
-  const [language, setLanguage] = useState<'en' | 'sw' | 'ar'>('en');
+  const language = 'en' as const;
+  const [languagesOpen, setLanguagesOpen] = useState(false);
+  const [drafts, setDrafts] = useState<GivingDraft[]>([]);
+  const [draft, setDraft] = useState<GivingDraft | null>(null);
+  const [draftError, setDraftError] = useState('');
+  const [draftSaving, setDraftSaving] = useState(false);
+  const [planCause, setPlanCause] = useState('Where most needed');
+  const [planReminders, setPlanReminders] = useState(false);
+  const [evidenceOpen, setEvidenceOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
@@ -55,11 +69,9 @@ export default function Home() {
   const [intention, setIntention] = useState('Sadaqah');
   const [amount, setAmount] = useState('1000');
   const [payment, setPayment] = useState('M-PESA');
-  const [phone, setPhone] = useState('');
   const [anonymous, setAnonymous] = useState(false);
   const [recurring, setRecurring] = useState(false);
   const [coverFees, setCoverFees] = useState(true);
-  const [receipt, setReceipt] = useState<{ transaction: string; date: string } | null>(null);
   const [toast, setToast] = useState('');
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [platformOpen, setPlatformOpen] = useState(false);
@@ -75,10 +87,16 @@ export default function Home() {
   const [zakat, setZakat] = useState({ cash: '', gold: '', investments: '', business: '', receivables: '', liabilities: '' });
 
   const t = copy[language];
-  const dialogOpen = searchOpen || !!selected || donationStep > 0 || dashboardOpen || platformOpen || plannerOpen || notificationsOpen;
+  const dialogOpen = languagesOpen || searchOpen || !!selected || donationStep > 0 || dashboardOpen || platformOpen || plannerOpen || notificationsOpen;
+  const modalKey = languagesOpen ? 'languages' : searchOpen ? 'search' : selected ? `campaign-${selected.id}` : donationStep ? `giving-${donationStep}` : dashboardOpen ? 'dashboard' : platformOpen ? 'platform' : plannerOpen ? 'planner' : notificationsOpen ? 'notifications' : '';
 
   useEffect(() => {
     if (!dialogOpen) return;
+    const background = Array.from(document.getElementById('main-content')?.children || []).filter((child): child is HTMLElement => child instanceof HTMLElement && !child.matches('[aria-modal=true], .toast'));
+    const previousInert = background.map(element => element.inert);
+    background.forEach(element => { element.inert = true; });
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     const previousFocus = document.activeElement as HTMLElement | null;
     const focusable = 'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]';
     const frame = requestAnimationFrame(() => {
@@ -102,13 +120,15 @@ export default function Home() {
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener('keydown', trapFocus);
+      background.forEach((element,index) => { element.inert = previousInert[index]; });
+      document.body.style.overflow = previousOverflow;
       previousFocus?.focus({ preventScroll: true });
     };
-  }, [dialogOpen]);
+  }, [dialogOpen, modalKey]);
   const filteredCampaigns = useMemo(() => campaigns.filter(campaign => {
     const matchesFilter = filter === 'All' || campaign.category === filter || (filter === 'Zakat' && campaign.zakat);
     const words = `${campaign.title} ${campaign.meta} ${campaign.category}`.toLowerCase();
-    return matchesFilter && words.includes(query.toLowerCase());
+    return matchesFilter && query.trim().toLowerCase().split(/\s+/).every(word => words.includes(word));
   }), [filter, query]);
 
   const zakatNet = Object.entries(zakat).reduce((total, [key, value]) => total + (key === 'liabilities' ? -1 : 1) * (Number(value) || 0), 0);
@@ -116,10 +136,12 @@ export default function Home() {
   const zakatDue = zakatNet >= nisab ? zakatNet * 0.025 : 0;
 
   useEffect(() => {
-    const stored = localStorage.getItem('amanah-saved');
-    if (!stored) return;
     const frame = requestAnimationFrame(() => {
-      try { setSaved(JSON.parse(stored)); } catch { localStorage.removeItem('amanah-saved'); }
+      setDrafts(readDrafts());
+      try {
+        const stored: unknown = JSON.parse(localStorage.getItem('amanah-saved') || '[]');
+        if (Array.isArray(stored)) setSaved(stored.filter((id): id is string => typeof id === 'string' && campaigns.some(c => c.id === id)));
+      } catch { /* Storage may be unavailable; the page still works for this session. */ }
     });
     return () => cancelAnimationFrame(frame);
   }, []);
@@ -132,13 +154,13 @@ export default function Home() {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = 'ltr';
   }, [language]);
 
   useEffect(() => {
     const onScroll = () => setScrollProgress(Math.min(100, window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight) * 100));
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { setSearchOpen(false); setSelected(null); setDashboardOpen(false); setPlatformOpen(false); setPlannerOpen(false); setNotificationsOpen(false); setDonationStep(0); return; }
+      if (event.key === 'Escape') { setSearchOpen(false); setSelected(null); setDashboardOpen(false); setPlatformOpen(false); setPlannerOpen(false); setNotificationsOpen(false); setLanguagesOpen(false); setDonationStep(0); return; }
       if (document.querySelector('[aria-modal=true]') || (event.target as HTMLElement)?.matches('input,textarea,select')) return;
       if (event.key === '/') { event.preventDefault(); setSearchOpen(true); }
       if (event.key.toLowerCase() === 'g') startDonation();
@@ -153,27 +175,37 @@ export default function Home() {
   const toggleSaved = (id: string) => {
     const next = saved.includes(id) ? saved.filter(item => item !== id) : [...saved, id];
     setSaved(next);
-    localStorage.setItem('amanah-saved', JSON.stringify(next));
-    setToast(next.includes(id) ? 'Campaign saved to My Giving' : 'Campaign removed');
+    try { localStorage.setItem('amanah-saved', JSON.stringify(next)); setToast(next.includes(id) ? 'Campaign saved to My Giving' : 'Campaign removed'); }
+    catch { setToast('Updated for this session. Device storage is unavailable.'); }
   };
 
   function startDonation(campaign?: Campaign | null, preset?: string) {
     setDonationCampaign(campaign || null);
     setDonationStep(1);
-    setReceipt(null);
+    setDraft(null); setDraftError('');
     setIntention(preset || (campaign?.zakat ? 'Zakat' : 'Sadaqah'));
     setAmount('1000');
-    setPhone('');
+    setAnonymous(false); setRecurring(false); setCoverFees(true); setPayment('M-PESA');
+    setPlanCause('Where most needed'); setPlanReminders(false);
     setDedication('');
     setOnBehalf(false);
     setSchedule('Monthly');
     setPlatformTip(0);
   }
 
-  const finishDonation = (event: FormEvent) => {
+  const finishDonation = async (event: FormEvent) => {
     event.preventDefault();
-    setReceipt({ transaction: `AMN-${Date.now().toString().slice(-8)}`, date: new Intl.DateTimeFormat('en-KE', { dateStyle: 'long' }).format(new Date()) });
-    setDonationStep(4);
+    if (draftSaving) return;
+    const value = Number(amount);
+    if (!Number.isSafeInteger(value) || value < 1 || value > 999999999) { setDraftError('Enter a whole-shilling amount between KSh 1 and KSh 999,999,999.'); return; }
+    setDraftSaving(true); setDraftError('');
+    try {
+      const entry: GivingDraft = { id: `DRAFT-${crypto.randomUUID().slice(0,8).toUpperCase()}`, createdAt: new Date().toISOString(), amount: value, intention, campaign: donationCampaign?.title || planCause, payment, recurring, schedule, cause: planCause, reminders: planReminders, anonymous, dedication: onBehalf ? dedication : '', total: value + (coverFees ? Math.ceil(value * .018) : 0) + Math.ceil(value * platformTip / 100) };
+      const next = [entry, ...readDrafts()].slice(0,100);
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(next));
+      setDrafts(next); setDraft(entry); setDonationStep(4);
+    } catch { setDraftError('Your draft could not be saved on this device. Enable browser storage and try again. No payment was made.'); }
+    finally { setDraftSaving(false); }
   };
 
   return (
@@ -189,8 +221,9 @@ export default function Home() {
           <span className="trustbar-item"><Icon name="phone" /><span>M-PESA ready</span></span>
         </div>
       </div>
-      <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguage(language === 'en' ? 'sw' : language === 'sw' ? 'ar' : 'en')} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
+      <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
+      <p className="site-preview-note"><Icon name="shield"/><span>Preview experience · Campaigns and impact figures are illustrative. Prepare giving drafts; payments are not connected.</span></p>
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
@@ -203,12 +236,12 @@ export default function Home() {
           <Image src="/water-community.jpg" alt="Children gathering at a rural community water well" width={1400} height={1200} priority sizes="(max-width: 900px) 100vw, 50vw" />
           <div className="impact-card"><div className="hero-impact-label"><Icon name="shield"/><b>Impact verified</b></div><p>Garissa water project now serves 340 people.</p><small>Evidence reviewed 2 days ago</small></div>
           <div className="live-giving"><span className="live-pulse"/><b>38 donors</b> gave in the last hour</div>
-          <div className="hero-caption"><span>WTR-284 · SADAQAH JARIYAH</span><p>From your giving to safe, flowing water.</p><button onClick={() => setSelected(campaigns[0])}>Trace this project <Icon name="→"/></button></div>
+          <div className="hero-caption"><span>WTR-183 · SADAQAH JARIYAH</span><p>From your giving to safe, flowing water.</p><button onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>Trace this project <Icon name="→"/></button></div>
         </div>
       </section>
 
       <section className="cause-strip refined-causes" aria-label="Popular causes">
-        {[['Zakat','giving'],['Food','◌'],['Orphans','users'],['Water','≈'],['Mosque','bank'],["Qur'ans",'book']].map(([cause, icon]) => <button key={cause} onClick={() => { setFilter(cause === "Qur'ans" ? 'All' : cause); document.querySelector('#causes')?.scrollIntoView(); }}><span className="cause-icon"><Icon name={icon}/></span><span className="cause-label">{cause === 'Food' ? 'Feed a family' : cause === 'Orphans' ? 'Sponsor an orphan' : cause === 'Water' ? 'Clean water' : cause === 'Mosque' ? 'Build a mosque' : cause}</span></button>)}
+        {[['Zakat','giving'],['Food','◌'],['Orphans','users'],['Water','≈'],['Mosque','bank'],["Qur'ans",'book']].map(([cause, icon]) => <button key={cause} onClick={() => { setFilter(cause === "Qur'ans" ? 'Education' : cause); setQuery(''); document.querySelector('#causes')?.scrollIntoView(); }}><span className="cause-icon"><Icon name={icon}/></span><span className="cause-label">{cause === 'Food' ? 'Feed a family' : cause === 'Orphans' ? 'Sponsor an orphan' : cause === 'Water' ? 'Clean water' : cause === 'Mosque' ? 'Build a mosque' : cause}</span></button>)}
       </section>
 
       <section className="seasonal-giving refined-seasonal" aria-labelledby="seasonal-title">
@@ -223,7 +256,7 @@ export default function Home() {
 
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
         <div className="section-heading"><div><p className="eyebrow">Verified opportunities</p><h2 id="causes-title">Give where it matters most</h2></div><button className="text-link button-link" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
-        <div className="filter-row" aria-label="Filter verified causes">{['All','Zakat','Food','Orphans','Water','Mosque'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div>
+        <div className="filter-row" aria-label="Filter verified causes">{['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div>
         <div className="campaign-grid">
           {filteredCampaigns.map(campaign => {
             const progress = Math.round(campaign.raised / campaign.goal * 100);
@@ -237,7 +270,7 @@ export default function Home() {
               </div>
               <div className="campaign-body">
                 <div className="campaign-funding"><div className="money-row"><div className="funding-amount"><strong>{money(campaign.raised)}</strong><small>raised of {money(campaign.goal)}</small></div><b>{progress}% funded</b></div><div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div></div>
-                <div className="card-footer"><button onClick={() => setSelected(campaign)} aria-label={`View details: ${campaign.title}`}>View details<Icon name="→"/></button><button className="donate-mini" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="↗"/></button></div>
+                <div className="card-footer"><button onClick={() => { setEvidenceOpen(false); setSelected(campaign); }} aria-label={`View details: ${campaign.title}`}>View details<Icon name="→"/></button><button className="donate-mini" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="↗"/></button></div>
               </div>
             </article>;
           })}
@@ -261,9 +294,9 @@ export default function Home() {
       <section className="impact-section refined-impact" id="impact" aria-labelledby="impact-title">
         <div className="impact-intro"><p className="eyebrow">Your giving, accounted for</p><h2 id="impact-title">See exactly what happened next.</h2><p>The donation button is only the beginning. Every verified update, approval, disbursement and outcome builds a traceable impact record.</p><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>Open your Impact Center <span><Icon name="↗"/></span></button></div>
         <div className="impact-timeline">
-          <div className="timeline-head"><div><span>PROJECT TRACE</span><h3>Al-Huda Water Project</h3><small>WTR-284</small></div><span className="complete"><Icon name="✓"/>Completed</span></div>
-          <ol className="impact-stages">{[['14 Jan','You donated KSh 5,000','Payment confirmed and receipt issued.','2026-01-14'],['28 Jan','Campaign fully funded','Restricted funds locked to WTR-284.','2026-01-28'],['12 Feb','Borehole drilling approved','Maker, checker and approver controls passed.','2026-02-12'],['05 Mar','Water test completed','Independent results uploaded and reviewed.','2026-03-05'],['18 Mar','Project impact verified','Now serving 340 people in Garissa.','2026-03-18']].map((item,index) => <li className={`timeline-item ${index === 4 ? 'final-stage' : ''}`} key={item[0]}><span className={`timeline-dot ${index === 4 ? 'last' : ''}`} aria-hidden="true"><Icon name="✓"/></span><time dateTime={item[3]}>{item[0]}</time><div><b>{item[1]}</b><p>{item[2]}</p></div></li>)}</ol>
-          <div className="evidence-row"><div className="evidence-files"><span>4 photos</span><span>2 receipts</span><span>Water test report</span></div><button onClick={() => setSelected(campaigns[0])}>View evidence <Icon name="→"/></button></div>
+          <div className="timeline-head"><div><span>PROJECT TRACE</span><h3>Al-Huda Water Project</h3><small>WTR-183</small></div><span className="complete"><Icon name="✓"/>Completed</span></div>
+          <ol className="impact-stages">{[['14 Jan','You donated KSh 5,000','Payment confirmed and receipt issued.','2026-01-14'],['28 Jan','Campaign fully funded','Restricted funds locked to WTR-183.','2026-01-28'],['12 Feb','Borehole drilling approved','Maker, checker and approver controls passed.','2026-02-12'],['05 Mar','Water test completed','Independent results uploaded and reviewed.','2026-03-05'],['18 Mar','Project impact verified','Now serving 340 people in Garissa.','2026-03-18']].map((item,index) => <li className={`timeline-item ${index === 4 ? 'final-stage' : ''}`} key={item[0]}><span className={`timeline-dot ${index === 4 ? 'last' : ''}`} aria-hidden="true"><Icon name="✓"/></span><time dateTime={item[3]}>{item[0]}</time><div><b>{item[1]}</b><p>{item[2]}</p></div></li>)}</ol>
+          <div className="evidence-row"><div className="evidence-files"><span>4 photos</span><span>2 receipts</span><span>Water test report</span></div><button onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>View evidence <Icon name="→"/></button></div>
         </div>
       </section>
 
@@ -275,17 +308,17 @@ export default function Home() {
         <div className="section-heading"><div><p className="eyebrow">Latest verified updates</p><h2 id="updates-title">Proof of progress, not promises.</h2></div><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>See all your updates <span><Icon name="↗"/></span></button></div>
         <div className="updates-grid">
           {[
-            { campaign: campaigns[0], date: '18 Mar 2026', label: 'Impact verified', title: 'Clean water is now flowing for 340 people', body: 'Independent water testing passed and the final contractor payment was reconciled.' },
-            { campaign: campaigns[2], date: '12 Mar 2026', label: 'Distribution verified', title: '250 food packs reached Mombasa households', body: 'Recipient counts, delivery photos and signed distribution records were reviewed.' },
+            { campaign: completedWater, date: '18 Mar 2026', label: 'Impact verified', title: 'Clean water is now flowing for 340 people', body: 'Independent water testing passed and the final contractor payment was reconciled.' },
+            { campaign: completedFood, date: '12 Mar 2026', label: 'Distribution verified', title: '250 food packs reached Mombasa households', body: 'Recipient counts, delivery photos and signed distribution records were reviewed.' },
             { campaign: campaigns[1], date: '06 Mar 2026', label: 'Milestone reached', title: 'Al-Rahmah mosque roofing is complete', body: 'The next approved release covers electrical work and the accessible water facility.' },
           ].map(update => <article className="update-card" key={update.title}>
             <div className="update-image">
               <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
               <span className="update-photo-badge"><Icon name="shield"/>{update.label}</span>
               <div className="update-image-content"><p className="update-meta"><span>{update.date}</span><span>{update.campaign.id}</span></p><h3>{update.title}</h3></div>
-              <button className="update-photo-action" onClick={() => setSelected(update.campaign)} aria-label={`View ${update.title}`} />
+              <button className="update-photo-action" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View ${update.title}`} />
             </div>
-            <div className="update-summary"><p>{update.body}</p><button onClick={() => setSelected(update.campaign)} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="→"/></span></button></div>
+            <div className="update-summary"><p>{update.body}</p><button onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="→"/></span></button></div>
           </article>)}
         </div>
       </section>
@@ -335,23 +368,24 @@ export default function Home() {
         </div>
         <div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div>
       </footer>
-      <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span>English · Kiswahili</span><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
+      <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span>English · More languages planned</span><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
 
       <MobileNavigation onGive={() => startDonation()} onAccount={() => setDashboardOpen(true)} accountOpen={dashboardOpen}/>
 
-      {searchOpen && <div className="overlay" role="dialog" aria-modal="true" aria-label="Search verified campaigns"><div className="search-panel"><button className="close" aria-label="Close dialog" onClick={() => setSearchOpen(false)}><Icon name="×"/></button><p className="eyebrow">Search Amanah Giving</p><h2>Find a cause close to your heart.</h2><div className="search-input"><span><Icon name="⌕"/></span><input autoFocus value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Try ‘orphan Nairobi’ or ‘water Garissa’" /></div><div className="filter-row" aria-label="Filter search results">{['All','Zakat','Food','Orphans','Water','Mosque'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div><div className="search-results">{filteredCampaigns.map(campaign => <button key={campaign.id} onClick={() => { setSearchOpen(false); setSelected(campaign); }}><img src={campaign.image} alt="" loading="lazy" decoding="async"/><span><b>{campaign.title}</b><small>{campaign.meta} · {campaign.zakat ? 'Zakat eligible' : campaign.category}</small></span><em>{Math.round(campaign.raised / campaign.goal * 100)}%</em></button>)}</div>{!filteredCampaigns.length && <div className="empty-state" role="status">No verified campaigns match your search.</div>}</div></div>}
+      {searchOpen && <div className="overlay" role="dialog" aria-modal="true" aria-label="Search verified campaigns"><div className="search-panel"><button className="close" aria-label="Close dialog" onClick={() => setSearchOpen(false)}><Icon name="×"/></button><p className="eyebrow">Search Amanah Giving</p><h2>Find a cause close to your heart.</h2><div className="search-input"><span><Icon name="⌕"/></span><input autoFocus value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Try ‘orphan Kisumu’ or ‘water Garissa’" /></div><div className="filter-row" aria-label="Filter search results">{['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div><div className="search-results">{filteredCampaigns.map(campaign => <button key={campaign.id} onClick={() => { setSearchOpen(false); setEvidenceOpen(false); setSelected(campaign); }}><Image src={campaign.image} alt="" width={96} height={72}/><span><b>{campaign.title}</b><small>{campaign.meta} · {campaign.zakat ? 'Zakat eligible' : campaign.category}</small></span><em>{Math.round(campaign.raised / campaign.goal * 100)}%</em></button>)}</div>{!filteredCampaigns.length && <div className="empty-state" role="status">No verified campaigns match your search.</div>}</div></div>}
 
-      {selected && <div className="overlay" role="dialog" aria-modal="true" aria-label="Campaign details"><div className="detail-panel"><button className="close" aria-label="Close dialog" onClick={() => setSelected(null)}><Icon name="×"/></button><div className="detail-media"><img className="detail-hero" src={selected.image} alt=""/><div className="detail-media-caption"><span>LEVEL 3 VERIFIED</span><b>Field need and budget reviewed</b><button onClick={() => setToast('Verification record opened')}>See verification record <Icon name="↗"/></button></div></div><div className="detail-content"><p className="verified"><Icon name="●"/> Campaign verified · {selected.id}</p><h2>{selected.title}</h2><p>{selected.story}</p><div className="detail-facts"><span><b>{money(selected.raised)}</b>raised</span><span><b>{selected.donors.toLocaleString()}</b>donors</span><span><b>{selected.days}</b>days left</span></div><div className="budget"><h3>Transparent budget</h3><div><span>Project delivery</span><b>82%</b></div><div><span>Verification & reporting</span><b>8%</b></div><div><span>Payment and operations</span><b>10%</b></div></div><div className="disbursement-preview"><div><span>DISBURSEMENT PLAN</span><b>Released only against milestones</b></div><ol><li className="done"><i><Icon name="✓"/></i><span><b>Mobilization</b><small>20% · reconciled</small></span></li><li className="active"><i>2</i><span><b>Core delivery</b><small>45% · evidence required</small></span></li><li><i>3</i><span><b>Completion</b><small>25% · pending</small></span></li><li><i>4</i><span><b>Retention</b><small>10% · after impact review</small></span></li></ol></div><div className="verification-box"><b>What we verified</b><p>Responsible organization, supporting documents, field need, budget, payment destination and update schedule.</p></div><div className="detail-assurances"><span><Icon name="▣"/> Restricted fund</span><span><Icon name="◎"/> Update schedule</span><span><Icon name="✓"/> Complaint channel</span></div><button className="button full" onClick={() => { const campaign = selected; setSelected(null); startDonation(campaign); }}>Donate to this campaign <Icon name="↗"/></button></div></div></div>}
+      {selected && <div className="overlay" role="dialog" aria-modal="true" aria-label="Campaign details"><div className="detail-panel"><button className="close" aria-label="Close dialog" onClick={() => setSelected(null)}><Icon name="×"/></button><div className="detail-media"><Image className="detail-hero" src={selected.image} alt="" width={1000} height={640} sizes="(max-width: 700px) 100vw, 800px"/><div className="detail-media-caption"><span>LEVEL 3 VERIFIED</span><b>Field need and budget reviewed</b><button onClick={() => setEvidenceOpen(!evidenceOpen)}>{evidenceOpen ? 'Hide verification summary' : 'See verification summary'} <Icon name="↗"/></button></div></div><div className="detail-content"><p className="verified"><Icon name="●"/> Campaign verified · {selected.id}</p><h2>{selected.title}</h2><p>{selected.story}</p><div className="detail-facts"><span><b>{money(selected.raised)}</b>raised</span><span><b>{selected.donors.toLocaleString()}</b>donors</span><span><b>{selected.days ? selected.days : 'Complete'}</b>{selected.days ? 'days left' : 'project status'}</span></div><p className="preview-note">Illustrative campaign record · verification documents are not connected.</p>{evidenceOpen && <section className="evidence-summary"><h3>Verification summary</h3><p>Review covers the organization, project scope, budget and payment destination. Original field evidence is not available in this frontend preview.</p><dl><div><dt>Reference</dt><dd>{selected.id}</dd></div><div><dt>Status</dt><dd>{selected.days ? 'Active appeal example' : 'Completed delivery example'}</dd></div></dl><button className="text-link" onClick={() => downloadText(`${selected.id}-summary.txt`, `${selected.title}\n${selected.id}\n${selected.story}\nIllustrative summary. Not an original verification document.`)}>Download example summary <Icon name="download"/></button></section>}<div className="budget"><h3>Transparent budget</h3><div><span>Project delivery</span><b>82%</b></div><div><span>Verification & reporting</span><b>8%</b></div><div><span>Payment and operations</span><b>10%</b></div></div><div className="disbursement-preview"><div><span>DISBURSEMENT PLAN</span><b>{selected.days ? 'Released only against milestones' : 'Completed delivery record'}</b></div>{selected.days === 0 ? <p>All delivery milestones are complete in this example. Delivery checks and reconciliation are complete in this illustrative record.</p> : <ol><li className="done"><i><Icon name="✓"/></i><span><b>Mobilization</b><small>20% · reconciled</small></span></li><li className="active"><i>2</i><span><b>Core delivery</b><small>45% · evidence required</small></span></li><li><i>3</i><span><b>Completion</b><small>25% · pending</small></span></li><li><i>4</i><span><b>Retention</b><small>10% · after impact review</small></span></li></ol>}</div><div className="verification-box"><b>What we verified</b><p>Responsible organization, supporting documents, field need, budget, payment destination and update schedule.</p></div><div className="detail-assurances"><span><Icon name="▣"/> Restricted fund</span><span><Icon name="◎"/> Update schedule</span><span><Icon name="✓"/> Complaint channel</span></div>{selected.days > 0 ? <button className="button full" onClick={() => { const campaign = selected; setSelected(null); startDonation(campaign); }}>Donate to this campaign <Icon name="↗"/></button> : <button className="button full" onClick={() => { setSelected(null); document.getElementById('causes')?.scrollIntoView({ behavior: 'smooth' }); }}>Explore active causes <Icon name="↗"/></button>}</div></div></div>}
 
       {donationStep > 0 && renderDonationModal()}
 
-      {dashboardOpen && <div className="overlay" role="dialog" aria-modal="true" aria-label="My Giving dashboard"><div className="dashboard-panel premium-dashboard"><button className="close" aria-label="Close dialog" onClick={() => setDashboardOpen(false)}><Icon name="×"/></button><div className="dashboard-welcome"><div><p className="eyebrow">My Giving</p><h2>Assalamu Alaikum, Amina</h2><span>Safar 1448 · Your private impact record</span></div><button onClick={() => setToast('Annual giving statement prepared')}><Icon name="▣"/> Download statement</button></div><div className="dashboard-stats"><div><span>Total given</span><b>KSh 72,450</b><small>Across 4 giving types</small></div><div><span>Projects supported</span><b>24</b><small>8 counties</small></div><div><span>Recurring gifts</span><b>4</b><small>Next gift Friday</small></div><div><span>Verified outcomes</span><b>18</b><small>75% complete</small></div></div><div className="dashboard-layout"><div><h3>Latest impact</h3><div className="dashboard-update"><img src="/water-community.jpg" alt=""/><div><span>IMPACT VERIFIED</span><b>Al-Huda Water Project completed</b><p>Your KSh 5,000 Sadaqah Jariyah now helps serve 340 people.</p><button onClick={() => { setDashboardOpen(false); setSelected(campaigns[0]); }}>View full trace <Icon name="→"/></button></div></div></div><aside><h3>Giving balance</h3><div className="giving-balance"><div><span>Zakat</span><b>KSh 28,000</b><i style={{width:'39%'}}/></div><div><span>Sadaqah</span><b>KSh 22,450</b><i style={{width:'31%'}}/></div><div><span>Jariyah</span><b>KSh 18,500</b><i style={{width:'25%'}}/></div><div><span>Other</span><b>KSh 3,500</b><i style={{width:'5%'}}/></div></div></aside></div><div className="dashboard-actions"><button onClick={() => { setDashboardOpen(false); setPlannerOpen(true); }}><Icon name="☾"/> Manage giving plans <span>4 active</span></button><button onClick={() => setToast('Tax and receipt center opened')}><Icon name="▣"/> Receipt center <span>24 receipts</span></button><button onClick={() => { setDashboardOpen(false); setNotificationsOpen(true); }}><Icon name="◉"/> Preferences <span>4 channels</span></button></div><h3>Saved causes</h3><p className="muted">{saved.length ? `${saved.length} campaign${saved.length > 1 ? 's' : ''} saved on this device.` : 'Save a campaign to find it here later.'}</p></div></div>}
+      {dashboardOpen && <MyGiving drafts={drafts} saved={campaigns.filter(c => saved.includes(c.id))} onClose={() => setDashboardOpen(false)} onView={id => { setDashboardOpen(false); setEvidenceOpen(false); setSelected(campaigns.find(c => c.id === id) || null); }} onRemove={toggleSaved} onGive={() => { setDashboardOpen(false); startDonation(); }} onPlan={() => { setDashboardOpen(false); setPlannerOpen(true); }} onNotifications={() => { setDashboardOpen(false); setNotificationsOpen(true); }}/>}
 
       {platformOpen && <PlatformConsole initialPortal={platformPortal} onClose={() => setPlatformOpen(false)} onGive={() => { setPlatformOpen(false); startDonation(); }}/>}
-      {plannerOpen && <GivingPlanner onClose={() => setPlannerOpen(false)} onCreate={(plannedAmount,label) => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plannedAmount); setRecurring(true); setSchedule(label); }}/>} 
+      {plannerOpen && <GivingPlanner onClose={() => setPlannerOpen(false)} onCreate={plan => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plan.amount); setRecurring(true); setSchedule(plan.schedule === 'Monthly Sadaqah' ? 'Monthly' : plan.schedule === 'Last 10 nights' ? 'Last 10 nights' : plan.schedule); setPlanCause(plan.cause); setPlanReminders(plan.reminders); }}/>}
 
       {notificationsOpen && <NotificationCenter read={readNotifications} onRead={setReadNotifications} onClose={() => setNotificationsOpen(false)}/>}
 
+      {languagesOpen && <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="language-title"><div className="search-panel language-panel"><button className="close" aria-label="Close languages" onClick={() => setLanguagesOpen(false)}><Icon name="close"/></button><p className="eyebrow">Language</p><h2 id="language-title">Read with clarity.</h2><p>English is available throughout this preview. Other languages will be offered after every page and giving step has been translated.</p><div className="language-options"><button aria-pressed="true" onClick={() => setLanguagesOpen(false)}><b>English</b><span>Current language <Icon name="check"/></span></button><div><b>Kiswahili</b><span>Translation in preparation</span></div><div lang="ar"><b>العربية</b><span lang="en">Translation in preparation</span></div></div></div></div>}
       {toast && <div className="toast" role="status" aria-live="polite"><span><Icon name="✓"/></span>{toast}</div>}
       <a className="back-to-top" href="#top" aria-label="Back to top"><Icon name="↑"/></a>
     </main>
@@ -361,12 +395,12 @@ export default function Home() {
     const numericAmount = Number(amount) || 0;
     const fee = coverFees ? Math.ceil(numericAmount * 0.018) : 0;
     const tip = Math.ceil(numericAmount * platformTip / 100);
-    return <div className="overlay" role="dialog" aria-modal="true" aria-label="Donation checkout"><div className="donation-panel refined-checkout"><button className="close" aria-label="Close dialog" onClick={() => { setDonationStep(0); setReceipt(null); setDonationCampaign(null); }}><Icon name="×"/></button>{donationStep < 4 && <><div className="checkout-heading"><p className="eyebrow">Secure donation</p><div className="checkout-assurance"><span><Icon name="▣"/> Encrypted</span><span><Icon name="✓"/> Auditable</span><span><Icon name="shield"/> Private</span></div></div><ol className="checkout-stages" aria-label="Donation progress">{['Intention', 'Amount', 'Payment'].map((label, index) => <li key={label} className={donationStep > index + 1 ? 'done' : donationStep === index + 1 ? 'current' : ''} aria-current={donationStep === index + 1 ? 'step' : undefined}><span aria-hidden="true">{donationStep > index + 1 ? <Icon name="✓"/> : index + 1}</span><b>{label}</b></li>)}</ol></>}
+    return <div className="overlay" role="dialog" aria-modal="true" aria-label="Donation checkout"><div className="donation-panel refined-checkout"><button className="close" aria-label="Close dialog" onClick={() => { setDonationStep(0); setDraft(null); setDraftError(''); setDonationCampaign(null); }}><Icon name="×"/></button>{donationStep < 4 && <><div className="checkout-heading"><p className="eyebrow">Prepare your gift</p><div className="checkout-assurance"><span><Icon name="▣"/> Local draft</span><span><Icon name="✓"/> No payment</span><span><Icon name="shield"/> Private</span></div></div><ol className="checkout-stages" aria-label="Donation progress">{['Intention', 'Amount', 'Review'].map((label, index) => <li key={label} className={donationStep > index + 1 ? 'done' : donationStep === index + 1 ? 'current' : ''} aria-current={donationStep === index + 1 ? 'step' : undefined}><span aria-hidden="true">{donationStep > index + 1 ? <Icon name="✓"/> : index + 1}</span><b>{label}</b></li>)}</ol></>}
       {donationStep === 1 && <form className="donation-step intention-step" onSubmit={event => { event.preventDefault(); setDonationStep(2); }}><h2 id="intention-title">What is your intention?</h2><p id="intention-help">Your selected giving type stays with your donation for clear accounting.</p><fieldset className="intention-options" aria-describedby="intention-help"><legend className="sr-only">Choose your giving intention</legend>{[
         ['Sadaqah','heart','Verified giving'], ['Zakat','shield','Restricted fund'], ['Sadaqah Jariyah','∞','Ongoing benefit'], ['Waqf','bank','Verified giving'], ['Fidyah / Kaffarah','giving','Verified giving'], ['General charity','gift','Verified giving'],
       ].map(([item, icon, description]) => <label className={`intention-option ${intention === item ? 'selected' : ''}`} key={item}><input type="radio" name="giving-intention" value={item} checked={intention === item} onChange={() => setIntention(item)}/><span className="intention-icon" aria-hidden="true"><Icon name={icon}/></span><span className="intention-check" aria-hidden="true">{intention === item && <Icon name="✓"/>}</span><b>{item}</b><small>{description}</small></label>)}</fieldset><button className="button full" type="submit">Continue to amount <Icon name="→"/></button></form>}
-      {donationStep === 2 && <div className="donation-step"><button className="back" onClick={() => setDonationStep(1)}><Icon name="←"/> Back</button><h2>Shape your gift</h2>{donationCampaign && <div className="donation-campaign"><img src={donationCampaign.image} alt=""/><span><small>Giving to</small><b>{donationCampaign.title}</b></span></div>}<div className="amount-grid">{['500','1000','2500','5000'].map(value => <button className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>)}</div><label className="custom-amount"><span>Custom amount</span><div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,''))}/></div></label><label className="check-row"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/><span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span></label><label className="check-row"><input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/><span><b>Give on behalf of someone</b><small>Add a private dedication to the receipt.</small></span></label>{onBehalf && <label className="dedication-field"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}<label className="check-row"><input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/><span><b>Make this recurring</b><small>Pause or cancel any time from My Giving.</small></span></label>{recurring && <label className="schedule-field"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}><option>Daily</option><option>Every Jumu’ah</option><option>Monthly</option><option>Last 10 nights</option></select></label>}<button className="button full" disabled={!numericAmount} onClick={() => setDonationStep(3)}>Continue to payment <Icon name="→"/></button></div>}
-      {donationStep === 3 && <form className="donation-step" onSubmit={finishDonation}><button type="button" className="back" onClick={() => setDonationStep(2)}><Icon name="←"/> Back</button><h2>Complete your gift</h2><div className="payment-tabs three-tabs"><button type="button" className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button><button type="button" className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button><button type="button" className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button></div>{payment === 'M-PESA' ? <label className="field"><span>M-PESA phone number</span><div><small>+254</small><input required value={phone} onChange={event => setPhone(event.target.value.replace(/\D/g,'').slice(0,9))} placeholder="712 345 678"/></div><em>An STK Push will be sent to this number.</em></label> : payment === 'Card' ? <><label className="field"><span>Card number</span><input required placeholder="1234 5678 9012 3456"/></label><div className="two-fields"><label className="field"><span>Expiry</span><input required placeholder="MM / YY"/></label><label className="field"><span>CVC</span><input required placeholder="123"/></label></div></> : <div className="bank-instructions"><span>AMANAH CLIENT ACCOUNT</span><b>Reference AMN-{Date.now().toString().slice(-6)}</b><p>Bank details appear after you reserve this gift. Funds are only posted after statement reconciliation.</p></div>}<label className="check-row"><input type="checkbox" checked={coverFees} onChange={event => setCoverFees(event.target.checked)}/><span><b>Cover payment costs</b><small>Add KSh {Math.ceil(numericAmount * 0.018).toLocaleString()} so the cause receives your full gift.</small></span></label><div className="tip-control"><div><span><b>Support the Amanah platform</b><small>Optional and always shown separately.</small></span><strong>{platformTip}%</strong></div><input type="range" min="0" max="10" step="2" value={platformTip} onChange={event => setPlatformTip(Number(event.target.value))}/><div><button type="button" onClick={() => setPlatformTip(0)}>No tip</button><button type="button" onClick={() => setPlatformTip(5)}>5%</button><button type="button" onClick={() => setPlatformTip(10)}>10%</button></div></div><div className="payment-summary"><span>Your {intention}{recurring ? ` · ${schedule}` : ''}</span><b>KSh {(numericAmount + fee + tip).toLocaleString()}</b><small>Gift {numericAmount.toLocaleString()} + costs {fee.toLocaleString()} + optional support {tip.toLocaleString()}</small></div><button className="button full" type="submit">{payment === 'M-PESA' ? 'Send M-PESA prompt' : payment === 'Bank' ? 'Reserve bank transfer' : 'Give securely'} <Icon name="→"/></button><p className="secure-note"><Icon name="▣"/> Payment confirmation is verified before a donation is recorded.</p></form>}
-      {donationStep === 4 && receipt && <div className="receipt"><span className="receipt-check"><Icon name="✓"/></span><p className="eyebrow">Donation confirmed</p><h2>JazakAllahu Khayran</h2><p>Your gift has been received and restricted to its stated intention.</p><div className="receipt-card"><span>AMOUNT<b>KSh {numericAmount.toLocaleString()}</b></span><span>TYPE<b>{intention}</b></span><span>PROJECT<b>{donationCampaign?.title || 'Most-needed verified cause'}</b></span><span>TRANSACTION<b>{receipt.transaction}</b></span><span>DATE<b>{receipt.date}</b></span></div><button className="button full" onClick={() => { setDonationStep(0); setReceipt(null); setDonationCampaign(null); setToast('Receipt saved to My Giving'); }}>View my impact <Icon name="→"/></button><button className="download-receipt" onClick={() => window.print()}>Download receipt</button></div>}</div></div>;
+      {donationStep === 2 && <div className="donation-step"><button className="back" onClick={() => setDonationStep(1)}><Icon name="←"/> Back</button><h2>Shape your gift</h2>{donationCampaign && <div className="donation-campaign"><Image src={donationCampaign.image} alt="" width={100} height={80}/><span><small>Giving to</small><b>{donationCampaign.title}</b></span></div>}<div className="amount-grid">{['500','1000','2500','5000'].map(value => <button className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>)}</div><label className="custom-amount"><span>Custom amount</span><div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div></label><label className="check-row"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/><span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span></label><label className="check-row"><input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/><span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span></label>{onBehalf && <label className="dedication-field"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}<label className="check-row"><input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/><span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span></label>{recurring && <label className="schedule-field"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}<button className="button full" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button></div>}
+      {donationStep === 3 && <form className="donation-step" onSubmit={finishDonation} aria-busy={draftSaving}><button type="button" className="back" onClick={() => setDonationStep(2)}><Icon name="←"/> Back</button><h2>Review your giving draft</h2><p className="preview-note">No money will move. Your choices are saved only in this browser.</p><div className="payment-tabs three-tabs"><button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button><button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button><button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button></div><div className="preview-note" role="note"><b>{payment} · Not connected</b><p>{payment === 'M-PESA' ? 'No M-PESA prompt will be sent. Save your preferred method for later.' : payment === 'Card' ? 'Card checkout is not connected. Do not enter card details in this preview.' : 'No bank transfer will be reserved. Bank details will be available when payments are connected.'}</p></div><label className="check-row"><input type="checkbox" checked={coverFees} onChange={event => setCoverFees(event.target.checked)}/><span><b>Include estimated payment costs</b><small>Add KSh {Math.ceil(numericAmount * 0.018).toLocaleString()} in this illustrative estimate. Actual provider costs may differ.</small></span></label><div className="tip-control"><div><span><b>Support the Amanah platform</b><small>Optional and always shown separately.</small></span><strong>{platformTip}%</strong></div><input aria-label="Optional platform support percentage" type="range" min="0" max="10" step="2" value={platformTip} onChange={event => setPlatformTip(Number(event.target.value))}/><div><button type="button" onClick={() => setPlatformTip(0)}>No tip</button><button type="button" onClick={() => setPlatformTip(5)}>5%</button><button type="button" onClick={() => setPlatformTip(10)}>10%</button></div></div><dl className="plan-review"><div><dt>Preferred cause</dt><dd>{donationCampaign?.title || planCause}</dd></div>{recurring && <><div><dt>Schedule</dt><dd>{schedule}</dd></div><div><dt>Reminders</dt><dd>{planReminders ? 'Requested · not activated' : 'Off'}</dd></div></>}<div><dt>Public identity</dt><dd>{anonymous ? 'Anonymous' : 'Not anonymous'}</dd></div>{onBehalf && dedication && <div><dt>Dedication</dt><dd>{dedication}</dd></div>}</dl><div className="payment-summary"><span>Your {intention}{recurring ? ` · ${schedule}` : ''}</span><b>KSh {(numericAmount + fee + tip).toLocaleString()}</b><small>Gift {numericAmount.toLocaleString()} + costs {fee.toLocaleString()} + optional support {tip.toLocaleString()}</small></div>{draftError && <p className="form-error" role="alert">{draftError}</p>}<button className="button full" type="submit" disabled={draftSaving}>{draftSaving ? 'Saving draft…' : 'Save giving draft'} <Icon name="→"/></button><p className="secure-note"><Icon name="▣"/> This saves a plan, not a payment receipt. No recurring charges are enabled.</p></form>}
+      {donationStep === 4 && draft && <div className="receipt"><span className="receipt-check"><Icon name="check"/></span><p className="eyebrow">Giving draft saved</p><h2>Your intention, ready for later.</h2><p>Saved on this device. No payment was made and no recurring schedule was activated.</p><div className="receipt-card"><span>GIFT<b>KSh {draft.amount.toLocaleString()}</b></span><span>TYPE<b>{draft.intention}</b></span><span>CAUSE<b>{draft.campaign}</b></span><span>DRAFT REFERENCE<b>{draft.id}</b></span></div><button className="button full" onClick={() => { setDonationStep(0); setDashboardOpen(true); }}>Open My Giving <Icon name="arrow-right"/></button><button className="download-receipt" onClick={() => downloadText(`${draft.id}.txt`, draftText([draft]))}>Download giving draft <Icon name="download"/></button></div>}</div></div>;
   }
 }

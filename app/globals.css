@@ -2681,133 +2681,157 @@ textarea:focus-visible { outline: 2px solid var(--control-focus); outline-offset
   .overlay .dashboard-update div { padding: 0 12px 12px; }
 }
 
-/* Photo-led opportunities: three quarters imagery, one quarter funding and actions. */
-.refined-opportunities .campaign-image { height: 336px; isolation: isolate; }
-.refined-opportunities .campaign-image::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #071a2c20 0%, transparent 28%, #071a2c80 51%, #071a2cf5 100%); pointer-events: none; }
-.refined-opportunities .campaign-image > img { position: absolute; inset: 0; }
+/* Shared photo-card composition. Keep overrides for these components together. */
+.refined-opportunities .campaign-card,
+.refined-updates .update-card {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  aspect-ratio: 1;
+  min-block-size: 19rem;
+  width: 100%; min-width: 0; border-radius: 18px;
+}
+.refined-opportunities .campaign-card > .campaign-image,
+.refined-updates .update-card > .update-image {
+  position: relative; display: block; isolation: isolate;
+  height: 100%; min-height: 0; padding: 0;
+}
+.refined-opportunities .campaign-image > img,
+.refined-updates .update-image > img { position: absolute; inset: 0; }
+.refined-opportunities .campaign-image::after,
+.refined-updates .update-image::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #071a2c20 0%, transparent 25%, #071a2c99 48%, #071a2cf5 100%); pointer-events: none; }
 .refined-opportunities .campaign-image .badge,
 .refined-opportunities .campaign-image .save { z-index: 2; }
-.campaign-image-content { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 1; text-align: start; }
-.refined-opportunities .campaign-image-content .campaign-meta-row { margin-bottom: 8px; gap: 6px 10px; }
-.refined-opportunities .campaign-image-content .verified { color: #b8ecd6; font-size: 10px; }
-.refined-opportunities .campaign-image-content .verified .app-icon { color: #b8ecd6; }
-.refined-opportunities .campaign-image-content .campaign-code { color: #d7e8e1; }
-.refined-opportunities .campaign-image-content .campaign-deadline { color: #fff2d4; }
+.refined-opportunities .campaign-image-content,
+.refined-updates .update-image-content { position: absolute; inset-inline: clamp(12px, 3.6cqw, 16px); bottom: 12px; z-index: 1; text-align: start; }
+.refined-updates .update-image-content { pointer-events: none; }
+.refined-opportunities .campaign-image-content h3,
+.refined-updates .update-image-content h3 { color: #fff; min-height: 2.3em; font-size: clamp(1.2rem, 5.45cqw, 1.5rem); line-height: 1.15; margin: 0 0 7px; text-shadow: 0 1px 8px #0005; }
+.refined-updates .update-image-content h3 { margin: 0; min-height: 0; }
+.refined-opportunities .campaign-image-content .campaign-meta-row { gap: 4px 8px; margin-bottom: 6px; }
+.refined-opportunities .campaign-image-content .verified { color: #c5f0dd; font-size: .6875rem; }
+.refined-opportunities .campaign-image-content .verified .app-icon { color: inherit; }
+.refined-opportunities .campaign-image-content .campaign-code { color: #e4f0eb; }
+.refined-opportunities .campaign-image-content .campaign-deadline { color: #fff2d4; font-size: .6875rem; }
 .refined-opportunities .campaign-image-content .campaign-deadline .app-icon { color: inherit; }
-.refined-opportunities .campaign-image-content h3 { color: #fff; font-size: clamp(22px, 1.8vw, 26px); line-height: 1.15; min-height: 2.3em; margin: 0 0 9px; text-shadow: 0 1px 8px #0005; }
-.refined-opportunities .campaign-image-content .campaign-location { margin: 0; color: #edf3f0; font-size: 11px; gap: 3px 6px; }
-.refined-opportunities .campaign-image-content .campaign-eligibility { color: #c7f4de; background: #ffffff1f; border: 1px solid #ffffff25; padding: 0 5px; font-size: 10px; }
-.refined-opportunities .campaign-body { padding: 12px; }
+.refined-opportunities .campaign-image-content .campaign-location { margin: 0; color: #edf3f0; font-size: .75rem; gap: 3px 6px; }
+.refined-opportunities .campaign-image-content .campaign-eligibility { color: #d6fbe8; background: #ffffff1f; border: 1px solid #ffffff25; padding: 0 5px; font-size: .6875rem; }
+.refined-opportunities .campaign-body,
+.refined-updates .update-card > .update-summary { min-width: 0; padding: 10px 12px; }
 .refined-opportunities .campaign-funding { margin-top: 0; }
+.refined-opportunities .money-row { flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.refined-opportunities .funding-amount { gap: 2px 5px; }
+.refined-opportunities .money-row strong { font-size: clamp(1rem, 4.3cqw, 1.2rem); }
+.refined-opportunities .funding-amount small,
+.refined-opportunities .money-row b { font-size: .6875rem; }
 .refined-opportunities .card-footer { margin-top: 8px; padding-top: 0; border-top: 0; }
+.refined-updates .update-image > .update-photo-badge { top: 12px; bottom: auto; inset-inline-start: 12px; z-index: 1; background: #fffcf1f5; color: #12634d; }
+.refined-updates .update-image-content .update-meta { margin: 0 0 8px; color: #d5ebdf; font-size: .75rem; }
+.refined-updates .update-image-content .update-meta span { position: static; display: inline; background: transparent; color: inherit; padding: 0; border-radius: 0; font-size: inherit; font-weight: 600; }
+.refined-updates .update-card .update-image > .update-photo-action { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: pointer; }
+.refined-updates .update-photo-action:focus-visible { outline: 3px solid #d8bd78; outline-offset: -5px; }
+.refined-updates .update-summary p { min-height: 3.2em; }
+.refined-updates .update-card .update-summary > p { margin: 0 0 4px; font-size: .8125rem; line-height: 1.6; }
+.refined-updates .update-card .update-summary > button { min-height: 44px; padding: 6px 0 0; }
+.refined-header :is(.header-icon, .header-language),
+.refined-header :is(.header-icon, .header-language):has(> .app-icon[data-icon-tone]),
+.refined-header :is(.header-icon, .header-language):hover,
+.refined-header :is(.header-icon, .header-language):active { background: transparent; border-color: transparent; box-shadow: none; }
 @media (max-width: 700px) {
-  .refined-opportunities .campaign-image { height: 324px; }
-  .campaign-image-content { inset-inline: 14px; bottom: 14px; }
-  .refined-opportunities .campaign-image-content h3 { font-size: 24px; }
+  .refined-opportunities .campaign-grid { grid-template-columns: minmax(0,1fr); max-width: none; }
+}
+@media (max-width: 380px) {
+  .refined-opportunities .campaign-card,
+  .refined-updates .update-card { min-block-size: 22rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .refined-opportunities .campaign-image img { transition: none; }
 }
 
-/* Verified updates use the same photo-led composition as opportunities. */
-.refined-updates .update-card > .update-image { position: relative; display: block; height: 336px; padding: 0; isolation: isolate; }
-.refined-updates .update-image > img { position: absolute; inset: 0; }
-.refined-updates .update-image::after { content: ""; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #071a2c20 0%, transparent 28%, #071a2c80 51%, #071a2cf5 100%); pointer-events: none; }
-.refined-updates .update-image > .update-photo-badge { top: 12px; bottom: auto; inset-inline-start: 12px; z-index: 1; background: #fffcf1f5; color: #12634d; }
-.refined-updates .update-image-content { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 1; pointer-events: none; text-align: start; }
-.refined-updates .update-image-content .update-meta { margin: 0 0 8px; color: #c4e8d9; font-size: 11px; }
-.refined-updates .update-image-content .update-meta span { position: static; display: inline; background: transparent; color: inherit; padding: 0; border-radius: 0; font-size: inherit; font-weight: 600; }
-.refined-updates .update-image-content h3 { color: #fff; min-height: 2.3em; margin: 0; font-size: clamp(22px, 1.8vw, 26px); line-height: 1.15; text-shadow: 0 1px 8px #0005; }
-.refined-updates .update-card .update-image > .update-photo-action { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: pointer; }
-.refined-updates .update-photo-action:focus-visible { outline: 3px solid #d8bd78; outline-offset: -5px; }
-.refined-updates .update-card > .update-summary { padding: 12px; }
-.refined-updates .update-summary p { min-height: 3.2em; }
-.refined-updates .update-card .update-summary > p { margin: 0 0 6px; font-size: 12px; line-height: 1.6; }
-.refined-updates .update-card .update-summary > button { min-height: 44px; padding: 6px 0 0; }
+/* Clear local-preview states and complete account workflows. */
+.site-preview-note { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 10px 20px; background: #f2f5ef; color: #4a6157; font-size: 12px; line-height: 1.5; }
+.site-preview-note .app-icon { flex-shrink: 0; width: 16px; height: 16px; }
+.preview-note { padding: 12px 14px; border: 1px solid #dce7df; border-radius: 12px; background: #f0f6f1; color: #345c4a; font-size: 13px; line-height: 1.6; }
+.preview-note b { display: block; }
+.preview-note p { margin: 4px 0 0; font-size: inherit; color: inherit; }
+.preview-caption { color: var(--muted); font-size: 12px; line-height: 1.5; }
+.form-error { border-inline-start: 3px solid #b34149; padding: 10px 12px; background: #fff1f0; color: #8b2930; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+.plan-review, .evidence-summary dl { display: grid; gap: 8px; margin: 16px 0; }
+.plan-review > div, .evidence-summary dl > div { display: grid; grid-template-columns: minmax(100px, .8fr) minmax(0, 1.2fr); gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 8px; font-size: 13px; line-height: 1.5; }
+.plan-review dt, .evidence-summary dt { color: var(--muted); }
+.plan-review dd, .evidence-summary dd { margin: 0; font-weight: 650; overflow-wrap: anywhere; }
+.evidence-summary { padding: 16px; border-radius: 14px; border: 1px solid var(--line); margin-block: 16px; }
+.evidence-summary h3 { margin: 0 0 8px; }
+.evidence-summary p { font-size: 14px; line-height: 1.6; }
+.saved-campaigns { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.saved-campaigns article { display: grid; grid-template-columns: 70px minmax(0,1fr) 36px; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; }
+.saved-campaigns img { width: 70px; height: 80px; object-fit: cover; border-radius: 9px; }
+.saved-campaigns b, .local-drafts b { display: block; font-size: 14px; line-height: 1.4; }
+.saved-campaigns small, .local-drafts small { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.saved-campaigns .text-link { font-size: 12px; min-height: 44px; }
+.saved-remove { width: 36px; min-height: 44px; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.local-drafts { margin-top: 24px; scroll-margin-top: 20px; }
+.local-drafts article { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.local-drafts article > div { min-width: 0; overflow-wrap: anywhere; }
+.local-drafts article span { display: block; margin-top: 6px; font-size: 13px; color: var(--muted); }
+.local-drafts article button { flex-shrink: 0; min-height: 44px; font-size: 13px; }
+.local-empty { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 16px; border-radius: 12px; background: #f5f7f3; }
+.local-empty p { flex: 1 1 220px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.language-options { display: grid; gap: 10px; margin-top: 20px; }
+.language-options > :is(button,div) { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #f6f8f4; text-align: start; }
+.language-options button { cursor: pointer; border-color: #8dbca1; background: #edf7ef; }
+.language-options span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+.support-composer { margin-top: 30px; padding: clamp(16px,4vw,28px); border: 1px solid var(--line); border-radius: 18px; background: #fff; }
+.support-composer form { display: grid; gap: 16px; margin-block: 20px; }
+.support-composer label { display: grid; gap: 7px; font-size: 14px; font-weight: 650; }
+.support-composer :is(input,select,textarea) { width: 100%; min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; font-weight: 400; }
+.support-composer textarea { resize: vertical; min-height: 130px; }
+.support-composer small { font-size: 12px; color: var(--muted); font-weight: 400; }
+.support-composer [role=status] { min-height: 1.5em; font-size: 13px; color: var(--emerald-dark); }
+.workflow-preview { position: relative; padding: 20px; margin-bottom: 20px; background: #fff; border: 1px solid #b8d7c2; border-radius: 16px; }
+.workflow-preview h3 { margin: 0 40px 8px 0; }
+.workflow-preview p:not(.eyebrow) { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.workflow-close { position: absolute; right: 10px; top: 10px; display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 0; cursor: pointer; }
 @media (max-width: 700px) {
-  .refined-updates .update-card > .update-image { height: 324px; }
-  .refined-updates .update-image-content { inset-inline: 14px; bottom: 14px; }
-  .refined-updates .update-image-content h3 { font-size: 24px; }
+  .saved-campaigns { grid-template-columns: minmax(0,1fr); }
+  .local-drafts article { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .dashboard-welcome { gap: 12px; }
+  .dashboard-welcome h2 { font-size: 27px; }
+  .site-preview-note { padding-inline: 16px; justify-content: flex-start; font-size: 11px; }
 }
 
-/* Square photo cards keep their rounded shell and let the image use spare space. */
-.refined-opportunities .campaign-card,
-.refined-updates .update-card {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  min-width: 0;
-  border-radius: 18px;
-}
-.refined-opportunities .campaign-card > .campaign-image,
-.refined-updates .update-card > .update-image { height: 100%; min-height: 0; }
-.refined-opportunities .campaign-body,
-.refined-updates .update-card > .update-summary { min-width: 0; padding: 10px 12px; }
-.refined-opportunities .campaign-image-content h3,
-.refined-updates .update-image-content h3 { min-height: 0; font-size: clamp(20px, 1.65vw, 24px); }
-.campaign-image-content,
-.refined-updates .update-image-content { bottom: 12px; }
-.refined-opportunities .campaign-image-content .campaign-meta-row { margin-bottom: 6px; }
-.refined-updates .update-card .update-summary > p { margin-bottom: 4px; }
+/* Account summaries and support fields remain readable on compact screens. */
+.premium-dashboard .dashboard-welcome span { font-size: 13px; line-height: 1.6; }
+.premium-dashboard .dashboard-welcome > button,
+.premium-dashboard .dashboard-actions > button { min-height: 44px; font-size: 14px; line-height: 1.5; }
+.premium-dashboard .dashboard-stats span,
+.premium-dashboard .dashboard-stats small { font-size: 12px; line-height: 1.5; }
+.premium-dashboard .dashboard-stats b { font-size: clamp(23px, 2vw, 28px); line-height: 1.25; }
+.premium-dashboard .muted { font-size: 14px; line-height: 1.6; }
+.support-composer :is(input,select,textarea) { font-size: 16px; }
+
+.saved-campaigns .text-link,
+.local-drafts .text-link,
+.local-empty .text-link,
+.evidence-summary .text-link,
+.workflow-preview .text-link { border: 0; background: transparent; padding: 8px 0; cursor: pointer; text-align: start; }
+
+/* Let content use its own track without forcing neighbours outside their containers. */
+.app-icon { min-width: 0; }
+.refined-updates .update-card > .update-summary { width: auto; min-width: 0; }
+.refined-updates .update-summary > button { width: 100%; align-self: stretch; min-width: 0; }
+.refined-updates .update-summary > button > span { display: inline-flex; flex: 0 0 16px; }
+.overlay .button.full { min-width: 0; white-space: normal; overflow-wrap: normal; padding-inline: 14px; gap: 8px; }
+.refined-checkout .intention-check .app-icon { width: 12px; height: 12px; }
+/* A static button surface avoids decorative shine extending its scrollable bounds. */
+.button::before { content: none; }
+:is(.portal-grid, .platform-preview-grid, .dashboard-stats, .planner-fields, .org-metrics) > * { min-width: 0; }
+:is(.plan-review, .receipt-card, .saved-campaigns, .local-drafts, .notice-content) :is(b,strong,dd,p) { overflow-wrap: anywhere; }
 @media (max-width: 700px) {
-  .refined-opportunities .campaign-image-content h3,
-  .refined-updates .update-image-content h3 { font-size: 22px; }
-}
-@media (max-width: 380px) {
-  .refined-opportunities .campaign-image-content h3,
-  .refined-updates .update-image-content h3 { font-size: 20px; }
-  .campaign-image-content,
-  .refined-updates .update-image-content { inset-inline: 12px; bottom: 10px; }
-  .refined-opportunities .campaign-image-content .campaign-meta-row { gap: 3px 6px; }
-  .refined-opportunities .campaign-image-content .verified,
-  .refined-opportunities .campaign-image-content .campaign-deadline { font-size: 9px; }
-  .refined-opportunities .campaign-image-content .campaign-location { font-size: 10px; }
-  .refined-opportunities .campaign-image-content h3 { margin-bottom: 6px; }
+  .refined-hero .hero-proof { grid-template-columns: .85fr .9fr 1.25fr; }
+  .refined-hero .hero-proof b { font-size: clamp(15px, 4vw, 23px); }
 }
 
-/* Keep the language switch light and unboxed while retaining its touch target. */
-.refined-header .header-language,
-.refined-header .header-language:has(> .app-icon[data-icon-tone]),
-.refined-header .header-language:hover,
-.refined-header .header-language:active {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-/* Search and notifications match the unboxed language control. */
-.refined-header .header-icon,
-.refined-header .header-icon:has(> .app-icon[data-icon-tone]),
-.refined-header .header-icon:hover,
-.refined-header .header-icon:active {
-  background: transparent;
-  border-color: transparent;
-  box-shadow: none;
-}
-
-/* One shared card composition scales with the card, rather than the viewport. */
-.refined-opportunities .campaign-card { container-type: inline-size; }
-.refined-opportunities .campaign-image-content {
-  inset-inline: clamp(12px, 3.6cqw, 16px);
-  bottom: clamp(10px, 2.7cqw, 12px);
-}
-.refined-opportunities .campaign-image-content h3 {
-  min-height: 2.3em;
-  margin-bottom: 7px;
-  font-size: clamp(19px, 5.45cqw, 24px);
-  line-height: 1.15;
-}
-.refined-opportunities .campaign-image-content .campaign-meta-row { gap: 4px 8px; margin-bottom: 6px; }
-.refined-opportunities .campaign-image-content .verified,
-.refined-opportunities .campaign-image-content .campaign-deadline { font-size: clamp(9px, 2.55cqw, 11px); }
-.refined-opportunities .campaign-image-content .campaign-location { font-size: clamp(10px, 2.75cqw, 12px); }
-.refined-opportunities .campaign-body { padding: clamp(8px, 2.7cqw, 12px); }
-.refined-opportunities .money-row { flex-wrap: nowrap; align-items: center; gap: 6px; }
-.refined-opportunities .funding-amount { gap: 2px 5px; }
-.refined-opportunities .money-row strong { font-size: clamp(16px, 4.3cqw, 19px); }
-.refined-opportunities .funding-amount small { font-size: clamp(9px, 2.5cqw, 11px); }
-.refined-opportunities .money-row b { font-size: clamp(9px, 2.3cqw, 10px); }
-@media (max-width: 700px) {
-  .refined-opportunities .campaign-grid { grid-template-columns: minmax(0, 1fr); max-width: none; }
-}
+/* Contain the hero decoration within its own section. */
+.hero.refined-hero { overflow: clip; }

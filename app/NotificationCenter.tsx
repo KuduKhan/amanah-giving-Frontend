@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Icon from './Icon';
 
 const notices = [
-  { id: 'impact', category: 'Impact', icon: 'shield', label: 'Impact verified', title: 'Clean water is now flowing in Garissa', description: 'Your WTR-284 gift now helps serve 340 people.', time: '2h', timeLabel: '2 hours ago' },
+  { id: 'impact', category: 'Impact', icon: 'shield', label: 'Impact verified', title: 'Clean water is now flowing in Garissa', description: 'Example WTR-183 update: completed delivery serves 340 people.', time: '2h', timeLabel: '2 hours ago' },
   { id: 'receipt', category: 'Payments', icon: 'wallet', label: 'Receipt ready', title: 'Your Jumu’ah Sadaqah was confirmed', description: 'KSh 500 · AMN-948231', time: 'Fri', timeLabel: 'Friday' },
   { id: 'plan', category: 'Plans', icon: 'calendar', label: 'Giving plan reminder', title: 'Last 10 nights plan begins in 5 days', description: 'Review your amount and payment method.', time: '1d', timeLabel: '1 day ago' },
   { id: 'security', category: 'Security', icon: 'shield', label: 'New sign-in protected', title: 'A sign-in from Nairobi was verified', description: 'If this was not you, secure your account.', time: '3d', timeLabel: '3 days ago' },
@@ -29,7 +29,7 @@ export default function NotificationCenter({ read, onRead, onClose }: Props) {
     <div className="notification-panel refined-notifications">
       <button className="close" aria-label="Close notifications" onClick={onClose}><Icon name="close"/></button>
       <div className="notification-head">
-        <div><p className="eyebrow">Notification center</p><h2 id="notification-title">Peace of mind, delivered.</h2></div>
+        <div><p className="eyebrow">Notification center</p><h2 id="notification-title">Peace of mind, delivered.</h2><p className="preview-caption">Example updates · no live account or payment activity</p></div>
         <div className="notification-summary"><span role="status">{unread ? `${unread} unread updates` : 'You’re all caught up'}</span><button disabled={!unread} onClick={() => onRead(notices.map(item => item.id))}><Icon name="✓"/>Mark all read</button></div>
       </div>
       <div className="notification-tabs" role="group" aria-label="Filter notifications">

@@ -3,8 +3,11 @@
 import Icon from './Icon';
 import AmanahLogo from './AmanahLogo';
 import Image from 'next/image';
+import { downloadText } from './givingDrafts';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { createContext, FormEvent, useContext, useMemo, useState } from 'react';
+
+const WorkflowActions = createContext<(message: string) => void>(() => {});
 
 type ActionProps = { act: (message: string) => void };
 
@@ -41,10 +44,11 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
   const portalTitle = useMemo(() => portals.find(item => item.id === portal)!, [portal]);
   const act = (text: string) => {
     setMessage(text);
-    window.setTimeout(() => setMessage(''), 2600);
+    requestAnimationFrame(() => document.getElementById('workflow-preview')?.focus());
+
   };
 
-  return <div className="platform-overlay" role="dialog" aria-modal="true" aria-label="Amanah platform console">
+  return <WorkflowActions.Provider value={act}><div className="platform-overlay" role="dialog" aria-modal="true" aria-label="Amanah platform console">
     <div className="platform-shell">
       <aside className="platform-sidebar">
         <div className="platform-brand"><AmanahLogo variant="light" size="sm" showTagline={false}/><div><b>AMANAH</b><small>PLATFORM</small></div></div>
@@ -52,14 +56,14 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
         <nav aria-label="Platform portals">
           {portals.map(item => <button key={item.id} className={portal === item.id ? 'active' : ''} onClick={() => setPortal(item.id)}><i><Icon name={item.icon}/></i><span><b>{item.label}</b><small>{item.role}</small></span></button>)}
         </nav>
-        <div className="platform-security"><span><Icon name="●"/></span><div><b>Systems healthy</b><small>Encrypted · auditable · monitored</small></div></div>
+        <div className="platform-security"><span><Icon name="●"/></span><div><b>Example workspace</b><small>No live records connected</small></div></div>
       </aside>
 
       <div className="platform-main">
-        <header className="platform-topbar"><div><p>{portalTitle.label} portal</p><h2>{portalTitle.role}</h2></div><div><button className="platform-ai" aria-expanded={assistantOpen} onClick={() => setAssistantOpen(!assistantOpen)}><Icon name="✦"/> Giving assistant</button><button className="platform-close" onClick={onClose} aria-label="Close platform"><Icon name="×"/></button></div></header>
-        {assistantOpen && <form className="assistant-bar" onSubmit={(event: FormEvent) => { event.preventDefault(); setAssistantReply('Based on your intention, a verified water or education Sadaqah Jariyah campaign may fit. I can explain options, but I do not issue religious rulings or move funds.'); }}><span><Icon name="✦"/></span><input aria-label="Ask the Giving Assistant" placeholder="Ask about giving types, causes or your impact…"/><button>Ask</button>{assistantReply && <p>{assistantReply}</p>}</form>}
+        <header className="platform-topbar"><div><p>{portalTitle.label} portal</p><h2>{portalTitle.role}</h2></div><div><button className="platform-ai" aria-expanded={assistantOpen} onClick={() => setAssistantOpen(!assistantOpen)}><Icon name="✦"/> Giving guide</button><button className="platform-close" onClick={onClose} aria-label="Close platform"><Icon name="×"/></button></div></header>
+        {assistantOpen && <form className="assistant-bar" onSubmit={(event: FormEvent) => { event.preventDefault(); setAssistantReply('Example guidance (not personalised): a verified water or education Sadaqah Jariyah campaign may fit. I can explain options, but I do not issue religious rulings or move funds.'); }}><span><Icon name="✦"/></span><input aria-label="Ask the example giving guide" placeholder="Ask about giving types, causes or your impact…"/><button>Ask</button>{assistantReply && <p>{assistantReply}</p>}</form>}
 
-        <div className="platform-content">
+        <div className="platform-content"><p className="preview-note">Workspace examples · Figures, records and controls are illustrative. No organization, account or financial changes are submitted.</p>{message && <section className="workflow-preview" id="workflow-preview" tabIndex={-1} aria-labelledby="workflow-title"><button className="workflow-close" aria-label="Close workflow preview" onClick={() => setMessage('')}><Icon name="close"/></button><p className="eyebrow">Workflow preview</p><h3 id="workflow-title">{message.replace(/ (opened|created|saved|submitted|approved|prepared)$/i, '')}</h3><p>This task is shown as a preview. No record was submitted, approved, downloaded or changed on a live service.</p><button className="text-link" onClick={() => downloadText('amanah-workflow-note.txt', `AMANAH GIVING — WORKFLOW NOTE\n${message}\nPreview only. No live record was changed.\n`)}>Download workflow note <Icon name="→"/></button></section>}
           {portal === 'donor' && <DonorPortal onGive={onGive} act={act} notifications={notifications} setNotifications={setNotifications} privateProfile={privateProfile} setPrivateProfile={setPrivateProfile}/>} 
           {portal === 'beneficiary' && <BeneficiaryPortal act={act}/>} 
           {portal === 'organization' && <OrganizationPortal act={act}/>} 
@@ -69,8 +73,8 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
         </div>
       </div>
     </div>
-    {message && <div className="platform-toast"><Icon name="✓"/> {message}</div>}
-  </div>;
+
+  </div></WorkflowActions.Provider>;
 }
 
 function DonorPortal({ onGive, act, notifications, setNotifications, privateProfile, setPrivateProfile }: DonorProps) {
@@ -78,7 +82,7 @@ function DonorPortal({ onGive, act, notifications, setNotifications, privateProf
     <div className="portal-welcome"><div><p className="portal-label">ASSALAMU ALAIKUM, AMINA</p><h3>Your generosity is becoming visible impact.</h3><p>Follow every gift from payment confirmation to verified outcome.</p></div><button className="button" onClick={onGive}>Give now <Icon name="↗"/></button></div>
     <div className="portal-metrics">{[['KSh 72,450','Total given'],['24','Projects supported'],['4','Recurring plans'],['18','Verified outcomes']].map(([value,label]) => <div key={label}><span>{label}</span><b>{value}</b><small><Icon name="↑"/> Updated today</small></div>)}</div>
     <div className="portal-grid donor-grid">
-      <section className="portal-card trace-card"><CardHead eyebrow="GIFT JOURNEY" title="Trace gift AMN-948231" action="Full evidence →"/><div className="trace-route">{[['✓','Payment','Confirmed'],['✓','Fund','Restricted'],['✓','Approval','3 of 3'],['✓','Delivery','Completed'],['✓','Impact','340 people']].map((x,i) => <div key={x[1]} className="trace-node"><i><Icon name={x[0]}/></i><b>{x[1]}</b><small>{x[2]}</small>{i < 4 && <span/>}</div>)}</div><div className="trace-detail"><Image src="/water-community.jpg" alt="Completed water project" width={600} height={420}/><div><span>WTR-284 · GARISSA</span><b>Clean water is flowing</b><p>Water test, contractor invoices, completion photos and beneficiary count verified.</p><button onClick={() => act('Evidence bundle opened')}>View 7 evidence files <Icon name="↗"/></button></div></div></section>
+      <section className="portal-card trace-card"><CardHead eyebrow="GIFT JOURNEY" title="Trace gift AMN-948231" action="Full evidence →"/><div className="trace-route">{[['✓','Payment','Confirmed'],['✓','Fund','Restricted'],['✓','Approval','3 of 3'],['✓','Delivery','Completed'],['✓','Impact','340 people']].map((x,i) => <div key={x[1]} className="trace-node"><i><Icon name={x[0]}/></i><b>{x[1]}</b><small>{x[2]}</small>{i < 4 && <span/>}</div>)}</div><div className="trace-detail"><Image src="/water-community.jpg" alt="Completed water project" width={600} height={420}/><div><span>WTR-183 · GARISSA</span><b>Clean water is flowing</b><p>Water test, contractor invoices, completion photos and beneficiary count verified.</p><button onClick={() => act('Evidence bundle opened')}>View 7 evidence files <Icon name="↗"/></button></div></div></section>
       <section className="portal-card"><CardHead eyebrow="UPCOMING" title="Giving plans" action="Manage"/><div className="schedule-list">{[['Jumu’ah Sadaqah','Every Friday','KSh 500'],['Last 10 Nights','20–29 Ramadan','KSh 1,000'],['Orphan sponsorship','Monthly','KSh 3,500']].map(x => <button key={x[0]} onClick={() => act(`${x[0]} plan opened`)}><i><Icon name="↻"/></i><span><b>{x[0]}</b><small>{x[1]}</small></span><strong>{x[2]}</strong></button>)}</div><button className="add-plan" onClick={() => act('New giving plan created')}>+ Create giving plan</button></section>
     </div>
     <section className="portal-card"><CardHead eyebrow="WAYS TO GIVE" title="More paths to lasting benefit"/><div className="feature-catalog">{featureCatalog.map(item => <button key={item.title} onClick={() => act(`${item.title} opened`)}><i><Icon name={item.icon}/></i><span><b>{item.title}</b><p>{item.text}</p><small>{item.status} <em><Icon name="→"/></em></small></span></button>)}</div></section>
@@ -107,6 +111,6 @@ function ShariahPortal({ act }: ActionProps) {
   return <><div className="portal-welcome shariah"><div><p className="portal-label">SHARIAH GOVERNANCE CONSOLE</p><h3>Clear policy. Versioned decisions. Visible accountability.</h3><p>Eligibility, fund handling and distribution rules are reviewed without exposing private donor data.</p></div><span className="policy-badge">POLICY v3.2 ACTIVE</span></div><div className="portal-grid"><section className="portal-card"><CardHead eyebrow="POLICY REGISTER" title="Active rules and decisions"/><DataRows rows={[['ZKT-3.2','Zakat eligibility & segregation','Active','12 Jun 2026'],['WQF-1.4','Waqf principal protection','Active','05 May 2026'],['FDY-2.1','Fidyah distribution standard','Review','30 Aug 2026']]}/></section><section className="portal-card"><CardHead eyebrow="REVIEW QUEUE" title="Scholarly decisions needed"/><div className="task-list">{[['Mixed-benefit water campaign','Zakat eligibility','2 opinions'],['Corporate matching fund','Restricted use','New'],['Digital Waqf pilot','Principal custody','Priority']].map(x => <button key={x[0]} onClick={() => act(`${x[0]} review opened`)}><span><b>{x[0]}</b><small>{x[1]}</small></span><em>{x[2]}</em></button>)}</div></section></div><section className="portal-card"><CardHead eyebrow="GOVERNANCE BOUNDARIES" title="What the platform enforces"/><div className="governance-grid">{[['Immutable intention','A donation’s giving type cannot be silently changed after payment.'],['Restricted distribution','Zakat and other restricted funds can only reach approved categories.'],['Versioned policy','Every eligibility decision records the policy version used.'],['Independent oversight','Scholars review rules and exceptions; operators cannot self-approve.'],['Public explanation','Donors see plain-language policy without private case data.'],['AI boundaries','The assistant explains platform policy but never issues a fatwa.']].map(x => <div key={x[0]}><i><Icon name="✓"/></i><span><b>{x[0]}</b><p>{x[1]}</p></span></div>)}</div></section></>;
 }
 
-function CardHead({ eyebrow, title, action }: { eyebrow: string; title: string; action?: string }) { return <div className="card-head"><div><p>{eyebrow}</p><h4>{title}</h4></div>{action && <button>{action.replace(/\s*→$/, "")}<Icon name="→"/></button>}</div>; }
+function CardHead({ eyebrow, title, action }: { eyebrow: string; title: string; action?: string }) { const act = useContext(WorkflowActions); return <div className="card-head"><div><p>{eyebrow}</p><h4>{title}</h4></div>{action && <button onClick={() => act(`${title}: ${action.replace(/\s*→$/, "")}`)}>{action.replace(/\s*→$/, "")}<Icon name="→"/></button>}</div>; }
 function Toggle({ label, checked, setChecked }: { label: string; checked: boolean; setChecked: (value: boolean) => void }) { return <button className="toggle-row" role="switch" aria-checked={checked} onClick={() => setChecked(!checked)}><span>{label}</span><i className={checked ? 'on' : ''}><b/></i></button>; }
-function DataRows({ rows }: { rows: string[][] }) { return <div className="data-rows">{rows.map(row => <button key={row[0]}>{row.map((cell,index) => <span key={cell} className={index === row.length-1 ? 'row-action' : ''}>{cell}</span>)}</button>)}</div>; }
+function DataRows({ rows }: { rows: string[][] }) { const act = useContext(WorkflowActions); return <div className="data-rows">{rows.map(row => <button key={row[0]} onClick={() => act(`Review ${row[0]}: ${row[1]}`)}>{row.map((cell,index) => <span key={cell} className={index === row.length-1 ? 'row-action' : ''}>{cell}</span>)}</button>)}</div>; }

@@ -1,0 +1,83 @@
+/* Amanah finish: quiet surfaces, clear controls and a consistent icon rhythm. */
+:root {
+  --finish-shadow: 0 3px 8px #10263804, 0 12px 32px #10263806;
+  --finish-border: #dce6df;
+  --finish-ease: cubic-bezier(.2,.7,.2,1);
+}
+body { font-family: var(--font-geist-sans), Arial, sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button, .button { touch-action: manipulation; }
+.app-icon { stroke-width: 1.8; }
+:is(h1,h2,h3) { text-wrap: pretty; }
+.button, .refined-opportunities .donate-mini {
+  border: 1px solid #087253;
+  background: linear-gradient(160deg, #168365, #09644e);
+  color: #fff;
+  box-shadow: inset 0 1px 0 #ffffff24, 0 3px 7px #07594415;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  transition: background .18s, border-color .18s, box-shadow .18s;
+}
+.button .app-icon, .refined-opportunities .donate-mini .app-icon { color: inherit; }
+.button:enabled:hover, a.button:hover, .refined-opportunities .donate-mini:hover {
+  background: linear-gradient(160deg, #10775b, #07513e);
+  border-color: #07513e;
+  box-shadow: inset 0 1px 0 #ffffff20, 0 5px 12px #07594424;
+  transform: none;
+}
+.button:enabled:active, .refined-opportunities .donate-mini:active { box-shadow: inset 0 2px 4px #032d3029; transform: none; }
+.button:disabled { background: #e2ebe4; color: #64796b; border-color: #d5e1d8; box-shadow: none; }
+.button.sand, .refined-footer .footer-cta .button { color: #18382f; background: linear-gradient(150deg,#f6efde,#e9d7b2); border-color: #cfb883; box-shadow: inset 0 1px 0 #fff8, 0 3px 9px #0000000c; }
+.button.sand:hover, .refined-footer .footer-cta .button:hover { color: #18382f; background: #e7d4ac; border-color: #b89b5f; }
+:is(.refined-opportunities .campaign-card, .refined-updates .update-card, .refined-seasonal .seasonal-track article, .refined-how .steps-grid article, .saved-campaigns article, .support-composer) { border-color: var(--finish-border); box-shadow: var(--finish-shadow); }
+.refined-opportunities .campaign-card:hover, .refined-updates .update-card:hover { border-color: #aac7b7; box-shadow: 0 6px 22px #1026380c; }
+.refined-opportunities .campaign-body, .refined-updates .update-summary { background: linear-gradient(180deg,#fff,#fcfdfb); }
+.refined-opportunities .card-footer > button:first-child {
+  border: 1px solid #dce7df; background: #fff; color: #24473a;
+  box-shadow: 0 1px 2px #10263804; font-weight: 650;
+}
+.refined-opportunities .card-footer > button:first-child:hover { border-color: #a5c4b2; background: #f1f7f2; }
+:is(.filter-row, .notification-tabs) button { border: 1px solid #dce6df; background: #fff; box-shadow: 0 1px 2px #10263803; font-weight: 600; transition: background .18s, color .18s, border-color .18s; }
+:is(.filter-row, .notification-tabs) button:hover { border-color: #acc8b9; background: #f0f6f1; }
+:is(.filter-row, .notification-tabs) button.active { border-color: #116b51; color: #fff; background: #126e54; box-shadow: inset 0 1px 0 #ffffff20; }
+:is(.filter-row, .notification-tabs) button.active:hover { color: #fff; background: #0b5c45; }
+.refined-header { border-bottom-color: #dfe8e1; box-shadow: 0 3px 18px #10263804; }
+.refined-header :is(.header-icon,.header-language) { background: transparent; border-color: transparent; box-shadow: none; }
+.refined-header :is(.header-icon,.header-language):hover { background: transparent; border-color: transparent; box-shadow: none; color: var(--emerald-dark); }
+.refined-header .desktop-links a[aria-current] { border-radius: 10px; background: #edf5ee; }
+.overlay .close, .platform-close { display: inline-grid; place-items: center; border: 1px solid #e0e8e2; background: #fbfcfa; color: #41594e; box-shadow: 0 2px 5px #10263804; transition: background .18s, border-color .18s; }
+.overlay .close:hover, .platform-close:hover { background: #edf4ee; border-color: #b5cdbf; }
+.overlay :is(.search-panel,.donation-panel,.dashboard-panel,.planner-panel,.notification-panel,.detail-panel) { box-shadow: 0 24px 90px #00000030, 0 0 0 1px #ffffff40; }
+.text-link, .button-link { text-underline-offset: 4px; }
+:is(.text-link,.button-link):hover { color: var(--emerald-dark); text-decoration: underline; }
+:is(.refined-footer,.refined-promise,.refined-zakat .zakat-copy) :is(.text-link,.button-link):hover { color: #cce8d6; }
+:is(.amount-grid,.payment-tabs,.occasion-grid) button { border-radius: 11px; }
+.amount-grid button.selected, .occasion-grid button.selected { background: #eef7ef; border-color: #247e59; box-shadow: inset 0 0 0 1px #247e59; }
+.payment-tabs button.active { background: #fff; color: #145c45; box-shadow: 0 2px 7px #1026380a; }
+.refined-checkout .intention-option { border-color: #dfe7e1; background: #fff; transition: border-color .18s, background .18s; }
+.refined-checkout .intention-option:hover { border-color: #9bbbAA; background: #fafcf9; }
+.refined-checkout .intention-option.selected { border-color: #267c58; background: #eff7f0; box-shadow: inset 0 0 0 1px #267c58; }
+:is(.season-icon,.cause-icon,.intention-icon,.notice-icon,.platform-preview-grid i) { box-shadow: inset 0 1px 0 #ffffff80; }
+.premium-dashboard .dashboard-stats > div { border: 1px solid #e5e8db; background: linear-gradient(145deg,#f6f3ea,#f0eee4); border-radius: 14px; }
+.premium-dashboard .dashboard-actions > button { border: 1px solid #dee8e0; background: #f8fbf7; border-radius: 11px; padding-inline: 14px; }
+.premium-dashboard .dashboard-actions > button:hover { background: #eef6ee; border-color: #b2cbb9; }
+.support-composer :is(input,select,textarea):focus, .overlay :is(input,select,textarea):focus { border-color: #679f83; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #218360; outline-offset: 3px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :is(.text-link,.button-link,.card-footer button) > .app-icon { transition: transform .18s var(--finish-ease); }
+  :is(.text-link,.button-link,.card-footer button):hover > .app-icon { transform: translateX(2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto; }
+  :is(.button,.app-icon,.filter-row button,.notification-tabs button,.intention-option) { transition: none; }
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* Header utilities deliberately remain unboxed, including native-tone icon rules. */
+.site-header.premium-header.refined-header :is(.header-icon,.header-language):has(> .app-icon[data-icon-tone]),
+.site-header.premium-header.refined-header :is(.header-icon,.header-language):has(> .app-icon[data-icon-tone]):hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}

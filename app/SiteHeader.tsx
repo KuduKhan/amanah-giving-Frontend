@@ -60,7 +60,6 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
   }, [menuOpen]);
 
   const run = (action: () => void) => { setMenuOpen(false); action(); };
-  const nextLanguage = language === 'en' ? 'Kiswahili' : language === 'sw' ? 'Arabic' : 'English';
 
   return <header className="site-header premium-header refined-header" ref={header} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
@@ -74,7 +73,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     <div className="header-actions">
       <button className="header-icon" onClick={() => run(onSearch)} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
       <button className="header-icon notification-trigger" onClick={onNotifications} aria-label={`Open notifications, ${unreadCount} unread`} title="Notifications"><Icon name="bell"/>{unreadCount > 0 && <span className="notification-dot"/>}</button>
-      <button className="header-language" onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`} title={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
+      <button className="header-language" onClick={onLanguage} aria-label="Language options" title="Language options"><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
       <span className="header-divider" aria-hidden="true"/>
       <button className="account-link" onClick={onAccount}><Icon name="wallet"/>{labels.sign}</button>
       <button className="button button-small header-give" onClick={onGive}>{labels.give}<Icon name="↗"/></button>
@@ -95,7 +94,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
         <button onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="→"/></button>
       </nav>
       <div className="menu-utilities">
-        <button onClick={onLanguage} aria-label={`Switch to ${nextLanguage}`}><Icon name="globe"/><span>{language === 'en' ? 'English' : language === 'sw' ? 'Kiswahili' : 'العربية'}</span><small>{nextLanguage}</small></button>
+        <button onClick={onLanguage} aria-label="Language options"><Icon name="globe"/><span>{language === 'en' ? 'English' : language === 'sw' ? 'Kiswahili' : 'العربية'}</span><small>Language options</small></button>
         <button onClick={() => run(onNotifications)}><Icon name="bell"/><span>Notifications</span><small>{unreadCount ? `${unreadCount} unread` : 'All read'}</small></button>
       </div>
       <div className="menu-footer"><span><Icon name="shield"/>Verified giving. Visible impact.</span><button className="button" onClick={() => run(onGive)}>{labels.give}<Icon name="↗"/></button></div>
