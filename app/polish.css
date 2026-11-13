@@ -81,3 +81,99 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   border-color: transparent;
   box-shadow: none;
 }
+
+/* Editorial landing: a calm welcome, a single impact story, and a clearer browse rail. */
+.hero.refined-hero { background: #f6f4eb; }
+.refined-hero .hero-copy {
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  background: radial-gradient(ellipse at 90% 5%, #e8eee0, transparent 60%), linear-gradient(145deg, #fcfaf2, #f2eee2);
+}
+.refined-hero .hero-copy .eyebrow {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px;
+  border: 1px solid #b9d0be; border-radius: 999px; color: #285641; letter-spacing: .09em;
+}
+.refined-hero .hero-copy .eyebrow::before { content: ''; width: 6px; height: 6px; flex: none; border-radius: 50%; background: #508566; }
+.refined-hero .hero-copy h1 { max-width: 12ch; }
+.refined-hero .hero-copy h1 em { color: #137054; }
+.refined-hero .hero-actions { flex-wrap: wrap; gap: 12px 18px; }
+.refined-hero .hero-actions .button { min-height: 48px; padding: 12px 16px; }
+.refined-hero .hero-secondary { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; color: #1b5c45; font-size: 13px; font-weight: 650; text-decoration: none; }
+.refined-hero .hero-secondary:hover { text-decoration: underline; text-underline-offset: 4px; }
+.refined-hero .hero-proof { width: 100%; margin-top: 26px; }
+.refined-hero .hero-visual { grid-template-rows: auto 1fr auto; align-content: stretch; }
+.refined-hero .hero-visual::after { background: linear-gradient(180deg,#071a2c30 0%,#071a2c0d 45%,#071a2ce8 100%); }
+.refined-hero .live-giving { display: inline-flex; gap: 8px; align-items: center; border-radius: 999px; background: #0b2031f5; color: #edf6f3; }
+.refined-hero .live-giving .live-pulse { flex: none; animation: none; box-shadow: none; }
+.refined-hero .impact-card { width: min(325px, 100%); padding: clamp(16px, 1.6vw, 24px); border-radius: 20px; background: #fffffff5; }
+.refined-hero .impact-card p { font-size: clamp(18px, 1.75vw, 26px); }
+.refined-hero .hero-caption { grid-row: 3; align-self: end; padding-bottom: 16px; }
+.refined-hero .hero-caption p { max-width: 26ch; font-size: clamp(27px, 2.65vw, 40px); }
+.refined-hero .hero-caption button { color: #fff; background: #ffffff10; border-color: #ffffff60; }
+.refined-hero .hero-caption button:hover { background: #ffffff25; }
+.cause-browser-bar { min-width: 0; padding: 12px 14px 6px; margin-bottom: 16px; border: 1px solid #dce6df; border-radius: 16px; background: #f5f8f2; }
+.refined-opportunities .cause-browser-bar .filter-row { margin: 0; padding: 0; }
+.refined-opportunities .cause-browser-bar .filter-row button { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 8px 13px; }
+.refined-opportunities .cause-browser-bar .filter-row button .app-icon { width: 15px; height: 15px; }
+.refined-opportunities .cause-browser-bar .filter-row button.active .app-icon { color: inherit; }
+.cause-results-line { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2px 12px; padding-top: 5px; }
+.cause-results-line p { min-width: 0; margin: 5px 0; color: #4c665a; font-size: 12px; overflow-wrap: anywhere; }
+.cause-results-line button { display: inline-flex; align-items: center; gap: 5px; min-height: 38px; padding: 4px 0; border: 0; background: transparent; color: #1b5c45; font-size: 12px; font-weight: 650; }
+.refined-how .step-signature { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.refined-how .step-signature i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #1b5c45; background: #e7f0e7; }
+.refined-how .step-signature span { color: #62786b; font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: .06em; }
+@media (max-width: 1050px) {
+  .refined-hero .hero-copy h1 { max-width: 17ch; }
+  .refined-hero .hero-visual { min-height: 460px; }
+}
+@media (max-width: 600px) {
+  .refined-hero .hero-copy .eyebrow { font-size: 10px; margin-bottom: 13px; }
+  .refined-hero .hero-copy h1 { max-width: 15ch; font-size: clamp(34px, 8.8vw, 46px); }
+  .refined-hero .hero-visual { min-height: 410px; }
+  .refined-hero .impact-card { width: min(255px, 100%); border-radius: 16px; }
+  .refined-hero .hero-caption { padding-bottom: 12px; }
+  .refined-hero .hero-actions { gap: 5px 14px; }
+  .cause-browser-bar { padding: 9px 9px 5px; }
+  .refined-opportunities .cause-browser-bar .filter-row button { gap: 5px; padding-inline: 9px; font-size: 12px; }
+}
+
+/* Safeguards and the private giving workspace. */
+.trustbar.refined-trustbar { background: #0e292b; border-bottom: 1px solid #ffffff18; }
+.refined-trustbar .trustbar-inner { margin: 0 auto; padding: 0; list-style: none; }
+.refined-trustbar .trustbar-item { gap: 9px; padding-block: 7px; font-weight: 600; }
+.refined-trustbar .trustbar-item + .trustbar-item { border-inline-start: 1px solid #ffffff20; }
+.refined-trustbar .trustbar-item i { display: grid; place-items: center; width: 26px; height: 26px; flex: none; border-radius: 8px; background: #b2e3cd18; }
+.refined-trustbar .trustbar-item i .app-icon[data-icon-tone] { color: #afe4ca; }
+.overlay .my-giving { background: #f9faf6; }
+.my-giving .dashboard-welcome { align-items: end; padding: 0 0 18px; border-bottom: 1px solid #dce6df; }
+.my-giving .dashboard-welcome > div { min-width: 0; }
+.my-giving .dashboard-welcome h2 { margin: 0 0 10px; font-size: clamp(27px,4vw,40px); }
+.my-giving .dashboard-welcome > button { display: inline-flex; align-items: center; gap: 8px; padding-inline: 13px; }
+.my-giving .dashboard-welcome > button:disabled { opacity: 1; color: #67776f; background: #eff2ed; }
+.my-giving .giving-device { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 7px; margin: 0; color: #52665c; font-size: 12px; line-height: 1.5; }
+.my-giving .dashboard-stats { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.overlay .my-giving .dashboard-stats > div { padding: 13px; background: #fff; border-color: #dce7df; }
+.my-giving .dashboard-stats > div:first-child { background: #eaf4ec; border-color: #c9dfcf; }
+.my-giving .dashboard-stats dt { display: flex; align-items: center; gap: 6px; color: #405b4e; font-size: 12px; line-height: 1.35; }
+.my-giving .dashboard-stats dd { margin: 0; }
+.my-giving .dashboard-stats b { display: block; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.my-giving .dashboard-actions { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.my-giving .dashboard-actions > button { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 8px; text-align: start; min-height: 48px; transform: none; }
+.my-giving .dashboard-actions > button > span { margin: 0; color: inherit; font-size: 13px; font-weight: 650; }
+.my-giving .dashboard-actions > .button { background: #116f54; border-color: #116f54; color: #fff; }
+.my-giving .dashboard-actions > .button:hover { background: #095a43; border-color: #095a43; }
+.giving-library { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; align-items: start; }
+.my-giving .giving-collection { min-width: 0; margin: 0; padding: 16px; border: 1px solid #dce7df; border-radius: 15px; background: #fff; }
+.giving-collection h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 17px; }
+.giving-collection-note, .giving-empty p { margin: 0 0 8px; color: #52665c; font-size: 13px; line-height: 1.5; }
+.giving-empty { padding: 12px; border: 1px dashed #cfdfd4; border-radius: 11px; background: #f7faf6; }
+.giving-empty strong { display: block; margin-bottom: 4px; font-size: 14px; }
+.giving-empty .text-link { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0; border: 0; background: transparent; font-size: 13px; }
+.my-giving .saved-campaigns { grid-template-columns: minmax(0,1fr); }
+.my-giving .local-drafts article { flex-wrap: wrap; }
+@media (max-width: 700px) {
+  .my-giving .dashboard-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .my-giving .dashboard-actions, .giving-library { grid-template-columns: minmax(0,1fr); }
+  .my-giving .dashboard-welcome { align-items: start; }
+  .refined-trustbar .trustbar-item { gap: 4px; padding: 6px 4px; }
+  .refined-trustbar .trustbar-item i { width: 22px; height: 22px; border-radius: 7px; }
+}

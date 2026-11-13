@@ -41,6 +41,18 @@ const completedWater: Campaign = { ...campaigns[0], id: 'WTR-183', title: 'Al-Hu
 
 const completedFood: Campaign = { ...campaigns[2], id: 'FOD-398', title: 'Food distribution to 250 Mombasa households', raised: 1250000, goal: 1250000, days: 0, badge: 'Completed', story: 'This example completed distribution reached 250 households. Delivery counts and distribution records illustrate a closed delivery, separate from the current appeal.' };
 
+const causeFilters = [
+  ['All', 'platform'], ['Zakat', 'giving'], ['Food', '□'], ['Orphans', 'users'],
+  ['Water', '≈'], ['Mosque', 'bank'], ['Health', 'healthcare'], ['Education', 'education'],
+] as const;
+
+const givingSteps = [
+  ['01', 'search', 'Discover verified need', 'Search by cause, location, giving type and verification level.'],
+  ['02', 'giving', 'Choose your intention', 'Keep Zakat, Sadaqah, Sadaqah Jariyah and Waqf clearly separated.'],
+  ['03', 'wallet', 'Prepare your gift', 'Choose an amount and review your giving draft before saving it.'],
+  ['04', 'evidence', 'Follow the outcome', 'See how disbursements and verified outcomes appear in the example records.'],
+] as const;
+
 const money = (value: number) => value >= 1000000 ? `KSh ${(value / 1000000).toFixed(value % 1000000 ? 1 : 0)}M` : `KSh ${Math.round(value / 1000)}K`;
 
 const copy = {
@@ -213,13 +225,11 @@ export default function Home() {
       <a className="skip-link" href="#top">Skip to main content</a>
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
       <div className="trustbar refined-trustbar" role="note" aria-label="Giving safeguards">
-        <div className="trustbar-inner">
-          <span className="trustbar-item"><Icon name="shield" /><span>Verified campaigns</span></span>
-          <span className="trustbar-separator" aria-hidden="true" />
-          <span className="trustbar-item trustbar-primary"><Icon name="wallet" /><span>Zakat funds kept separate</span></span>
-          <span className="trustbar-separator" aria-hidden="true" />
-          <span className="trustbar-item"><Icon name="phone" /><span>M-PESA ready</span></span>
-        </div>
+        <ul className="trustbar-inner">
+          <li className="trustbar-item"><i><Icon name="shield"/></i><span>Verified campaigns</span></li>
+          <li className="trustbar-item"><i><Icon name="wallet"/></i><span>Zakat funds kept separate</span></li>
+          <li className="trustbar-item"><i><Icon name="receipt"/></i><span>Giving draft preview</span></li>
+        </ul>
       </div>
       <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
@@ -229,14 +239,27 @@ export default function Home() {
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-title">{t.titleA} <em>{t.titleB}</em></h1>
           <p className="hero-lead">{t.lead}</p>
-          <div className="hero-actions"><a className="text-link" href="#causes">Explore verified causes <span><Icon name="↓"/></span></a></div>
+          <div className="hero-actions">
+            <a className="button" href="#causes">Explore verified causes <Icon name="↓"/></a>
+            <a className="hero-secondary" href="#how">How giving works <Icon name="arrow-right"/></a>
+          </div>
           <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
         </div>
         <div className="hero-visual">
           <Image src="/water-community.jpg" alt="Children gathering at a rural community water well" width={1400} height={1200} priority sizes="(max-width: 900px) 100vw, 50vw" />
-          <div className="impact-card"><div className="hero-impact-label"><Icon name="shield"/><b>Impact verified</b></div><p>Garissa water project now serves 340 people.</p><small>Evidence reviewed 2 days ago</small></div>
-          <div className="live-giving"><span className="live-pulse"/><b>38 donors</b> gave in the last hour</div>
-          <div className="hero-caption"><span>WTR-183 · SADAQAH JARIYAH</span><p>From your giving to safe, flowing water.</p><button onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>Trace this project <Icon name="→"/></button></div>
+          <div className="live-giving">
+            <span className="live-pulse" aria-hidden="true"/><span><b>38 donors</b> gave in the last hour</span>
+          </div>
+          <div className="impact-card">
+            <div className="hero-impact-label"><Icon name="shield"/><b>Impact verified</b></div>
+            <p>Garissa water project now serves 340 people.</p>
+            <small>Evidence reviewed 2 days ago</small>
+          </div>
+          <div className="hero-caption">
+            <span>WTR-183 · SADAQAH JARIYAH</span>
+            <p>From your giving to safe, flowing water.</p>
+            <button onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>Trace this project <Icon name="arrow-right"/></button>
+          </div>
         </div>
       </section>
 
@@ -255,8 +278,16 @@ export default function Home() {
       </section>
 
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
-        <div className="section-heading"><div><p className="eyebrow">Verified opportunities</p><h2 id="causes-title">Give where it matters most</h2></div><button className="text-link button-link" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
-        <div className="filter-row" aria-label="Filter verified causes">{['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div>
+        <div className="section-heading"><div><p className="eyebrow">Verified opportunities</p><h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2></div><button className="text-link button-link" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
+        <div className="cause-browser-bar">
+          <div className="filter-row" role="group" aria-label="Filter verified causes">
+            {causeFilters.map(([label, icon]) => <button className={filter === label ? 'active' : ''} aria-pressed={filter === label} key={label} onClick={() => setFilter(label)}><Icon name={icon}/>{label}</button>)}
+          </div>
+          <div className="cause-results-line">
+            <p role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'opportunity' : 'opportunities'}{query.trim() ? ` matching “${query.trim()}”` : ''}</p>
+            {filter !== 'All' || query ? <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); }}>Clear filters <Icon name="close"/></button> : null}
+          </div>
+        </div>
         <div className="campaign-grid">
           {filteredCampaigns.map(campaign => {
             const progress = Math.round(campaign.raised / campaign.goal * 100);
@@ -326,7 +357,10 @@ export default function Home() {
       <section className="how-section refined-how" id="how">
         <div className="section-heading centered"><div><p className="eyebrow">A clearer way to give</p><h2>Discover. Give. Track. See impact.</h2></div></div>
         <div className="steps-grid">
-          {[['01','Discover verified need','Search by cause, location, giving type and verification level.'],['02','Choose your intention','Keep Zakat, Sadaqah, Sadaqah Jariyah and Waqf clearly separated.'],['03','Give securely','Use M-PESA or card, anonymously or as a recurring gift.'],['04','Follow the outcome','Receive receipts, disbursement updates and verified completion evidence.']].map(step => <article key={step[0]}><span>{step[0]}</span><h3>{step[1]}</h3><p>{step[2]}</p></article>)}
+          {givingSteps.map(([number, icon, title, description]) => <article key={number}>
+            <div className="step-signature"><i><Icon name={icon}/></i><span aria-hidden="true">{number}</span></div>
+            <h3>{title}</h3><p>{description}</p>
+          </article>)}
         </div>
       </section>
 
