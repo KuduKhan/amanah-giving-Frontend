@@ -11,6 +11,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import PlatformConsole, { type Portal } from './PlatformConsole';
 import GivingPlanner from './GivingPlanner';
 import Image from 'next/image';
+import Link from 'next/link';
 import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
 
 type Campaign = {
@@ -254,6 +255,11 @@ export default function Home() {
             <a className="button" href="#causes">Explore verified causes <Icon name="↓"/></a>
             <a className="hero-secondary" href="#how">How giving works <Icon name="arrow-right"/></a>
           </div>
+          <Link className="hero-hajj-link" href="/hajj">
+            <span className="hajj-entry-icon"><Icon name="giving"/></span>
+            <span><strong>Amanah Hajj</strong><small>Sponsor a pilgrim or explore support</small></span>
+            <Icon name="arrow-right"/>
+          </Link>
           <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
         </div>
         <div className="hero-visual">
@@ -279,7 +285,12 @@ export default function Home() {
       </section>
 
       <section className="seasonal-giving refined-seasonal" aria-labelledby="seasonal-title">
-        <div className="seasonal-heading"><p className="eyebrow">Give in every season</p><h2 id="seasonal-title">Timely worship, thoughtfully prepared.</h2><p>Create plans for sacred days and recurring acts of generosity—without losing oversight or intention.</p><button className="text-link button-link" onClick={() => setPlannerOpen(true)}>Build my giving plan <span><Icon name="↗"/></span></button></div>
+        <div className="seasonal-heading">
+          <p className="eyebrow">Give in every season</p>
+          <h2 id="seasonal-title">Timely worship, thoughtfully prepared.</h2>
+          <p>Create plans for sacred days and recurring acts of generosity—without losing oversight or intention.</p>
+          <button className="text-link button-link" onClick={() => setPlannerOpen(true)}>Build my giving plan <span><Icon name="↗"/></span></button>
+        </div>
         <div className="seasonal-track">{[
           ['NOW','Jumu’ah giving','Every Friday','A small, consistent Sadaqah can become a lasting rhythm.','Create weekly plan'],
           ['RAMADAN','Last 10 nights','Nightly giving','Schedule across the final nights so no opportunity is missed.','Prepare Ramadan plan'],
