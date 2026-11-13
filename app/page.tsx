@@ -41,6 +41,14 @@ const completedWater: Campaign = { ...campaigns[0], id: 'WTR-183', title: 'Al-Hu
 
 const completedFood: Campaign = { ...campaigns[2], id: 'FOD-398', title: 'Food distribution to 250 Mombasa households', raised: 1250000, goal: 1250000, days: 0, badge: 'Completed', story: 'This example completed distribution reached 250 households. Delivery counts and distribution records illustrate a closed delivery, separate from the current appeal.' };
 
+const waterProjectStages = [
+  { date: '14 Jan', dateTime: '2026-01-14', title: 'You donated KSh 5,000', detail: 'Payment confirmed and receipt issued.', icon: 'receipt' },
+  { date: '28 Jan', dateTime: '2026-01-28', title: 'Campaign fully funded', detail: `Restricted funds locked to ${completedWater.id}.`, icon: 'wallet' },
+  { date: '12 Feb', dateTime: '2026-02-12', title: 'Borehole drilling approved', detail: 'Maker, checker and approver controls passed.', icon: 'check' },
+  { date: '05 Mar', dateTime: '2026-03-05', title: 'Water test completed', detail: 'Independent results uploaded and reviewed.', icon: '≈' },
+  { date: '18 Mar', dateTime: '2026-03-18', title: 'Project impact verified', detail: 'Now serving 340 people in Garissa.', icon: 'shield' },
+];
+
 const causeFilters = [
   ['All', 'platform'], ['Zakat', 'giving'], ['Food', '□'], ['Orphans', 'users'],
   ['Water', '≈'], ['Mosque', 'bank'], ['Health', 'healthcare'], ['Education', 'education'],
@@ -326,11 +334,36 @@ export default function Home() {
       </section>
 
       <section className="impact-section refined-impact" id="impact" aria-labelledby="impact-title">
-        <div className="impact-intro"><p className="eyebrow">Your giving, accounted for</p><h2 id="impact-title">See exactly what happened next.</h2><p>The donation button is only the beginning. Every verified update, approval, disbursement and outcome builds a traceable impact record.</p><button className="text-link button-link" onClick={() => setDashboardOpen(true)}>Open your Impact Center <span><Icon name="↗"/></span></button></div>
+        <div className="impact-intro">
+          <p className="eyebrow">Your giving, accounted for</p>
+          <h2 id="impact-title">See exactly what happened next.</h2>
+          <p>The donation button is only the beginning. Every verified update, approval, disbursement and outcome builds a traceable impact record.</p>
+          <button className="button impact-center-button" aria-haspopup="dialog" onClick={() => setDashboardOpen(true)}>Open your Impact Center <Icon name="arrow-right"/></button>
+        </div>
         <div className="impact-timeline">
-          <div className="timeline-head"><div><span>PROJECT TRACE</span><h3>Al-Huda Water Project</h3><small>WTR-183</small></div><span className="complete"><Icon name="✓"/>Completed</span></div>
-          <ol className="impact-stages">{[['14 Jan','You donated KSh 5,000','Payment confirmed and receipt issued.','2026-01-14'],['28 Jan','Campaign fully funded','Restricted funds locked to WTR-183.','2026-01-28'],['12 Feb','Borehole drilling approved','Maker, checker and approver controls passed.','2026-02-12'],['05 Mar','Water test completed','Independent results uploaded and reviewed.','2026-03-05'],['18 Mar','Project impact verified','Now serving 340 people in Garissa.','2026-03-18']].map((item,index) => <li className={`timeline-item ${index === 4 ? 'final-stage' : ''}`} key={item[0]}><span className={`timeline-dot ${index === 4 ? 'last' : ''}`} aria-hidden="true"><Icon name="✓"/></span><time dateTime={item[3]}>{item[0]}</time><div><b>{item[1]}</b><p>{item[2]}</p></div></li>)}</ol>
-          <div className="evidence-row"><div className="evidence-files"><span>4 photos</span><span>2 receipts</span><span>Water test report</span></div><button onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>View evidence <Icon name="→"/></button></div>
+          <div className="timeline-head">
+            <p className="eyebrow">Project trace</p>
+            <span className="complete"><Icon name="check"/>Completed</span>
+            <h3>Al-Huda Water Project</h3>
+            <small>{completedWater.id} · Example record</small>
+          </div>
+          <ol className="impact-stages" aria-label="Project milestones">
+            {waterProjectStages.map(({ date, dateTime, title, detail, icon }) => (
+              <li className="timeline-item" key={dateTime}>
+                <span className="timeline-dot" aria-hidden="true"><Icon name={icon}/></span>
+                <time dateTime={dateTime}>{date}</time>
+                <div><b>{title}</b><p>{detail}</p></div>
+              </li>
+            ))}
+          </ol>
+          <div className="evidence-row">
+            <ul className="evidence-files" aria-label="Available evidence">
+              <li><Icon name="photos"/>4 photos</li>
+              <li><Icon name="receipt"/>2 receipts</li>
+              <li><Icon name="evidence"/>Water test report</li>
+            </ul>
+            <button aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>View evidence <Icon name="arrow-right"/></button>
+          </div>
         </div>
       </section>
 

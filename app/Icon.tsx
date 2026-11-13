@@ -4,7 +4,7 @@ import {
   CreditCard, Droplets, Gift, Globe2, HandHeart, Heart, House,
   Infinity as InfinityIcon, Landmark, LayoutGrid, Menu, Moon,
   Package, Plus, Repeat2, Search, ShieldCheck, Sparkles, Users,
-  Wallet, X, Smartphone, Download, ReceiptText, Settings2, LifeBuoy, Stethoscope, GraduationCap, FileCheck2, ChevronRight, type LucideIcon,
+  Wallet, X, Smartphone, Download, ReceiptText, Settings2, LifeBuoy, Stethoscope, GraduationCap, FileCheck2, ChevronRight, Images, type LucideIcon,
 } from 'lucide-react';
 
 const icons: Record<string, LucideIcon> = {
@@ -12,6 +12,7 @@ const icons: Record<string, LucideIcon> = {
   heart: Heart, home: House, giving: HandHeart, platform: LayoutGrid,
   wallet: Wallet, shield: ShieldCheck, users: Users, calendar: CalendarDays, phone: Smartphone,
   book: BookOpen, bank: Landmark, card: CreditCard,
+  photos: Images,
   '⌕': Search, '◉': Bell, '✦': Sparkles, '♡': Heart, '♥': Heart,
   '⌂': House, '◇': Building2, '◎': ShieldCheck, '≡': Landmark,
   '↻': Repeat2, '□': Package, '○': Users, '▦': Building2, '☾': Moon,
