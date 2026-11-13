@@ -47,7 +47,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     const escape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') { setMenuOpen(false); menuButton.current?.focus(); }
     };
-    const desktop = window.matchMedia('(min-width: 1360px)');
+    const desktop = window.matchMedia('(min-width: 1180px)');
     const resize = () => { if (desktop.matches) setMenuOpen(false); };
     document.addEventListener('pointerdown', dismiss);
     document.addEventListener('keydown', escape);
@@ -68,15 +68,15 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><AmanahLogo size="md"/></a>
     <nav className="desktop-links" aria-label="Main navigation">
       {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}><Icon name={link.icon}/>{link.label}</a>)}
-      <button className="nav-platform" onClick={onPlatform}><Icon name="platform"/>Platform</button>
+      <button className="nav-platform" aria-haspopup="dialog" onClick={onPlatform}><Icon name="platform"/>Platform</button>
     </nav>
     <div className="header-actions">
-      <button className="header-icon" onClick={() => run(onSearch)} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
-      <button className="header-icon notification-trigger" onClick={onNotifications} aria-label={`Open notifications, ${unreadCount} unread`} title="Notifications"><Icon name="bell"/>{unreadCount > 0 && <span className="notification-dot"/>}</button>
-      <button className="header-language" onClick={onLanguage} aria-label="Language options" title="Language options"><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
+      <button className="header-icon" aria-haspopup="dialog" onClick={() => run(onSearch)} aria-label="Search campaigns" title="Search campaigns"><Icon name="search"/></button>
+      <button className="header-icon notification-trigger" aria-haspopup="dialog" onClick={onNotifications} aria-label={`Open notifications, ${unreadCount} unread`} title="Notifications"><Icon name="bell"/>{unreadCount > 0 && <span className="notification-dot"/>}</button>
+      <button className="header-language" aria-haspopup="dialog" onClick={onLanguage} aria-label="Language options" title="Language options"><Icon name="globe"/><span>{language.toUpperCase()}</span></button>
       <span className="header-divider" aria-hidden="true"/>
-      <button className="account-link" onClick={onAccount}><Icon name="wallet"/>{labels.sign}</button>
-      <button className="button button-small header-give" onClick={onGive}>{labels.give}<Icon name="↗"/></button>
+      <button className="account-link" aria-haspopup="dialog" onClick={onAccount}><Icon name="wallet"/>{labels.sign}</button>
+      <button className="button button-small header-give" aria-haspopup="dialog" onClick={onGive}>{labels.give}<Icon name="↗"/></button>
       <button className="header-icon menu-trigger" ref={menuButton} aria-expanded={menuOpen} aria-controls="navigation-menu" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} onClick={() => setMenuOpen(!menuOpen)} onKeyDown={event => {
         if (event.key === 'ArrowDown') {
           event.preventDefault();

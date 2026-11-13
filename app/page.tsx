@@ -7,7 +7,7 @@ import NotificationCenter from './NotificationCenter';
 import MyGiving from './MyGiving';
 import MobileNavigation from './MobileNavigation';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import PlatformConsole, { type Portal } from './PlatformConsole';
 import GivingPlanner from './GivingPlanner';
 import Image from 'next/image';
@@ -72,6 +72,7 @@ export default function Home() {
   const [planReminders, setPlanReminders] = useState(false);
   const [evidenceOpen, setEvidenceOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
   const [saved, setSaved] = useState<string[]>([]);
@@ -104,16 +105,18 @@ export default function Home() {
 
   useEffect(() => {
     if (!dialogOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
     const background = Array.from(document.getElementById('main-content')?.children || []).filter((child): child is HTMLElement => child instanceof HTMLElement && !child.matches('[aria-modal=true], .toast'));
     const previousInert = background.map(element => element.inert);
     background.forEach(element => { element.inert = true; });
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const previousFocus = document.activeElement as HTMLElement | null;
     const focusable = 'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]';
     const frame = requestAnimationFrame(() => {
       const dialog = document.querySelector<HTMLElement>('[aria-modal="true"]');
-      if (dialog && !dialog.contains(document.activeElement)) dialog.querySelector<HTMLElement>(focusable)?.focus();
+      if (dialog && !dialog.contains(document.activeElement)) {
+        (modalKey === 'search' ? searchInputRef.current : dialog.querySelector<HTMLElement>(focusable))?.focus();
+      }
     });
     const trapFocus = (event: KeyboardEvent) => {
       if (event.key !== 'Tab') return;
@@ -246,19 +249,19 @@ export default function Home() {
           <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
         </div>
         <div className="hero-visual">
-          <Image src="/water-community.jpg" alt="Children gathering at a rural community water well" width={1400} height={1200} priority sizes="(max-width: 900px) 100vw, 50vw" />
+          <Image src="/water-community.jpg" alt="Children gathering at a rural community water well" width={1400} height={1200} priority sizes="(max-width: 1050px) 100vw, 50vw" />
           <div className="live-giving">
             <span className="live-pulse" aria-hidden="true"/><span><b>38 donors</b> gave in the last hour</span>
           </div>
           <div className="impact-card">
             <div className="hero-impact-label"><Icon name="shield"/><b>Impact verified</b></div>
             <p>Garissa water project now serves 340 people.</p>
-            <small>Evidence reviewed 2 days ago</small>
+            <small className="hero-evidence-time"><Icon name="◷"/>Evidence reviewed 2 days ago</small>
           </div>
           <div className="hero-caption">
             <span>WTR-183 · SADAQAH JARIYAH</span>
             <p>From your giving to safe, flowing water.</p>
-            <button onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>Trace this project <Icon name="arrow-right"/></button>
+            <button aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(completedWater); }}>Trace this project <Icon name="arrow-right"/></button>
           </div>
         </div>
       </section>
@@ -406,7 +409,40 @@ export default function Home() {
 
       <MobileNavigation onGive={() => startDonation()} onAccount={() => setDashboardOpen(true)} accountOpen={dashboardOpen}/>
 
-      {searchOpen && <div className="overlay" role="dialog" aria-modal="true" aria-label="Search verified campaigns"><div className="search-panel"><button className="close" aria-label="Close dialog" onClick={() => setSearchOpen(false)}><Icon name="×"/></button><p className="eyebrow">Search Amanah Giving</p><h2>Find a cause close to your heart.</h2><div className="search-input"><span><Icon name="⌕"/></span><input autoFocus value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Try ‘orphan Kisumu’ or ‘water Garissa’" /></div><div className="filter-row" aria-label="Filter search results">{['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map(item => <button className={filter === item ? 'active' : ''} aria-pressed={filter === item} key={item} onClick={() => setFilter(item)}>{item}</button>)}</div><div className="search-results">{filteredCampaigns.map(campaign => <button key={campaign.id} onClick={() => { setSearchOpen(false); setEvidenceOpen(false); setSelected(campaign); }}><Image src={campaign.image} alt="" width={96} height={72}/><span><b>{campaign.title}</b><small>{campaign.meta} · {campaign.zakat ? 'Zakat eligible' : campaign.category}</small></span><em>{Math.round(campaign.raised / campaign.goal * 100)}%</em></button>)}</div>{!filteredCampaigns.length && <div className="empty-state" role="status">No verified campaigns match your search.</div>}</div></div>}
+      {searchOpen && (
+        <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="campaign-search-title">
+          <div className="search-panel campaign-search-panel">
+            <button className="close" aria-label="Close dialog" onClick={() => setSearchOpen(false)}><Icon name="close"/></button>
+            <p className="eyebrow">Search Amanah Giving</p>
+            <h2 id="campaign-search-title">Find a cause close to your heart.</h2>
+            <div className="search-input" role="search" aria-label="Find verified campaigns">
+              <Icon name="search"/>
+              <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Try ‘water Garissa’" />
+              {query && <button className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
+            </div>
+            <div className="filter-row" role="group" aria-label="Filter search results">
+              {causeFilters.map(([label]) => <button className={filter === label ? 'active' : ''} aria-pressed={filter === label} key={label} onClick={() => setFilter(label)}>{label}</button>)}
+            </div>
+            <p className="search-count" role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'verified campaign' : 'verified campaigns'}</p>
+            {filteredCampaigns.length > 0 ? (
+              <div className="search-results">
+                {filteredCampaigns.map(campaign => (
+                  <button key={campaign.id} aria-haspopup="dialog" onClick={() => { setSearchOpen(false); setEvidenceOpen(false); setSelected(campaign); }}>
+                    <Image src={campaign.image} alt="" width={120} height={96}/>
+                    <span className="search-result-copy"><b>{campaign.title}</b><small>{campaign.meta} · {campaign.zakat ? 'Zakat eligible' : campaign.category}</small></span>
+                    <span className="search-result-end"><span className="search-funded">{Math.round(campaign.raised / campaign.goal * 100)}% funded</span><Icon name="chevron"/></span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state search-empty">
+                <strong>No campaigns match this search.</strong>
+                <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); searchInputRef.current?.focus(); }}>Clear filters</button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {selected && <div className="overlay" role="dialog" aria-modal="true" aria-label="Campaign details"><div className="detail-panel"><button className="close" aria-label="Close dialog" onClick={() => setSelected(null)}><Icon name="×"/></button><div className="detail-media"><Image className="detail-hero" src={selected.image} alt="" width={1000} height={640} sizes="(max-width: 700px) 100vw, 800px"/><div className="detail-media-caption"><span>LEVEL 3 VERIFIED</span><b>Field need and budget reviewed</b><button onClick={() => setEvidenceOpen(!evidenceOpen)}>{evidenceOpen ? 'Hide verification summary' : 'See verification summary'} <Icon name="↗"/></button></div></div><div className="detail-content"><p className="verified"><Icon name="●"/> Campaign verified · {selected.id}</p><h2>{selected.title}</h2><p>{selected.story}</p><div className="detail-facts"><span><b>{money(selected.raised)}</b>raised</span><span><b>{selected.donors.toLocaleString()}</b>donors</span><span><b>{selected.days ? selected.days : 'Complete'}</b>{selected.days ? 'days left' : 'project status'}</span></div><p className="preview-note">Illustrative campaign record · verification documents are not connected.</p>{evidenceOpen && <section className="evidence-summary"><h3>Verification summary</h3><p>Review covers the organization, project scope, budget and payment destination. Original field evidence is not available in this frontend preview.</p><dl><div><dt>Reference</dt><dd>{selected.id}</dd></div><div><dt>Status</dt><dd>{selected.days ? 'Active appeal example' : 'Completed delivery example'}</dd></div></dl><button className="text-link" onClick={() => downloadText(`${selected.id}-summary.txt`, `${selected.title}\n${selected.id}\n${selected.story}\nIllustrative summary. Not an original verification document.`)}>Download example summary <Icon name="download"/></button></section>}<div className="budget"><h3>Transparent budget</h3><div><span>Project delivery</span><b>82%</b></div><div><span>Verification & reporting</span><b>8%</b></div><div><span>Payment and operations</span><b>10%</b></div></div><div className="disbursement-preview"><div><span>DISBURSEMENT PLAN</span><b>{selected.days ? 'Released only against milestones' : 'Completed delivery record'}</b></div>{selected.days === 0 ? <p>All delivery milestones are complete in this example. Delivery checks and reconciliation are complete in this illustrative record.</p> : <ol><li className="done"><i><Icon name="✓"/></i><span><b>Mobilization</b><small>20% · reconciled</small></span></li><li className="active"><i>2</i><span><b>Core delivery</b><small>45% · evidence required</small></span></li><li><i>3</i><span><b>Completion</b><small>25% · pending</small></span></li><li><i>4</i><span><b>Retention</b><small>10% · after impact review</small></span></li></ol>}</div><div className="verification-box"><b>What we verified</b><p>Responsible organization, supporting documents, field need, budget, payment destination and update schedule.</p></div><div className="detail-assurances"><span><Icon name="▣"/> Restricted fund</span><span><Icon name="◎"/> Update schedule</span><span><Icon name="✓"/> Complaint channel</span></div>{selected.days > 0 ? <button className="button full" onClick={() => { const campaign = selected; setSelected(null); startDonation(campaign); }}>Donate to this campaign <Icon name="↗"/></button> : <button className="button full" onClick={() => { setSelected(null); document.getElementById('causes')?.scrollIntoView({ behavior: 'smooth' }); }}>Explore active causes <Icon name="↗"/></button>}</div></div></div>}
 
