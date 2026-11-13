@@ -250,16 +250,18 @@ export default function Home() {
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
           <h1 id="hero-title">{t.titleA} <em>{t.titleB}</em></h1>
-          <p className="hero-lead">{t.lead}</p>
-          <div className="hero-actions">
-            <a className="button" href="#causes">Explore verified causes <Icon name="↓"/></a>
-            <a className="hero-secondary" href="#how">How giving works <Icon name="arrow-right"/></a>
+          <div className="hero-giving">
+            <p className="hero-lead">{t.lead}</p>
+            <div className="hero-actions">
+              <a className="button" href="#causes"><span>Explore verified causes</span><Icon name="↓"/></a>
+              <a className="hero-secondary" href="#how"><span>How giving works</span><Icon name="arrow-right"/></a>
+            </div>
+            <Link className="hero-hajj-link" href="/hajj">
+              <span className="hajj-entry-icon"><Icon name="giving"/></span>
+              <span><strong>Amanah Hajj</strong><small>Sponsor a pilgrim or explore support</small></span>
+              <Icon name="arrow-right"/>
+            </Link>
           </div>
-          <Link className="hero-hajj-link" href="/hajj">
-            <span className="hajj-entry-icon"><Icon name="giving"/></span>
-            <span><strong>Amanah Hajj</strong><small>Sponsor a pilgrim or explore support</small></span>
-            <Icon name="arrow-right"/>
-          </Link>
           <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
         </div>
         <div className="hero-visual">

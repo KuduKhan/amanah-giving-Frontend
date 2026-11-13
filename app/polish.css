@@ -93,12 +93,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   border: 1px solid #b9d0be; border-radius: 999px; color: #285641; letter-spacing: .09em;
 }
 .refined-hero .hero-copy .eyebrow::before { content: ''; width: 6px; height: 6px; flex: none; border-radius: 50%; background: #508566; }
-.refined-hero .hero-copy h1 { max-width: 12ch; }
 .refined-hero .hero-copy h1 em { color: #137054; }
-.refined-hero .hero-actions { flex-wrap: wrap; gap: 12px 18px; }
-.refined-hero .hero-actions .button { min-height: 48px; padding: 12px 16px; }
-.refined-hero .hero-secondary { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; color: #1b5c45; font-size: 13px; font-weight: 650; text-decoration: none; }
-.refined-hero .hero-secondary:hover { text-decoration: underline; text-underline-offset: 4px; }
+.hero-giving { display: grid; gap: 10px; width: min(100%, 30rem); margin-top: clamp(12px, 2vw, 20px); }
+.refined-hero .hero-giving .hero-lead { margin: 0 0 3px; text-wrap: pretty; line-height: 1.55; }
+.refined-hero .hero-giving .hero-actions { display: grid; grid-template-columns: minmax(0, 1.24fr) minmax(0, 1fr); align-items: stretch; gap: 8px; margin: 0; }
+.refined-hero .hero-actions :is(.button, .hero-secondary) {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  min-width: 0; width: 100%; min-height: 46px; padding: 8px clamp(8px, 1.3vw, 14px);
+  border-radius: 12px; font-size: clamp(12px, 1.25vw, 14px); font-weight: 750;
+  line-height: 1.25; text-align: start; text-decoration: none;
+}
+.hero-actions > a > span { min-width: 0; }
+.refined-hero .hero-actions .app-icon { flex: none; width: 16px; height: 16px; }
+.refined-hero .hero-secondary { border: 1px solid #bbd1c1; background: #f9fcf7; color: #1b5c45; }
+.refined-hero .hero-secondary:hover { background: #e9f4eb; border-color: #8fb59b; }
 .refined-hero .hero-proof { width: 100%; margin-top: 26px; }
 .refined-hero .hero-visual { grid-template-rows: auto 1fr auto; align-content: stretch; }
 .refined-hero .hero-visual::after { background: linear-gradient(180deg,#071a2c30 0%,#071a2c0d 45%,#071a2ce8 100%); }
@@ -110,6 +118,22 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-hero .hero-caption p { max-width: 26ch; font-size: clamp(27px, 2.65vw, 40px); }
 .refined-hero .hero-caption button { color: #fff; background: #ffffff10; border-color: #ffffff60; }
 .refined-hero .hero-caption button:hover { background: #ffffff25; }
+@media (min-width: 1051px) {
+  .hero.refined-hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
+  .refined-hero .hero-copy {
+    align-self: stretch;
+    padding-inline-start: max(var(--page-gutter), calc((100vw - 1520px) / 2));
+    padding-inline-end: clamp(24px, 3vw, 56px);
+  }
+  .refined-hero .hero-copy h1 {
+    max-width: min(100%, 44rem);
+    font-size: clamp(37px, 3.6vw, 63px);
+    text-wrap: balance;
+  }
+  .refined-hero .hero-giving { width: min(100%, 39rem); }
+  .refined-hero .hero-giving .hero-lead { max-width: none; }
+  .refined-hero .hero-proof { max-width: 39rem; }
+}
 .cause-browser-bar { min-width: 0; padding: 12px 14px 6px; margin-bottom: 16px; border: 1px solid #dce6df; border-radius: 16px; background: #f5f8f2; }
 .refined-opportunities .cause-browser-bar .filter-row { margin: 0; padding: 0; }
 .refined-opportunities .cause-browser-bar .filter-row button { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 8px 13px; }
@@ -131,7 +155,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-hero .hero-visual { min-height: 410px; }
   .refined-hero .impact-card { width: min(255px, 100%); border-radius: 16px; }
   .refined-hero .hero-caption { padding-bottom: 12px; }
-  .refined-hero .hero-actions { gap: 5px 14px; }
   .cause-browser-bar { padding: 9px 9px 5px; }
   .refined-opportunities .cause-browser-bar .filter-row button { gap: 5px; padding-inline: 9px; font-size: 12px; }
 }
@@ -327,11 +350,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-impact .timeline-item:last-child > div { padding-inline: 8px; }
 }
 
-.hero-hajj-link { display: grid; grid-template-columns: 34px minmax(0, 1fr) 16px; align-items: center; gap: 10px; width: fit-content; max-width: 100%; margin-top: 13px; padding: 6px 10px 6px 7px; border: 1px solid #ccded1; border-radius: 13px; background: #f9fcf7; color: var(--navy); text-decoration: none; }
+.hero-hajj-link { display: grid; grid-template-columns: 34px minmax(0, 1fr) 16px; align-items: center; gap: 9px; min-width: 0; min-height: 52px; padding: 6px clamp(8px, 1.3vw, 14px); border: 1px solid #ccded1; border-radius: 12px; background: #f9fcf7; color: var(--navy); text-decoration: none; }
 .hero-hajj-link:hover { border-color: #83b49a; background: #eef7ef; }
 .hero-hajj-link :is(strong, small) { display: block; }
 .hero-hajj-link strong { font-size: 14px; }
-.hero-hajj-link small { margin-top: 2px; color: #49615a; font-size: 11px; line-height: 1.4; }
+.hero-hajj-link small { margin-top: 2px; color: #49615a; font-size: 12px; line-height: 1.35; }
 .hero-hajj-link > .app-icon { width: 16px; height: 16px; color: var(--emerald-dark); }
 .hajj-entry-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #f9eaf0; }
 .hajj-safeguards > a, .hajj-inline-link {
