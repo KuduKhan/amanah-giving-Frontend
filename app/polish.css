@@ -462,6 +462,82 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-tools-grid .hajj-icon-teal { background: #e5f4ef; }
 .hajj-tools-grid .hajj-icon-blue { background: #e6f0fb; }
 .hajj-tools-grid .hajj-icon-gold { background: #fbf0dc; }
+
+.overlay .campaign-detail { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: start; background: #f7faf7; }
+.campaign-detail-bar {
+  grid-column: 1 / -1; position: sticky; inset-block-start: 0; z-index: 4;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 4px clamp(12px, 2vw, 22px); border-bottom: 1px solid #dce7de;
+  background: #fbfdfb; color: var(--navy); font-size: 14px; font-weight: 750;
+}
+.overlay .campaign-detail-bar .close { position: static; flex: 0 0 44px; }
+.overlay .campaign-detail .detail-media { min-height: 0; margin: 14px 0 14px 14px; border-radius: 16px; background: #102b36; }
+.campaign-detail .detail-media .detail-hero { min-height: 0; object-fit: cover; }
+.campaign-detail .detail-media::after { inset: 30% 0 0; background: linear-gradient(transparent, #081d29ed); }
+.campaign-detail .detail-media-caption { inset: auto 14px 14px; }
+.campaign-detail .detail-media-caption span { display: inline-flex; align-items: center; gap: 5px; padding: 5px 7px; border-radius: 6px; background: #112f3d; color: #e4f6ed; font-size: 11px; text-transform: uppercase; }
+.campaign-detail .detail-media-caption .app-icon { width: 14px; height: 14px; color: #a8e0c5; }
+.campaign-detail .detail-media-caption b { margin: 6px 0 0; font-size: clamp(17px, 2vw, 23px); line-height: 1.23; }
+.overlay .campaign-detail .detail-content { min-width: 0; display: grid; gap: 11px; padding: 16px clamp(14px, 2.3vw, 28px) 20px; }
+.overlay .campaign-detail .detail-content :is(h2, .campaign-detail-story, .verified) { margin: 0; }
+.campaign-detail .verified { display: flex; align-items: center; gap: 6px; line-height: 1.4; }
+.campaign-detail .verified .app-icon { flex: none; width: 16px; height: 16px; }
+.overlay .campaign-detail .detail-content h2 { font-size: clamp(24px, 3.2vw, 38px); }
+.overlay .campaign-detail .detail-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin: 0; padding: 0; border: 0; }
+.campaign-detail .detail-facts > div { min-width: 0; display: flex; flex-direction: column-reverse; gap: 2px; padding: 9px 7px; border: 1px solid #dce7de; border-radius: 9px; background: white; }
+.campaign-detail .detail-facts dt { color: var(--muted); font-size: 11px; }
+.campaign-detail .detail-facts dd { margin: 0; color: var(--navy); font: 700 clamp(14px, 2.2vw, 22px)/1.25 Georgia, serif; overflow-wrap: anywhere; }
+.campaign-detail-card { min-width: 0; padding: 12px; border: 1px solid #dce7de; border-radius: 12px; background: white; }
+.campaign-detail-card h3 { margin: 0; color: var(--navy); font-size: 15px; line-height: 1.35; }
+.campaign-detail-card p { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.campaign-detail-card .eyebrow { margin: 0 0 4px; color: var(--emerald-dark); font-size: 10px; }
+.campaign-evidence h3 button { display: grid; grid-template-columns: 18px minmax(0, 1fr) 16px; align-items: center; gap: 7px; width: 100%; min-height: 44px; padding: 6px 8px; border: 1px solid #c8ded0; border-radius: 8px; background: #eef7ef; color: #174c38; text-align: start; }
+.campaign-evidence h3 button:hover { background: #e1f0e5; }
+.campaign-evidence h3 .app-icon { width: 16px; height: 16px; }
+.campaign-evidence [aria-expanded='true'] .app-icon:last-child { transform: rotate(90deg); }
+.campaign-evidence-body dl, .campaign-budget { display: grid; gap: 7px; margin: 8px 0 0; }
+.campaign-evidence-body dl > div, .campaign-budget > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 8px; font-size: 12px; }
+.campaign-evidence-body dl > div { grid-template-columns: minmax(0, .65fr) minmax(0, 1fr); }
+.campaign-detail-card dt { color: var(--muted); }
+.campaign-detail-card dd { margin: 0; color: var(--navy); font-weight: 750; overflow-wrap: anywhere; }
+.campaign-evidence-body .text-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; text-align: start; }
+.campaign-evidence-body .app-icon { flex: none; width: 15px; height: 15px; }
+.campaign-evidence .campaign-example-note { font-size: 11px; }
+.campaign-budget progress { grid-column: 1 / -1; width: 100%; height: 6px; accent-color: var(--emerald-dark); }
+.campaign-release-steps, .campaign-safeguards ul { display: grid; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+.campaign-release-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.campaign-release-steps li { display: grid; grid-template-columns: 23px minmax(0, 1fr); align-items: start; gap: 5px; padding: 6px; border-radius: 7px; background: #f4f7f4; font-size: 12px; }
+.campaign-release-steps [aria-current='step'] { background: #e9f5ec; }
+.campaign-stage-icon { display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; background: #deede3; color: #21553f; font-weight: 750; }
+.campaign-stage-icon .app-icon { width: 14px; height: 14px; }
+.campaign-release-steps small { display: block; color: var(--muted); font-size: 11px; line-height: 1.3; }
+.campaign-detail-card .campaign-complete { display: flex; align-items: start; gap: 6px; color: #1e5c43; }
+.campaign-complete .app-icon { flex: none; width: 16px; height: 16px; }
+.campaign-safeguards ul { display: flex; flex-wrap: wrap; }
+.campaign-safeguards li { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px; border-radius: 5px; background: #eef5ef; color: #315a48; font-size: 11px; }
+.campaign-safeguards .app-icon { width: 14px; height: 14px; }
+@media (min-width: 781px) {
+  .overlay .campaign-detail {
+    height: 100dvh;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: stretch;
+    overflow: hidden;
+    scrollbar-gutter: auto;
+  }
+  .overlay .campaign-detail .detail-media { height: auto; }
+  .overlay .campaign-detail .detail-content {
+    min-height: 0;
+    align-content: start;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+}
+@media (max-width: 780px) {
+  .overlay .campaign-detail { grid-template-columns: minmax(0, 1fr); }
+  .overlay .campaign-detail .detail-media { position: relative; inset: auto; width: auto; height: clamp(145px, 36vw, 230px); margin: 9px 10px 0; border-radius: 11px; }
+  .overlay .campaign-detail .detail-content { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+}
 @media (max-width: 750px) {
   .hajj-applicant-grid, .hajj-safeguards ul { grid-template-columns: minmax(0, 1fr); }
 }

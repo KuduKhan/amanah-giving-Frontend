@@ -1,6 +1,7 @@
 'use client';
 
 import Icon from './Icon';
+import CampaignDetails from './CampaignDetails';
 import SiteHeader from './SiteHeader';
 import AmanahLogo from './AmanahLogo';
 import NotificationCenter from './NotificationCenter';
@@ -490,7 +491,22 @@ export default function Home() {
         </div>
       )}
 
-      {selected && <div className="overlay" role="dialog" aria-modal="true" aria-label="Campaign details"><div className="detail-panel"><button className="close" aria-label="Close dialog" onClick={() => setSelected(null)}><Icon name="×"/></button><div className="detail-media"><Image className="detail-hero" src={selected.image} alt="" width={1000} height={640} sizes="(max-width: 700px) 100vw, 800px"/><div className="detail-media-caption"><span>LEVEL 3 VERIFIED</span><b>Field need and budget reviewed</b><button onClick={() => setEvidenceOpen(!evidenceOpen)}>{evidenceOpen ? 'Hide verification summary' : 'See verification summary'} <Icon name="↗"/></button></div></div><div className="detail-content"><p className="verified"><Icon name="●"/> Campaign verified · {selected.id}</p><h2>{selected.title}</h2><p>{selected.story}</p><div className="detail-facts"><span><b>{money(selected.raised)}</b>raised</span><span><b>{selected.donors.toLocaleString()}</b>donors</span><span><b>{selected.days ? selected.days : 'Complete'}</b>{selected.days ? 'days left' : 'project status'}</span></div><p className="preview-note">Illustrative campaign record · verification documents are not connected.</p>{evidenceOpen && <section className="evidence-summary"><h3>Verification summary</h3><p>Review covers the organization, project scope, budget and payment destination. Original field evidence is not available in this frontend preview.</p><dl><div><dt>Reference</dt><dd>{selected.id}</dd></div><div><dt>Status</dt><dd>{selected.days ? 'Active appeal example' : 'Completed delivery example'}</dd></div></dl><button className="text-link" onClick={() => downloadText(`${selected.id}-summary.txt`, `${selected.title}\n${selected.id}\n${selected.story}\nIllustrative summary. Not an original verification document.`)}>Download example summary <Icon name="download"/></button></section>}<div className="budget"><h3>Transparent budget</h3><div><span>Project delivery</span><b>82%</b></div><div><span>Verification & reporting</span><b>8%</b></div><div><span>Payment and operations</span><b>10%</b></div></div><div className="disbursement-preview"><div><span>DISBURSEMENT PLAN</span><b>{selected.days ? 'Released only against milestones' : 'Completed delivery record'}</b></div>{selected.days === 0 ? <p>All delivery milestones are complete in this example. Delivery checks and reconciliation are complete in this illustrative record.</p> : <ol><li className="done"><i><Icon name="✓"/></i><span><b>Mobilization</b><small>20% · reconciled</small></span></li><li className="active"><i>2</i><span><b>Core delivery</b><small>45% · evidence required</small></span></li><li><i>3</i><span><b>Completion</b><small>25% · pending</small></span></li><li><i>4</i><span><b>Retention</b><small>10% · after impact review</small></span></li></ol>}</div><div className="verification-box"><b>What we verified</b><p>Responsible organization, supporting documents, field need, budget, payment destination and update schedule.</p></div><div className="detail-assurances"><span><Icon name="▣"/> Restricted fund</span><span><Icon name="◎"/> Update schedule</span><span><Icon name="✓"/> Complaint channel</span></div>{selected.days > 0 ? <button className="button full" onClick={() => { const campaign = selected; setSelected(null); startDonation(campaign); }}>Donate to this campaign <Icon name="↗"/></button> : <button className="button full" onClick={() => { setSelected(null); document.getElementById('causes')?.scrollIntoView({ behavior: 'smooth' }); }}>Explore active causes <Icon name="↗"/></button>}</div></div></div>}
+      {selected && <CampaignDetails
+        campaign={selected}
+        raised={money(selected.raised)}
+        evidenceOpen={evidenceOpen}
+        onToggleEvidence={() => setEvidenceOpen(!evidenceOpen)}
+        onClose={() => setSelected(null)}
+        onAction={() => {
+          setSelected(null);
+          if (selected.days > 0) startDonation(selected);
+          else requestAnimationFrame(() => {
+            const heading = document.getElementById('causes-title');
+            heading?.focus({ preventScroll: true });
+            document.getElementById('causes')?.scrollIntoView();
+          });
+        }}
+      />}
 
       {donationStep > 0 && renderDonationModal()}
 
