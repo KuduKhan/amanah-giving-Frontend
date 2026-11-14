@@ -165,6 +165,39 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-how .step-signature { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .refined-how .step-signature i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #1b5c45; background: #e7f0e7; }
 .refined-how .step-signature span { color: #62786b; font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: .06em; }
+.refined-zakat .zakat-copy h2 span { display: block; }
+.refined-zakat .zakat-copy h2 span:last-child { color: #a6dfc4; }
+.refined-zakat .zakat-copy > p:not(.eyebrow) { margin-block: 14px; max-width: 49ch; }
+.refined-zakat .zakat-copy ul { margin-top: 15px; gap: 7px; }
+.refined-zakat .zakat-copy li { align-items: center; gap: 9px; }
+.refined-zakat .zakat-copy li i { display: grid; place-items: center; flex: 0 0 30px; height: 30px; border-radius: 8px; background: #3b233a; }
+.refined-zakat .zakat-copy li:nth-child(2) i { background: #393127; }
+.refined-zakat .zakat-copy li:nth-child(3) i { background: #183c36; }
+.refined-zakat .zakat-copy li i .app-icon { width: 16px; height: 16px; margin: 0; }
+.refined-zakat .zakat-copy li:nth-child(1) .app-icon { color: #f1a8c0; }
+.refined-zakat .zakat-copy li:nth-child(2) .app-icon { color: #edc989; }
+.refined-zakat .zakat-copy li:nth-child(3) .app-icon { color: #a6dfc4; }
+.refined-zakat .calculator { padding: clamp(12px, 2.3vw, 27px); }
+.refined-zakat .calculator-top { padding: 9px clamp(8px, 1.3vw, 14px); border: 1px solid #d9e7dd; border-radius: 12px; background: #f2f8f2; }
+.refined-zakat .calculator-top > div { min-width: 0; }
+.refined-zakat .calculator-top div b { margin-top: 2px; font-size: clamp(18px, 3vw, 29px); }
+.refined-zakat .verified-pill { border: 1px solid #cce2d3; color: #205640; background: #e9f4eb; }
+.refined-zakat .calc-grid { padding-block: 13px; gap: 9px 10px; }
+.refined-zakat .calc-grid label { min-width: 0; }
+.refined-zakat .calc-grid label > span { min-height: 0; margin-bottom: 4px; }
+.refined-zakat .calc-grid label > div { min-height: 44px; }
+.refined-zakat .calc-grid small { padding-inline: clamp(5px, 1vw, 10px); color: #4c6859; }
+.refined-zakat .calc-grid input { padding: 8px clamp(5px, 1vw, 10px); font-size: 16px; }
+.refined-zakat .calc-grid input:focus-visible { outline: none; }
+.refined-zakat .zakat-total { gap: 5px 12px; margin-bottom: 9px; padding: 10px 12px; background: #f2f4ef; }
+.refined-zakat .zakat-total[data-due='true'] { border-color: #b8d8c3; background: #e8f5ea; }
+.refined-zakat .zakat-total > span { min-width: 0; }
+.refined-zakat .zakat-total small { margin-top: 1px; }
+.refined-zakat .zakat-total strong { min-width: 0; margin-inline-start: auto; font-size: clamp(19px, 3vw, 30px); white-space: normal; overflow-wrap: anywhere; text-align: end; }
+.refined-zakat .calculator > .button { min-height: 44px; padding: 8px 12px; }
+.refined-zakat .calculator > .button:disabled { color: #4d6656; }
+.refined-zakat .fine-print { display: flex; align-items: flex-start; justify-content: center; gap: 5px; margin: 8px 0 0; }
+.refined-zakat .fine-print .app-icon { flex: 0 0 14px; height: 14px; margin-top: 2px; }
 .refined-updates .section-heading > button .app-icon { flex: none; width: 16px; height: 16px; }
 .refined-updates .update-card { grid-template-rows: minmax(min-content, 1fr) auto; }
 .refined-updates .update-card > .update-image { display: grid; grid-template-rows: auto minmax(26px, 1fr) auto; height: auto; padding: 12px; }

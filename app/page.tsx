@@ -340,15 +340,20 @@ export default function Home() {
       </section>
 
       <section className="zakat-section refined-zakat" id="zakat" aria-labelledby="zakat-title">
-        <div className="zakat-copy"><p className="eyebrow light">Dedicated Zakat Center</p><h2 id="zakat-title">Calculate with clarity.<br/>Give with confidence.</h2><p>Your Zakat is recorded as a restricted giving type and never mixed with ordinary Sadaqah. Eligible campaigns are reviewed against versioned Shariah policy.</p><ul><li><Icon name="giving"/>2.5% calculation using the current nisab</li><li><Icon name="wallet"/>Separate ledger and distribution reporting</li><li><Icon name="shield"/>Calculation stays private on this device</li></ul></div>
+        <div className="zakat-copy">
+          <p className="eyebrow light">Dedicated Zakat Center</p>
+          <h2 id="zakat-title"><span>Calculate with clarity.</span>{' '}<span>Give with confidence.</span></h2>
+          <p>Your Zakat is recorded as a restricted giving type and never mixed with ordinary Sadaqah. Eligible campaigns are reviewed against versioned Shariah policy.</p>
+          <ul role="list"><li><i><Icon name="giving"/></i>2.5% calculation using the current nisab</li><li><i><Icon name="wallet"/></i>Separate ledger and distribution reporting</li><li><i><Icon name="shield"/></i>Calculation stays private on this device</li></ul>
+        </div>
         <div className="calculator">
-          <div className="calculator-top"><div><span>Current nisab</span><b>KSh 650,000</b></div><span className="verified-pill"><Icon name="shield"/>Policy reviewed</span></div>
+          <div className="calculator-top"><div><span>Current nisab</span><b>KSh {nisab.toLocaleString('en-KE')}</b></div><span className="verified-pill"><Icon name="shield"/>Policy reviewed</span></div>
           <div className="calc-grid">
             {[['cash','Cash & savings'],['gold','Gold & silver value'],['investments','Investments'],['business','Business assets'],['receivables','Money owed to you'],['liabilities','Short-term liabilities']].map(([key,label]) => <label key={key}><span>{label}</span><div><small aria-hidden="true">KSh</small><input inputMode="numeric" aria-label={`${label} in Kenyan shillings`} autoComplete="off" value={zakat[key as keyof typeof zakat]} onChange={event => setZakat({...zakat, [key]: event.target.value.replace(/\D/g,'').slice(0,12)})} placeholder="0" /></div></label>)}
           </div>
-          <div className="zakat-total" role="status" aria-live="polite" aria-atomic="true"><span>Estimated Zakat due <small>{zakatNet < nisab ? 'Below nisab threshold' : '2.5% of eligible net assets'}</small></span><strong>KSh {Math.round(zakatDue).toLocaleString('en-KE')}</strong></div>
-          <button className="button full" disabled={!zakatDue} onClick={() => { startDonation(null, 'Zakat'); setAmount(String(Math.round(zakatDue))); }}>Give my Zakat <span><Icon name="↗"/></span></button>
-          <p className="fine-print">This calculator is an estimate, not a personal religious ruling.</p>
+          <div className="zakat-total" data-due={zakatDue > 0} role="status" aria-live="polite" aria-atomic="true"><span>Estimated Zakat due <small>{zakatNet < nisab ? 'Below nisab threshold' : '2.5% of eligible net assets'}</small></span><strong>KSh {Math.round(zakatDue).toLocaleString('en-KE')}</strong></div>
+          <button className="button full" type="button" aria-haspopup="dialog" disabled={!zakatDue} onClick={() => { startDonation(null, 'Zakat'); setAmount(String(Math.round(zakatDue))); }}>Give my Zakat <Icon name="arrow-right"/></button>
+          <p className="fine-print"><Icon name="evidence"/> <span>This calculator is an estimate, not a personal religious ruling.</span></p>
         </div>
       </section>
 
