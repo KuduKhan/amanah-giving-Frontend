@@ -8,8 +8,6 @@ import HajjTools from './HajjTools';
 
 const nextActions = ['Approve sample application', 'Authorise sample funding', 'Confirm preparation', 'Confirm sample return', 'Reconcile sample expenses'];
 const sections = [
-  ['sponsorship', 'giving', 'Sponsor'],
-  ['application', 'receipt', 'Apply for support'],
   ['journey', 'calendar', 'My journey'],
   ['academy', 'book', 'Hajj Academy'],
   ['circles', 'users', 'Circles and pledges'],
@@ -60,7 +58,8 @@ export default function HajjDemo() {
   const application = demo.application;
   const { extras } = demo;
   const { cancelled, documents, audit } = extras;
-  const reviewBlocked = application?.stage === 0 ? documents.length < documentItems.length : application?.stage === 1 ? !extras.booking : application?.stage === 2 && demo.checklist.length < academy.length;
+  const caseRaised = extras.caseContributions.reduce((total, amount) => total + amount, 0);
+  const reviewBlocked = application?.stage === 0 ? documents.length < documentItems.length : application?.stage === 1 ? !extras.booking || !extras.financeCleared : application?.stage === 2 && demo.checklist.length < academy.length;
   const paid = (fund: FundId, state = demo) => state.gifts.filter(gift => gift.fund === fund).reduce((total, gift) => total + gift.amount, 0);
 
   function saveGift(event: FormEvent<HTMLFormElement>) {
@@ -105,16 +104,30 @@ export default function HajjDemo() {
       const entry = current.application;
       if (!entry || current.extras.cancelled || entry.stage !== application?.stage || entry.stage >= milestones.length - 1) return current;
       if (entry.stage === 0 && current.extras.documents.length < documentItems.length) return current;
-      if (entry.stage === 1 && !current.extras.booking) return current;
+      if (entry.stage === 1 && (!current.extras.booking || !current.extras.financeCleared || current.extras.caseContributions.reduce((total, amount) => total + amount, 0) !== sampleQuote)) return current;
       if (entry.stage === 2 && current.checklist.length < academy.length) return current;
       const stage = entry.stage + 1;
       return { ...current, application: { ...entry, stage }, extras: addAudit(current.extras, milestones[stage]) };
     });
   }
 
+  function addCaseContribution(amount: number) {
+    updateDemo(current => {
+      const remaining = sampleQuote - current.extras.caseContributions.reduce((total, contribution) => total + contribution, 0);
+      if (current.application?.stage !== 1 || current.extras.cancelled || amount <= 0 || amount > remaining) return current;
+      return { ...current, extras: addAudit({ ...current.extras, caseContributions: [...current.extras.caseContributions, amount] }, `Restricted Sadaqah recorded: ${formatKes(amount)}`) };
+    });
+  }
+
   return (
     <>
-      <p className="hajj-preview"><Icon name="shield"/><span><strong>Interactive demo</strong><span>Explore with sample records, simulated payments and bookings. {storageAvailable ? 'Progress is saved in this browser.' : 'Progress lasts for this visit because browser storage is unavailable.'}</span></span></p>
+      <div className="hajj-overview">
+        <p className="hajj-preview"><Icon name="shield"/><span><strong>Interactive demo</strong><span>Explore with sample records, simulated payments and bookings. {storageAvailable ? 'Progress is saved in this browser.' : 'Progress lasts for this visit because browser storage is unavailable.'}</span></span></p>
+        <div className="hajj-actions">
+          <a className="button" href="#hajj-sponsorship">Explore sponsorship <Icon name="arrow-right"/></a>
+          <a className="outline-button" href={application ? '#hajj-journey' : '#hajj-application'}>{application ? 'Continue my journey' : 'Start a sample application'} <Icon name="arrow-right"/></a>
+        </div>
+      </div>
       <nav className="hajj-jump" aria-label="Amanah Hajj sections">
         {sections.map(([id, icon, label]) => <a key={id} href={`#hajj-${id}`}><Icon name={icon}/><span>{label}</span></a>)}
       </nav>
@@ -125,8 +138,11 @@ export default function HajjDemo() {
           {funds.map(fund => {
             const total = fund.raised + paid(fund.id);
             return <article className="hajj-path" key={fund.id}>
-              <div className="hajj-icon"><Icon name={fund.icon}/></div>
-              <h3>{fund.name}</h3><p>{fund.description}</p><small className="hajj-reference">{fund.reference} · Sample fund</small>
+              <div className="hajj-fund-header">
+                <div className="hajj-icon"><Icon name={fund.icon}/></div>
+                <small className="hajj-reference">{fund.reference} · Sample fund</small>
+              </div>
+              <h3>{fund.name}</h3><p>{fund.description}</p>
               <div className="hajj-funding">
                 <div className="hajj-funding-summary"><div><strong>{formatKes(total)}</strong><small>of {formatKes(fund.target)}</small></div><span>{Math.floor(total / fund.target * 100)}% funded</span></div>
                 <progress id={`hajj-fund-${fund.id}`} aria-label={`${fund.name} sample funding`} value={total} max={fund.target}/>
@@ -138,6 +154,19 @@ export default function HajjDemo() {
             </article>;
           })}
         </div>
+        {application && application.stage >= 1 && <section className="hajj-case-fund hajj-path" aria-labelledby="hajj-case-fund-title">
+          <h3 id="hajj-case-fund-title">Your sample case fund</h3>
+          <p>{application.id} · {application.path === 'family' ? 'Family circle' : 'Community sponsorship'} · Quote DEMO-Q104</p>
+          <div className="hajj-funding">
+            <div className="hajj-funding-summary"><div><strong>{formatKes(caseRaised)}</strong><small>of {formatKes(sampleQuote)}</small></div><span>{cancelled ? 'Funding closed' : `${Math.floor(caseRaised / sampleQuote * 100)}% funded`}</span></div>
+            <progress aria-label="Sample case funding" value={caseRaised} max={sampleQuote}/>
+          </div>
+          {!cancelled && application.stage === 1 && caseRaised < sampleQuote && <div className="hajj-actions">
+            {sampleQuote - caseRaised > 50000 && <button className="outline-button" type="button" onClick={() => addCaseContribution(50000)}>Simulate KSh 50,000 gift</button>}
+            <button className="button" type="button" onClick={() => addCaseContribution(sampleQuote - caseRaised)}>Simulate covering the balance</button>
+          </div>}
+          {application.stage === milestones.length - 1 && <a className="text-link hajj-inline-link" href="#hajj-impact-report">Open donor impact report <Icon name="arrow-right"/></a>}
+        </section>}
         <p id="hajj-gift-status" className="hajj-status" role="status" tabIndex={-1}>{notice}</p>
         {selected && <form className="hajj-path hajj-form" ref={giftForm} onSubmit={saveGift}>
           <h3 ref={giftHeading} tabIndex={-1}>{review ? 'Review demo contribution' : selected.name}</h3>
@@ -170,6 +199,7 @@ export default function HajjDemo() {
             <label>Sponsorship route<select name="path"><option value="community">Community sponsorship</option><option value="family">Family Hajj Circle</option></select></label>
             <label>Sample profile<select name="scenario"><option value="first-time">First-time pilgrim seeking support</option><option value="accessibility">First-time pilgrim with accessibility needs</option></select></label>
           </div>
+          <details className="hajj-eligibility"><summary>How applications are assessed</summary><p>Reviewers consider financial need, first-time Hajj status, travel readiness and accessibility support. Family sponsorship has a separate funding record. The demo uses fictional profiles and document checks.</p></details>
           <button className="button" type="submit" disabled={!ready}>Save sample application</button>
         </form>}
       </section>
@@ -183,7 +213,7 @@ export default function HajjDemo() {
               <div className="hajj-icon"><Icon name={index <= application.stage ? 'check' : '◷'}/></div><div><h3>{label}</h3><p>{index < application.stage ? 'Recorded' : index === application.stage ? 'Latest milestone' : 'Pending'}</p></div>
             </li>)}
           </ol>
-          <p className="hajj-status" role="status">Journey status · {cancelled ? 'Cancelled booking · review required' : milestones[application.stage]}</p>
+          <p className="hajj-status" role="status">Journey status · {cancelled ? extras.resolution ? 'Cancelled booking · decision recorded' : 'Cancelled booking · review required' : milestones[application.stage]}</p>
           {cancelled ? <div className="hajj-review">
             {extras.resolution ? <p role="status">Sample disposition recorded · {extras.resolution === 'refund' ? 'Refund approved' : 'Reassignment approved'}. No funds moved.</p> : <>
               <p>The sample case is paused. Its balance stays restricted pending a documented disposition.</p>
@@ -192,7 +222,7 @@ export default function HajjDemo() {
           </div> : application.stage < milestones.length - 1 ? <div className="hajj-review">
             <button className="outline-button" type="button" aria-expanded={oversight} aria-controls="hajj-oversight" onClick={() => setOversight(!oversight)}><Icon name="shield"/>{oversight ? 'Hide programme review' : 'Try programme review'}</button>
             <div id="hajj-oversight" hidden={!oversight}>
-              <p>Reviewer simulation · Sample quotation {formatKes(sampleQuote)}. This case is separate from the sponsorship examples above.</p>
+              <p>Reviewer simulation · Sample quotation {formatKes(sampleQuote)} · DEMO-Q104</p>
               {application.stage === 0 && <fieldset className="hajj-documents"><legend>Sample verification checklist</legend>
                 {documentItems.map((item, index) => <div className="hajj-sample-document" key={item}>
                   <details><summary>{sampleDocuments[index][0]}</summary><p>{sampleDocuments[index][1]}</p></details>
@@ -206,6 +236,10 @@ export default function HajjDemo() {
               {application.stage === 1 && <div className="hajj-sample-document">
                 <p>Provider booking sandbox · Sample authorised partner · Quote DEMO-Q104 · {formatKes(sampleQuote)}</p>
                 {extras.booking ? <p role="status">Reservation DEMO-B104 held in the sandbox.</p> : <button type="button" className="outline-button" onClick={() => updateDemo(current => current.application?.stage !== 1 || current.extras.booking ? current : { ...current, extras: addAudit({ ...current.extras, booking: true }, 'Sample provider reservation created') })}>Create sample reservation</button>}
+                {extras.financeCleared ? <p role="status">Finance review passed. Ready for separate release approval.</p> : <>
+                  <p>{caseRaised < sampleQuote ? 'Finance review opens after the restricted fund reaches its quoted target.' : 'The restricted fund has reached its quoted target.'} <a className="text-link" href="#hajj-case-fund-title">View case fund</a></p>
+                  <button type="button" className="outline-button" disabled={caseRaised !== sampleQuote} onClick={() => updateDemo(current => current.application?.stage !== 1 || current.extras.financeCleared || current.extras.caseContributions.reduce((total, amount) => total + amount, 0) !== sampleQuote ? current : { ...current, extras: addAudit({ ...current.extras, financeCleared: true }, 'Finance reviewer matched restricted contributions to quotation') })}>Record finance review</button>
+                </>}
               </div>}
               {application.stage === 2 && demo.checklist.length < academy.length && <p><a className="text-link" href="#hajj-academy">Finish the Academy checklist</a> to confirm preparation.</p>}
               {application.stage === 3 && <p>Confirm the sample pilgrim’s welfare and safe return before closing the journey.</p>}
@@ -213,7 +247,7 @@ export default function HajjDemo() {
               <div className="hajj-actions"><button className="button" type="button" disabled={reviewBlocked} onClick={advance}>{nextActions[application.stage]}</button>
               {application.stage >= 2 && application.stage <= 3 && <button className="text-link" type="button" onClick={() => updateDemo(current => current.application?.stage !== application.stage || current.extras.cancelled ? current : { ...current, extras: addAudit({ ...current.extras, cancelled: true }, 'Sample booking cancelled') })}>Simulate failed booking</button>}</div>
             </div>
-          </div> : <button className="outline-button" type="button" onClick={() => downloadText(`${application.id}-impact-report.txt`, ['AMANAH HAJJ — SAMPLE IMPACT REPORT', application.id, `Sponsorship path: ${application.path === 'family' ? 'Family Hajj Circle' : 'Community sponsorship'}`, `Illustrative quotation: ${formatKes(sampleQuote)}`, ...sampleExpenses.map(item => `${item.label}: ${formatKes(item.amount)}`), `Reconciled expenses: ${formatKes(reconciledTotal)}`, `Unused restricted balance: ${formatKes(sampleQuote - reconciledTotal)}`, ...milestones, 'Demo record only. No payment, booking or real pilgrim data.'].join('\n'))}><Icon name="download"/>Download sample impact report</button>}
+          </div> : <div id="hajj-impact-report" className="hajj-impact-report"><h3>Donor impact report</h3><p>Safe return confirmed. Reconciled expenses: {formatKes(reconciledTotal)}. Unused restricted balance: {formatKes(sampleQuote - reconciledTotal)}.</p><button className="outline-button" type="button" onClick={() => downloadText(`${application.id}-impact-report.txt`, ['AMANAH HAJJ — SAMPLE IMPACT REPORT', application.id, `Sponsorship path: ${application.path === 'family' ? 'Family Hajj Circle' : 'Community sponsorship'}`, `Illustrative quotation: ${formatKes(sampleQuote)}`, ...sampleExpenses.map(item => `${item.label}: ${formatKes(item.amount)}`), `Reconciled expenses: ${formatKes(reconciledTotal)}`, `Unused restricted balance: ${formatKes(sampleQuote - reconciledTotal)}`, ...milestones, 'Demo record only. No payment, booking or real pilgrim data.'].join('\n'))}><Icon name="download"/>Download sample impact report</button></div>}
           {!cancelled && application.stage >= 2 && <details className="hajj-ledger" open={application.stage >= 4}><summary>Sample funding and expense record</summary><ul>
             {extras.booking && <li><span>Provider booking</span><b>DEMO-B104 · Confirmed</b></li>}
             <li><span>Approved funding</span><b>{formatKes(sampleQuote)}</b></li>
@@ -226,8 +260,12 @@ export default function HajjDemo() {
 
       <section className="hajj-journey" id="hajj-academy" aria-labelledby="hajj-academy-title">
         <div className="hajj-academy-head">
-          <div><h2 id="hajj-academy-title">Hajj Academy</h2><p aria-live="polite">{demo.checklist.length} of {academy.length} preparation steps complete</p></div>
-          <label className="hajj-form hajj-language">Academy language<select value={academyLanguage} onChange={event => setAcademyLanguage(event.target.value === 'sw' ? 'sw' : 'en')}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+          <div className="hajj-academy-progress">
+            <h2 id="hajj-academy-title">Hajj Academy</h2>
+            <p aria-live="polite">{demo.checklist.length} of {academy.length} preparation steps complete</p>
+            <progress aria-label="Academy preparation progress" value={demo.checklist.length} max={academy.length}/>
+          </div>
+          <label className="hajj-language">Academy language<select value={academyLanguage} onChange={event => setAcademyLanguage(event.target.value === 'sw' ? 'sw' : 'en')}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
         </div>
         <div className="hajj-academy">
           {academy.map(({ title, detail, sw }, index) => <div key={title} data-complete={demo.checklist.includes(index)}>

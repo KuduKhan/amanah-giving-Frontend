@@ -475,14 +475,25 @@ export default function Home() {
         ] as const).map(([portal, icon, label, description]) => <button key={portal} onClick={() => { setPlatformPortal(portal); setPlatformOpen(true); }} aria-label={`Explore ${label} workspace: ${description}`}><i><Icon name={icon}/></i><span><b>{label}</b><small>{description}</small></span><em><Icon name="→"/></em></button>)}</div>
       </section>
 
-      <section className="organizations refined-organizations" aria-labelledby="organizations-title">
-        <div className="organizations-copy"><p className="eyebrow light">Verified organizations</p><h2 id="organizations-title">Trusted locally.<br/>Accountable publicly.</h2><p>Every organization profile clearly shows what was checked, who is responsible, and the latest verified impact.</p><a className="outline-button" href="/verified-charities">Explore organizations <Icon name="→"/></a></div>
+      <section className="organizations refined-organizations" id="organizations" aria-labelledby="organizations-title">
+        <div className="organizations-copy">
+          <p className="eyebrow light">Verified organizations</p>
+          <h2 id="organizations-title">Trusted locally.<br/>Accountable publicly.</h2>
+          <p>Every organization profile clearly shows what was checked, who is responsible, and the latest verified impact.</p>
+          <Link className="outline-button" href="/verified-charities">Explore organizations <Icon name="arrow-right"/></Link>
+        </div>
         <article className="org-card" aria-labelledby="featured-org-title">
-          <div className="org-card-heading"><span className="org-logo" aria-hidden="true">AR</span><span className="org-verification"><Icon name="shield"/>Organization verified</span><span className="score" aria-label="Organization rating A plus">A+<small>Rating</small></span></div>
+          <div className="org-card-heading">
+            <span className="org-logo" aria-hidden="true">AR</span>
+            <span className="org-verification"><Icon name="shield"/>Organization verified</span>
+            <div className="score">A+<small>Rating</small></div>
+          </div>
           <h3 id="featured-org-title">Al-Rahmah Community Trust</h3>
           <p className="org-location"><Icon name="home"/>Nairobi, Kenya</p>
-          <dl className="org-metrics"><div><dt>Active projects</dt><dd>12</dd></div><div><dt>Reporting score</dt><dd>94<small>%</small></dd></div></dl>
-          <div className="org-reporting" role="meter" aria-label="Reporting score" aria-valuemin={0} aria-valuemax={100} aria-valuenow={94}><span/></div>
+          <dl className="org-metrics">
+            <div><dt>Active projects</dt><dd>12</dd></div>
+            <div><dt>Reporting score</dt><dd>94<small>%</small><meter className="org-reporting" min={0} max={100} value={94} aria-hidden="true"/></dd></div>
+          </dl>
         </article>
       </section>
 

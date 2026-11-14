@@ -38,9 +38,11 @@ export type Extras = {
   umrah: boolean;
   attached: number[];
   booking: boolean;
+  caseContributions: number[];
+  financeCleared: boolean;
   assistance: 'queued' | 'reviewed' | null;
 };
-export const emptyExtras: Extras = { documents: [], audit: [], cancelled: false, resolution: null, circle: false, pledges: [], savings: null, umrah: false, attached: [], booking: false, assistance: null };
+export const emptyExtras: Extras = { documents: [], audit: [], cancelled: false, resolution: null, circle: false, pledges: [], savings: null, umrah: false, attached: [], booking: false, caseContributions: [], financeCleared: false, assistance: null };
 export type Demo = { gifts: Gift[]; application: Application | null; checklist: number[]; extras: Extras };
 
 export const emptyDemo: Demo = { gifts: [], application: null, checklist: [], extras: emptyExtras };
@@ -65,6 +67,8 @@ export function parseDemo(raw: string | null): Demo {
     umrah: extras?.umrah === true,
     attached: validIndexes(extras?.attached, sampleDocuments.length),
     booking: extras?.booking === true && !!application,
+    caseContributions: Array.isArray(extras?.caseContributions) ? extras.caseContributions.filter(validAmount) : application && application.stage >= 2 ? [sampleQuote] : [],
+    financeCleared: extras?.financeCleared === true || !!application && application.stage >= 2,
     assistance: application && (extras?.assistance === 'queued' || extras?.assistance === 'reviewed') ? extras.assistance : null,
   } };
 }

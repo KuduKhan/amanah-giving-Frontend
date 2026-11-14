@@ -552,16 +552,29 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 :is(.hajj-safeguards > a, .hajj-inline-link):hover { text-decoration: underline; text-underline-offset: 4px; }
 .hajj-programme .text-link .app-icon { flex: none; width: 16px; height: 16px; }
-.seo-content:has(.hajj-programme) { width: min(calc(100% - clamp(28px, 7vw, 96px)), 1080px); padding-block: clamp(30px, 5vw, 64px); }
-.seo-content:has(.hajj-programme) h1 { max-width: 17ch; margin-block: 9px 13px; font-size: clamp(34px, 5.65vw, 68px); text-wrap: balance; }
-.seo-content:has(.hajj-programme) .seo-intro { margin-bottom: 24px; font-size: clamp(16px, 2.3vw, 22px); }
-.hajj-programme { display: grid; gap: clamp(20px, 4vw, 34px); }
+.seo-page:has(.hajj-programme) { background: radial-gradient(ellipse 55rem 25rem at 90% 2%, #dcebdd, transparent), linear-gradient(#f7f3e8, #f4f7f2 42rem); }
+.seo-content:has(.hajj-programme) { width: min(calc(100% - clamp(28px, 6vw, 100px)), 1200px); padding-block: clamp(26px, 4.3vw, 58px); }
+.seo-content:has(.hajj-programme) h1 { max-width: 24ch; margin-block: 9px 12px; font-size: clamp(34px, 5.45vw, 72px); text-wrap: balance; }
+.seo-content:has(.hajj-programme) .seo-intro { max-width: 57ch; margin-bottom: 18px; font-size: clamp(15px, 2vw, 20px); }
+.hajj-programme { display: grid; gap: clamp(18px, 3vw, 32px); }
 .hajj-programme section { min-width: 0; scroll-margin-top: 112px; }
-.hajj-preview { display: flex; align-items: flex-start; gap: 10px; margin: 0; padding: 11px 14px; background: #eaf4ed; border: 1px solid #cfe2d6; border-radius: 12px; color: #234638; font-size: 13px; line-height: 1.5; }
+.hajj-preview { display: flex; align-items: flex-start; gap: 10px; margin: 0; color: #234638; font-size: 13px; line-height: 1.45; }
 .hajj-preview .app-icon { flex: none; margin-top: 1px; }
 .hajj-preview strong { display: block; margin-bottom: 2px; color: #154f39; }
-.hajj-jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -10px; }
-.hajj-jump a { display: inline-flex; align-items: center; gap: 6px; min-width: 0; min-height: 44px; padding: 7px 10px; border: 1px solid #d7e4da; border-radius: 10px; background: #f9fcf8; color: var(--navy); font-size: 13px; font-weight: 750; line-height: 1.3; text-decoration: none; }
+.hajj-overview { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: 12px 22px; padding: clamp(12px, 1.6vw, 18px); border: 1px solid #cddfd2; border-radius: 16px; background: #f8fcf7; }
+.hajj-overview .hajj-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.hajj-overview .hajj-actions a { display: inline-flex; align-items: center; justify-content: space-between; gap: 6px; }
+.hajj-overview .hajj-actions .app-icon { width: 15px; height: 15px; flex: none; }
+.hajj-case-fund { margin-top: 12px; background: #f4faf5; }
+.hajj-case-fund > h3 { margin-top: 0; }
+.hajj-case-fund h3, .hajj-impact-report { scroll-margin-top: 112px; }
+.hajj-case-fund .hajj-funding { max-width: 580px; }
+.hajj-eligibility { padding-inline: 10px; border: 1px solid #dce8de; border-radius: 8px; }
+.hajj-journey .hajj-eligibility p { margin: 0 0 9px; }
+.hajj-impact-report { margin-top: 10px; padding: 12px; border-radius: 10px; background: #eff7ef; }
+.hajj-impact-report .outline-button { margin-top: 8px; }
+.hajj-jump { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: -8px; }
+.hajj-jump a { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 0; min-height: 44px; padding: 7px 10px; border: 1px solid #d7e4da; border-radius: 10px; background: #f9fcf8; color: var(--navy); font-size: 13px; font-weight: 750; line-height: 1.3; text-decoration: none; }
 .hajj-jump a:hover, .hajj-jump a:focus-visible { background: #e7f3eb; border-color: #a5c6b1; }
 .hajj-jump .app-icon { flex: none; width: 16px; height: 16px; }
 .hajj-programme h2 { margin: 0 0 14px; font: clamp(23px, 3.5vw, 32px)/1.15 Georgia, serif; text-wrap: balance; }
@@ -582,7 +595,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-safeguards li p { margin: 4px 0 0; color: var(--muted); }
 .hajj-safeguards > a { margin-top: 6px; }
 .hajj-funds { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
-.hajj-funds .hajj-path { display: flex; flex-direction: column; min-width: 0; align-items: flex-start; border-color: #d7e4da; box-shadow: 0 5px 16px #14372908; }
+.hajj-funds .hajj-path { display: flex; flex-direction: column; min-width: 0; padding: clamp(13px, 1.8vw, 22px); align-items: flex-start; border-color: #d7e4da; box-shadow: 0 5px 16px #1437290d; }
+.hajj-fund-header { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 8px; }
 .hajj-funds .hajj-path:has(button[aria-pressed='true']) { border-color: #78a78a; background: #fafffa; }
 .hajj-funds .outline-button { width: 100%; justify-content: space-between; }
 .hajj-funds .hajj-path:nth-child(2) .hajj-icon { background: #f9eaf0; }
@@ -593,7 +607,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-funding-summary strong { display: block; font: 700 clamp(16px, 2.35vw, 23px)/1.18 Georgia, serif; }
 .hajj-funding-summary small { color: var(--muted); font-size: 11px; }
 .hajj-funding-summary > span { border-radius: 6px; padding: 3px 6px; background: #e7f3eb; color: #205a42; font-weight: 750; font-size: 11px; }
-.hajj-funding progress { display: block; width: 100%; height: 8px; margin-top: 7px; accent-color: var(--emerald-dark); }
+.hajj-programme progress { appearance: none; display: block; width: 100%; height: 7px; margin-top: 7px; border: 0; border-radius: 999px; background: #e3ede6; accent-color: var(--emerald-dark); overflow: hidden; }
+.hajj-programme progress::-webkit-progress-bar { background: #e3ede6; }
+.hajj-programme progress::-webkit-progress-value { background: var(--emerald-dark); border-radius: 999px; }
+.hajj-programme progress::-moz-progress-bar { background: var(--emerald-dark); border-radius: 999px; }
 .hajj-programme :is(.button, .outline-button) { max-width: 100%; min-height: 44px; padding: 9px 12px; font-size: 13px; white-space: normal; text-align: start; }
 .hajj-programme .outline-button { border-color: #b9d2c0; background: #f1f8f2; color: #14513a; }
 .hajj-programme .outline-button:hover:not(:disabled) { border-color: #8eb39b; background: #e3f1e7; color: #14513a; }
@@ -602,7 +619,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-form > .button { justify-self: start; }
 .hajj-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .hajj-form label { min-width: 0; font-size: 13px; font-weight: 700; }
-.hajj-form :is(input[type='number'], select) { display: block; width: 100%; min-height: 44px; margin-top: 5px; padding: 7px 10px; border: 1px solid #bfcfc4; border-radius: 9px; background: #fcfefb; color: var(--navy); font-size: 16px; }
+.hajj-form :is(input[type='number'], select), .hajj-language select { display: block; width: 100%; min-height: 44px; margin-top: 5px; padding: 7px 10px; border: 1px solid #bfcfc4; border-radius: 9px; background: #fcfefb; color: var(--navy); font-size: 16px; }
 .hajj-check { display: flex; align-items: center; gap: 7px; width: fit-content; min-height: 42px; color: #3c584b; font-size: 13px; }
 .hajj-check input { flex: none; width: 17px; height: 17px; accent-color: var(--emerald-dark); }
 .hajj-actions { display: flex; flex-wrap: wrap; gap: 6px 12px; }
@@ -622,10 +639,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-review [id='hajj-oversight'] .button { margin-top: 8px; }
 .hajj-demo-settings { margin-top: -14px; font-size: 14px; }
 .hajj-demo-settings > .text-link { min-height: 44px; }
-.hajj-reference { display: block; margin-top: 7px; color: var(--muted); }
+.hajj-reference { padding: 3px 7px; border: 1px solid #dce8df; border-radius: 7px; background: #f5f8f4; color: var(--muted); font-size: 11px; font-weight: 650; text-align: end; }
 .hajj-funds button { scroll-margin-top: 105px; }
-.hajj-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.hajj-tools-grid > article { min-width: 0; background: #f8fbf8; }
+.hajj-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 12px; }
+.hajj-tools-grid > article { min-width: 0; padding: clamp(13px, 1.6vw, 19px); background: #f8fbf8; }
 .hajj-tools-grid .hajj-path > button { margin-top: 10px; }
 .hajj-journey .hajj-tool-list { display: grid; gap: 6px; padding: 0; margin: 12px 0 0; list-style: none; }
 .hajj-journey .hajj-tool-list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px; font-size: 13px; }
@@ -634,13 +651,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-sample-document { min-width: 0; margin-block: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
 .hajj-sample-document > button { margin-block: 6px; }
 .hajj-language { width: min(100%, 220px); gap: 0; color: var(--navy); font-size: 13px; font-weight: 700; }
-.hajj-applicant-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: start; gap: 12px; }
+.hajj-applicant-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: stretch; gap: 12px; }
+.hajj-applicant-grid:has(.hajj-milestones) { align-items: start; }
 .hajj-applicant-grid .hajj-fields { grid-template-columns: minmax(0, 1fr); }
 .hajj-journey-empty { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: start; gap: 10px; padding: 12px; border: 1px dashed #c7dbc9; border-radius: 12px; background: #f5faf5; }
 .hajj-journey-empty .hajj-inline-link { margin-top: 2px; }
 .hajj-academy-head { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; }
 .hajj-academy-head h2 { margin-bottom: 3px; }
-.hajj-academy-head .hajj-language { margin-top: 0; }
+.hajj-academy-progress { flex: 1 1 210px; }
+.hajj-academy-progress progress { max-width: 300px; }
 .hajj-academy > div { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 2px 12px; }
 .hajj-academy details { flex: 1 1 215px; }
 .hajj-academy > [data-complete='true'] { border-color: #a9cbb5; background: #edf7ef; }
@@ -725,11 +744,78 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .overlay .campaign-detail .detail-content { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
 }
 @media (max-width: 750px) {
-  .hajj-applicant-grid, .hajj-safeguards ul { grid-template-columns: minmax(0, 1fr); }
+  .hajj-overview, .hajj-applicant-grid, .hajj-safeguards ul { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   .hajj-funds, .hajj-fields, .hajj-tools-grid { grid-template-columns: minmax(0, 1fr); }
   .hajj-jump { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hajj-jump a { padding-inline: 8px; font-size: 12px; }
+  .hajj-jump a { justify-content: flex-start; padding-inline: 8px; font-size: 12px; }
+  .hajj-jump a:last-child { grid-column: 1 / -1; }
   .hajj-programme .hajj-path > form button { justify-self: start; }
+}
+
+.organizations.refined-organizations {
+  padding-block: clamp(22px, 2.8vw, 42px);
+  gap: clamp(14px, 2.6vw, 36px);
+  scroll-margin-top: 85px;
+  background: radial-gradient(ellipse at 85% 0%, #135e50, transparent 65%), #083d34;
+}
+.refined-organizations .eyebrow { margin-block: 0 6px; color: #a5e2ca; }
+.refined-organizations h2 { font-size: clamp(29px, 3.3vw, 43px); line-height: 1.1; }
+.refined-organizations .organizations-copy > p:not(.eyebrow) {
+  max-width: 49ch;
+  margin-block: 8px 12px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.refined-organizations .outline-button { max-width: 100%; min-height: 44px; padding-block: 9px; gap: 12px; }
+.refined-organizations .outline-button .app-icon { flex: none; width: 17px; height: 17px; }
+.refined-organizations .org-card {
+  padding: clamp(12px, 1.55vw, 22px);
+  background: linear-gradient(145deg, #fff 40%, #f2f8f3);
+}
+.refined-organizations .org-card-heading { margin-bottom: 8px; gap: clamp(6px, 1.1vw, 12px); }
+.refined-organizations .org-logo { width: 36px; height: 36px; flex-basis: 36px; font-size: 18px; }
+.refined-organizations .score { gap: 1px; padding: 4px 7px; font-size: 21px; }
+.refined-organizations .org-verification {
+  width: fit-content;
+  padding: 4px 6px;
+  border: 1px solid #d6ebdf;
+  border-radius: 8px;
+  background: #eaf6ee;
+}
+.refined-organizations .org-verification .app-icon { flex-basis: 15px; width: 15px; height: 15px; }
+.refined-organizations .org-card h3 { margin-bottom: 4px; font-size: clamp(22px, 2.3vw, 31px); text-wrap: pretty; }
+.refined-organizations .org-metrics {
+  margin: 10px 0 0;
+  padding: 0;
+  border-top: 0;
+  gap: 8px;
+}
+.refined-organizations .org-metrics > div {
+  min-width: 0;
+  padding: 6px clamp(8px, 1.1vw, 14px);
+  border: 1px solid #dce8df;
+  border-radius: 11px;
+  background: #ffffffb3;
+}
+.refined-organizations .org-metrics dd { margin-top: 2px; font-size: clamp(24px, 2.2vw, 31px); }
+.refined-organizations .org-reporting {
+  display: block;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  margin-top: 4px;
+  border: 0;
+  background: #deebe2;
+}
+.refined-organizations .org-reporting::-webkit-meter-bar {
+  height: 5px;
+  border: 0;
+  background: #deebe2;
+}
+.refined-organizations .org-reporting::-webkit-meter-optimum-value { border-radius: 10px; background: #248967; }
+.refined-organizations .org-reporting::-moz-meter-bar { border-radius: 10px; background: #248967; }
+@media (min-width: 720px) and (max-width: 900px) {
+  .organizations.refined-organizations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
