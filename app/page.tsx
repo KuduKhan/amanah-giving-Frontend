@@ -456,13 +456,25 @@ export default function Home() {
       <footer className="refined-footer">
         <div className="footer-brand"><a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a><p>Transparent, secure and Shariah-aware digital giving.</p></div>
         <div className="footer-links">
-          <nav aria-label="Giving links"><h3>Give</h3><a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="/sadaqah">Sadaqah giving</a></nav>
-          <nav aria-label="Platform links"><h3>Platform</h3><a href="#how">How it works</a><a href="/about">About Amanah</a><a href="/verified-charities">Verified charities</a><button onClick={() => setPlatformOpen(true)}>Request assistance</button><button onClick={() => setPlatformOpen(true)}>For organizations</button></nav>
-          <nav aria-label="Trust and support links"><h3>Trust</h3><a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a><button onClick={() => setPlatformOpen(true)}>Shariah governance</button></nav>
+          <nav aria-label="Giving links">
+            <h3><Icon name="giving"/>Give</h3>
+            <a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="/sadaqah">Sadaqah giving</a>
+          </nav>
+          <nav aria-label="Platform links">
+            <h3><Icon name="platform"/>Platform</h3>
+            <a href="#how">How it works</a><a href="/about">About Amanah</a><a href="/verified-charities">Verified charities</a>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('beneficiary'); setPlatformOpen(true); }}>Request assistance</button>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('organization'); setPlatformOpen(true); }}>For organizations</button>
+          </nav>
+          <nav aria-label="Trust and support links">
+            <h3><Icon name="shield"/>Trust</h3>
+            <a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('shariah'); setPlatformOpen(true); }}>Shariah governance</button>
+          </nav>
         </div>
-        <div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" onClick={() => startDonation()}>Give now <Icon name="↗"/></button></div>
+        <div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" type="button" aria-haspopup="dialog" onClick={() => startDonation()}>Give now <Icon name="arrow-right"/></button></div>
       </footer>
-      <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span>English · More languages planned</span><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
+      <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span className="footer-language"><Icon name="globe"/><span>English · More languages planned</span></span><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
 
       <MobileNavigation onGive={() => startDonation()} onAccount={() => setDashboardOpen(true)} accountOpen={dashboardOpen}/>
 

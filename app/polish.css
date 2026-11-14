@@ -29,6 +29,59 @@ button, .button { touch-action: manipulation; }
 .button:disabled { background: #e2ebe4; color: #64796b; border-color: #d5e1d8; box-shadow: none; }
 .button.sand, .refined-footer .footer-cta .button { color: #18382f; background: linear-gradient(150deg,#f6efde,#e9d7b2); border-color: #cfb883; box-shadow: inset 0 1px 0 #fff8, 0 3px 9px #0000000c; }
 .button.sand:hover, .refined-footer .footer-cta .button:hover { color: #18382f; background: #e7d4ac; border-color: #b89b5f; }
+footer.refined-footer {
+  grid-template-columns: minmax(0, .9fr) minmax(0, 2.4fr) minmax(0, .95fr);
+  gap: clamp(16px, 3vw, 42px);
+  padding-block: clamp(24px, 3.4vw, 46px);
+  border-top: 1px solid #31504f;
+  background: radial-gradient(ellipse at 12% 0%, #153738, transparent 52%), #081e2b;
+}
+.refined-footer .footer-brand > a:hover { transform: none; }
+.refined-footer .footer-brand p { margin-top: 9px; color: #bfd2d1; text-wrap: pretty; }
+.refined-footer .footer-links { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 2vw, 26px); }
+.refined-footer .footer-links nav { gap: 0; }
+.refined-footer .footer-links h3 { display: flex; align-items: center; gap: 5px; width: 100%; margin: 0 0 4px; padding-bottom: 8px; border-bottom: 1px solid #315052; color: #a8ddc7; }
+.refined-footer .footer-links h3 .app-icon { flex: none; width: 14px; height: 14px; color: inherit; }
+.refined-footer .footer-links :is(a, button) { min-height: 36px; padding: 6px 0; color: #c9dadb; }
+.refined-footer .footer-links :is(a, button):hover { text-decoration: underline; text-underline-offset: 4px; }
+.refined-footer .footer-cta { min-width: 0; gap: 10px; padding: 13px; border: 1px solid #395452; border-radius: 13px; background: #173339; }
+.refined-footer .footer-cta p { max-width: none; font-size: clamp(18px, 2vw, 24px); }
+.refined-footer .footer-cta .button { min-height: 44px; min-width: 0; padding: 8px 12px; gap: 8px; white-space: nowrap; }
+.footer-bottom.refined-footer-bottom { background: #071a25; color: #bacdd0; }
+.refined-footer-bottom > div { gap: 6px 15px; }
+.refined-footer-bottom :is(.footer-language, .footer-security) { display: inline-flex; align-items: center; gap: 5px; }
+.refined-footer-bottom .app-icon { flex: none; width: 14px; height: 14px; }
+.refined-footer-bottom .footer-language .app-icon { color: #a7c8ea; }
+@media (min-width: 781px) {
+  footer.refined-footer {
+    grid-template-columns: minmax(150px, 1fr) minmax(0, 2.65fr) minmax(148px, 1fr);
+    column-gap: clamp(18px, 3vw, 44px);
+    padding-inline: max(var(--page-gutter), calc((100% - 1440px) / 2));
+  }
+  .refined-footer .footer-brand p { max-width: 27ch; margin-top: 13px; }
+  .refined-footer .footer-links { column-gap: clamp(12px, 2.2vw, 32px); }
+  .refined-footer .footer-links h3 { min-height: 29px; margin-bottom: 5px; }
+  .refined-footer .footer-links :is(a, button) { min-height: 34px; }
+  .refined-footer .footer-cta {
+    grid-column: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 13px;
+    padding: clamp(12px, 1.6vw, 22px);
+    background: linear-gradient(155deg, #1a3a3e, #132f35);
+  }
+  .refined-footer .footer-cta .button { width: 100%; }
+  .footer-bottom.refined-footer-bottom { padding-inline: max(var(--page-gutter), calc((100% - 1440px) / 2)); }
+  .refined-footer-bottom > div { gap: 10px 20px; }
+  .refined-footer-bottom .footer-security { padding-inline-start: 14px; border-inline-start: 1px solid #315052; }
+}
+@media (max-width: 780px) {
+  footer.refined-footer { grid-template-columns: minmax(0, 1fr); gap: 17px; }
+  .refined-footer .footer-links :is(a, button) { min-height: 44px; padding: 5px 0; }
+  .refined-footer .footer-cta { flex-direction: row; align-items: center; justify-content: space-between; }
+  .refined-footer .footer-cta .button { width: auto; flex: none; }
+  .footer-bottom.refined-footer-bottom { gap: 5px; }
+}
 :is(.refined-opportunities .campaign-card, .refined-updates .update-card, .refined-seasonal .seasonal-track article, .refined-how .steps-grid article, .saved-campaigns article, .support-composer) { border-color: var(--finish-border); box-shadow: var(--finish-shadow); }
 .refined-opportunities .campaign-card:hover, .refined-updates .update-card:hover { border-color: #aac7b7; box-shadow: 0 6px 22px #1026380c; }
 .refined-opportunities .campaign-body, .refined-updates .update-summary { background: linear-gradient(180deg,#fff,#fcfdfb); }
