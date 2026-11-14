@@ -9,12 +9,14 @@ const occasions = [
   { id: 'ramadan', icon: '✦', title: 'Last 10 nights', note: 'Never miss Laylat al-Qadr', defaultAmount: 1000 },
   { id: 'monthly', icon: '↻', title: 'Monthly Sadaqah', note: 'Sustainable support all year', defaultAmount: 2500 },
   { id: 'qurbani', icon: '◇', title: 'Qurbani reserve', note: 'Prepare ahead for Dhul Hijjah', defaultAmount: 1500 },
-];
+] as const;
 
-export default function GivingPlanner({ onClose, onCreate }: { onClose: () => void; onCreate: (plan: { amount: string; schedule: string; cause: string; reminders: boolean }) => void }) {
-  const [occasion, setOccasion] = useState('jumuah');
+export type GivingOccasion = typeof occasions[number]['id'];
+
+export default function GivingPlanner({ initialOccasion = 'jumuah', onClose, onCreate }: { initialOccasion?: GivingOccasion; onClose: () => void; onCreate: (plan: { amount: string; schedule: string; cause: string; reminders: boolean }) => void }) {
+  const [occasion, setOccasion] = useState(initialOccasion);
   const selected = occasions.find(item => item.id === occasion)!;
-  const [amount, setAmount] = useState('500');
+  const [amount, setAmount] = useState(() => String(occasions.find(item => item.id === initialOccasion)!.defaultAmount));
   const [cause, setCause] = useState('Where most needed');
   const [reminders, setReminders] = useState(true);
 

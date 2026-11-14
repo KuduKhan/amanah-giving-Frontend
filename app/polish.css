@@ -171,6 +171,46 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-hero .hero-caption p { max-width: 26ch; font-size: clamp(27px, 2.65vw, 40px); }
 .refined-hero .hero-caption button { color: #fff; background: #ffffff10; border-color: #ffffff60; }
 .refined-hero .hero-caption button:hover { background: #ffffff25; }
+.cause-strip.refined-causes { gap: 5px; padding: 6px; border-color: #d9e5dc; background: #fbfdf9; }
+.refined-causes button {
+  display: grid; grid-template-rows: auto 1fr; justify-items: center; align-items: center;
+  min-height: 78px; gap: 6px; padding: 7px 5px;
+  border: 1px solid #e5ede6; border-radius: 12px; background: #fff;
+}
+.refined-causes button:hover { border-color: #bfd5c5; background: #f1f7f2; }
+.refined-causes button[aria-pressed='true'] { border-color: #88b59a; background: #e9f4eb; }
+.refined-causes button:focus-visible { outline-offset: -3px; }
+.refined-causes button .cause-icon { width: 34px; height: 34px; border-radius: 10px; }
+.refined-causes button .cause-icon .app-icon { width: 19px; height: 19px; }
+.refined-causes button .cause-label { min-width: 0; max-width: 100%; font-size: clamp(12px, 1.08vw, 14px); line-height: 1.25; text-wrap: balance; }
+@media (max-width: 780px) {
+  .cause-strip.refined-causes { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; }
+  .refined-causes button { min-height: 73px; }
+  .refined-causes button .cause-icon { width: 30px; height: 30px; border-radius: 8px; }
+  .refined-causes button .cause-icon .app-icon { width: 17px; height: 17px; }
+}
+.refined-seasonal .seasonal-heading h2 { margin-bottom: 12px; text-wrap: balance; }
+.refined-seasonal .seasonal-heading > p:not(.eyebrow) { max-width: 43ch; margin-bottom: 15px; line-height: 1.55; }
+.refined-seasonal .seasonal-heading .button { justify-content: space-between; min-height: 44px; padding: 8px 13px; text-align: start; }
+.refined-seasonal .seasonal-track { gap: clamp(9px, 1.35vw, 16px); align-items: stretch; }
+.refined-seasonal .seasonal-track article { display: flex; flex-direction: column; min-width: 0; padding: clamp(12px, 1.6vw, 20px); animation: none; }
+.refined-seasonal .season-card-top { justify-content: flex-start; flex-wrap: wrap; gap: 5px 8px; margin-bottom: 8px; }
+.refined-seasonal .season-card-top > span { color: #516b5c; font-size: 11px; letter-spacing: 0; text-align: start; }
+.refined-seasonal .seasonal-track h3 { font-size: clamp(19px, 2vw, 25px); line-height: 1.17; text-wrap: pretty; }
+.refined-seasonal .seasonal-track article > p { min-height: 0; margin-block: 3px 8px; line-height: 1.45; }
+.refined-seasonal .seasonal-track article > button { gap: 5px; margin-top: auto; padding-top: 5px; color: #164a37; }
+.refined-seasonal .seasonal-track article > button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.refined-seasonal .seasonal-track article > button .app-icon { flex: 0 0 15px; }
+.refined-seasonal [data-occasion='jumuah'] .season-icon { background: #fcf0df; }
+.refined-seasonal [data-occasion='ramadan'] .season-icon { background: #f0ebf8; }
+.refined-seasonal [data-occasion='qurbani'] .season-icon { background: #fbf0d9; }
+.refined-seasonal [data-occasion='fidyah'] .season-icon { background: #fbeaf0; }
+@media (max-width: 780px) {
+  .seasonal-giving.refined-seasonal { gap: 16px; }
+  .refined-seasonal .seasonal-heading > p:not(.eyebrow) { font-size: 14px; }
+  .refined-seasonal .seasonal-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .refined-seasonal .seasonal-track article > button { font-size: 12px; }
+}
 @media (min-width: 1051px) {
   .hero.refined-hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
   .refined-hero .hero-copy {

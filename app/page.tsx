@@ -10,7 +10,7 @@ import MobileNavigation from './MobileNavigation';
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import PlatformConsole, { type Portal } from './PlatformConsole';
-import GivingPlanner from './GivingPlanner';
+import GivingPlanner, { type GivingOccasion } from './GivingPlanner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
@@ -54,6 +54,15 @@ const waterProjectStages = [
 const causeFilters = [
   ['All', 'platform'], ['Zakat', 'giving'], ['Food', '□'], ['Orphans', 'users'],
   ['Water', '≈'], ['Mosque', 'bank'], ['Health', 'healthcare'], ['Education', 'education'],
+] as const;
+
+const causeShortcuts = [
+  ['Zakat', 'giving', 'Zakat'],
+  ['Food', '□', 'Feed a family'],
+  ['Orphans', 'users', 'Sponsor an orphan'],
+  ['Water', '≈', 'Clean water'],
+  ['Mosque', 'bank', 'Build a mosque'],
+  ['Education', 'book', 'Qur’ans'],
 ] as const;
 
 const givingSteps = [
@@ -100,6 +109,7 @@ export default function Home() {
   const [platformOpen, setPlatformOpen] = useState(false);
   const [platformPortal, setPlatformPortal] = useState<Portal>('donor');
   const [plannerOpen, setPlannerOpen] = useState(false);
+  const [plannerOccasion, setPlannerOccasion] = useState<GivingOccasion>('jumuah');
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [readNotifications, setReadNotifications] = useState<string[]>(['security']);
   const [dedication, setDedication] = useState('');
@@ -204,6 +214,11 @@ export default function Home() {
     catch { setToast('Updated for this session. Device storage is unavailable.'); }
   };
 
+  function openPlanner(occasion: GivingOccasion = 'jumuah') {
+    setPlannerOccasion(occasion);
+    setPlannerOpen(true);
+  }
+
   function startDonation(campaign?: Campaign | null, preset?: string) {
     setDonationCampaign(campaign || null);
     setDonationStep(1);
@@ -284,22 +299,40 @@ export default function Home() {
       </section>
 
       <section className="cause-strip refined-causes" aria-label="Popular causes">
-        {[['Zakat','giving'],['Food','◌'],['Orphans','users'],['Water','≈'],['Mosque','bank'],["Qur'ans",'book']].map(([cause, icon]) => <button key={cause} onClick={() => { setFilter(cause === "Qur'ans" ? 'Education' : cause); setQuery(''); document.querySelector('#causes')?.scrollIntoView(); }}><span className="cause-icon"><Icon name={icon}/></span><span className="cause-label">{cause === 'Food' ? 'Feed a family' : cause === 'Orphans' ? 'Sponsor an orphan' : cause === 'Water' ? 'Clean water' : cause === 'Mosque' ? 'Build a mosque' : cause}</span></button>)}
+        {causeShortcuts.map(([cause, icon, label]) => (
+          <button key={cause} type="button" aria-controls="causes" aria-pressed={filter === cause} onClick={() => {
+            setFilter(cause);
+            setQuery('');
+            requestAnimationFrame(() => {
+              document.getElementById('causes-title')?.focus({ preventScroll: true });
+              document.getElementById('causes')?.scrollIntoView();
+            });
+          }}>
+            <span className="cause-icon"><Icon name={icon}/></span>
+            <span className="cause-label">{label}</span>
+          </button>
+        ))}
       </section>
 
       <section className="seasonal-giving refined-seasonal" aria-labelledby="seasonal-title">
         <div className="seasonal-heading">
           <p className="eyebrow">Give in every season</p>
           <h2 id="seasonal-title">Timely worship, thoughtfully prepared.</h2>
-          <p>Create plans for sacred days and recurring acts of generosity—without losing oversight or intention.</p>
-          <button className="text-link button-link" onClick={() => setPlannerOpen(true)}>Build my giving plan <span><Icon name="↗"/></span></button>
+          <p>Plan ahead for sacred days and build a regular giving habit. Review your intention, amount and cause before saving a draft.</p>
+          <button className="button" aria-haspopup="dialog" onClick={() => openPlanner()}>Build my giving plan <Icon name="arrow-right"/></button>
         </div>
-        <div className="seasonal-track">{[
-          ['NOW','Jumu’ah giving','Every Friday','A small, consistent Sadaqah can become a lasting rhythm.','Create weekly plan'],
-          ['RAMADAN','Last 10 nights','Nightly giving','Schedule across the final nights so no opportunity is missed.','Prepare Ramadan plan'],
-          ['DHUL HIJJAH','Qurbani','Verified distribution','Reserve ahead and follow verified livestock and distribution evidence.','Plan Qurbani'],
-          ['ANY TIME','Fidyah & Kaffarah','Guided calculation','Understand the category, choose a verified program, and retain a receipt.','Open guided flow'],
-        ].map((item,index) => <article key={item[1]} style={{'--delay':`${index * 90}ms`} as React.CSSProperties}><div className="season-card-top"><div className="season-icon"><Icon name={['calendar','☾','gift','giving'][index]}/></div><span>{item[0]}</span></div><h3>{item[1]}</h3><b>{item[2]}</b><p>{item[3]}</p><button onClick={() => setPlannerOpen(true)}>{item[4]} <em><Icon name="↗"/></em></button></article>)}</div>
+        <div className="seasonal-track">{([
+          ['jumuah', 'calendar', 'Every Friday', 'Jumu’ah giving', 'Plan a small, consistent Sadaqah each Friday.', 'Create weekly plan'],
+          ['ramadan', '☾', 'Ramadan', 'Last 10 nights', 'Plan a nightly gift for the final nights of Ramadan.', 'Prepare Ramadan plan'],
+          ['qurbani', 'gift', 'Dhul Hijjah', 'Qurbani', 'Set aside a draft amount for your Qurbani.', 'Plan Qurbani'],
+          ['fidyah', 'giving', 'Any time', 'Fidyah & Kaffarah', 'Prepare a giving draft with Fidyah or Kaffarah selected.', 'Prepare a gift'],
+        ] as const).map(([occasion, icon, timing, title, detail, action]) => (
+          <article key={occasion} data-occasion={occasion}>
+            <div className="season-card-top"><div className="season-icon"><Icon name={icon}/></div><span>{timing}</span></div>
+            <h3>{title}</h3><p>{detail}</p>
+            <button type="button" aria-haspopup="dialog" onClick={() => occasion === 'fidyah' ? startDonation(null, 'Fidyah / Kaffarah') : openPlanner(occasion)}><span>{action}</span><Icon name="arrow-right"/></button>
+          </article>
+        ))}</div>
       </section>
 
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
@@ -532,10 +565,10 @@ export default function Home() {
 
       {donationStep > 0 && renderDonationModal()}
 
-      {dashboardOpen && <MyGiving drafts={drafts} saved={campaigns.filter(c => saved.includes(c.id))} onClose={() => setDashboardOpen(false)} onView={id => { setDashboardOpen(false); setEvidenceOpen(false); setSelected(campaigns.find(c => c.id === id) || null); }} onRemove={toggleSaved} onGive={() => { setDashboardOpen(false); startDonation(); }} onPlan={() => { setDashboardOpen(false); setPlannerOpen(true); }} onNotifications={() => { setDashboardOpen(false); setNotificationsOpen(true); }}/>}
+      {dashboardOpen && <MyGiving drafts={drafts} saved={campaigns.filter(c => saved.includes(c.id))} onClose={() => setDashboardOpen(false)} onView={id => { setDashboardOpen(false); setEvidenceOpen(false); setSelected(campaigns.find(c => c.id === id) || null); }} onRemove={toggleSaved} onGive={() => { setDashboardOpen(false); startDonation(); }} onPlan={() => { setDashboardOpen(false); openPlanner(); }} onNotifications={() => { setDashboardOpen(false); setNotificationsOpen(true); }}/>}
 
       {platformOpen && <PlatformConsole initialPortal={platformPortal} onClose={() => setPlatformOpen(false)} onGive={() => { setPlatformOpen(false); startDonation(); }}/>}
-      {plannerOpen && <GivingPlanner onClose={() => setPlannerOpen(false)} onCreate={plan => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plan.amount); setRecurring(true); setSchedule(plan.schedule === 'Monthly Sadaqah' ? 'Monthly' : plan.schedule === 'Last 10 nights' ? 'Last 10 nights' : plan.schedule); setPlanCause(plan.cause); setPlanReminders(plan.reminders); }}/>}
+      {plannerOpen && <GivingPlanner initialOccasion={plannerOccasion} onClose={() => setPlannerOpen(false)} onCreate={plan => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plan.amount); setRecurring(true); setSchedule(plan.schedule === 'Monthly Sadaqah' ? 'Monthly' : plan.schedule); setPlanCause(plan.cause); setPlanReminders(plan.reminders); }}/>}
 
       {notificationsOpen && <NotificationCenter read={readNotifications} onRead={setReadNotifications} onClose={() => setNotificationsOpen(false)}/>}
 
