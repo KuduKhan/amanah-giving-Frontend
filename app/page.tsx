@@ -9,7 +9,7 @@ import MyGiving from './MyGiving';
 import MobileNavigation from './MobileNavigation';
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
-import PlatformConsole, { type Portal } from './PlatformConsole';
+import PlatformConsole, { portals, type Portal } from './PlatformConsole';
 import GivingPlanner, { type GivingOccasion } from './GivingPlanner';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -265,7 +265,7 @@ export default function Home() {
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
-          <h1 id="hero-title">{t.titleA} <em>{t.titleB}</em></h1>
+          <h1 id="hero-title"><span>{t.titleA}</span> <em>{t.titleB}</em></h1>
           <div className="hero-giving">
             <p className="hero-lead">{t.lead}</p>
             <div className="hero-actions">
@@ -460,14 +460,7 @@ export default function Home() {
 
       <section className="platform-preview refined-ecosystem" aria-labelledby="ecosystem-title">
         <div className="platform-preview-copy"><p className="eyebrow">One mission. Six coordinated products.</p><h2 id="ecosystem-title">The complete giving ecosystem.</h2><p>Donors see impact. Beneficiaries request help privately. Organizations deliver transparently. Admin, finance and Shariah teams protect every decision behind the scenes.</p><button className="button" onClick={() => { setPlatformPortal('donor'); setPlatformOpen(true); }}>Explore the full platform <Icon name="↗"/></button></div>
-        <div className="platform-preview-grid">{([
-          ['donor','heart','Donor','Give, plan and trace'],
-          ['beneficiary','giving','Beneficiary','Request help privately'],
-          ['organization','platform','Organization','Deliver with evidence'],
-          ['admin','shield','Admin','Verify and protect'],
-          ['finance','wallet','Finance','Reconcile every fund'],
-          ['shariah','book','Shariah','Govern with clarity'],
-        ] as const).map(([portal, icon, label, description]) => <button key={portal} onClick={() => { setPlatformPortal(portal); setPlatformOpen(true); }} aria-label={`Explore ${label} workspace: ${description}`}><i><Icon name={icon}/></i><span><b>{label}</b><small>{description}</small></span><em><Icon name="→"/></em></button>)}</div>
+        <div className="platform-preview-grid">{portals.map(({ id, icon, label, role }) => <button type="button" key={id} aria-haspopup="dialog" onClick={() => { setPlatformPortal(id); setPlatformOpen(true); }}><i><Icon name={icon}/></i><span><b>{label}</b><small>{role}</small></span><em><Icon name="chevron"/></em></button>)}</div>
       </section>
 
       <section className="organizations refined-organizations" id="organizations" aria-labelledby="organizations-title">

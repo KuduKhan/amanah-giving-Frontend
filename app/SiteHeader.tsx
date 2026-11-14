@@ -60,7 +60,11 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     };
   }, [menuOpen]);
 
-  const run = (action: () => void) => { setMenuOpen(false); action(); };
+  const run = (action: () => void) => {
+    if (menuOpen) menuButton.current?.focus({ preventScroll: true });
+    setMenuOpen(false);
+    action();
+  };
 
   return <header className="site-header premium-header refined-header" ref={header} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
@@ -89,18 +93,27 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     </div>
     </div>
     {menuOpen && <div id="navigation-menu" className="navigation-menu">
-      <p className="menu-eyebrow">EXPLORE AMANAH</p>
-      <nav aria-label="Expanded navigation">
-        {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => setMenuOpen(false)}><Icon name={link.icon}/><span>{link.label}</span><Icon name="→"/></a>)}
-        <Link href="/hajj" onClick={() => setMenuOpen(false)}><Icon name="kaaba"/><span>Amanah Hajj</span><Icon name="arrow-right"/></Link>
-        <button onClick={() => run(onPlatform)}><Icon name="platform"/><span>Platform</span><Icon name="→"/></button>
-        <button onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="→"/></button>
-      </nav>
-      <div className="menu-utilities">
-        <button onClick={onLanguage} aria-label="Language options"><Icon name="globe"/><span>{language === 'en' ? 'English' : language === 'sw' ? 'Kiswahili' : 'العربية'}</span><small>Language options</small></button>
-        <button onClick={() => run(onNotifications)}><Icon name="bell"/><span>Notifications</span><small>{unreadCount ? `${unreadCount} unread` : 'All read'}</small></button>
+      <p className="menu-eyebrow" id="navigation-menu-title">Explore Amanah</p>
+      <div className="menu-scroll">
+        <nav aria-labelledby="navigation-menu-title">
+          {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => setMenuOpen(false)}><Icon name={link.icon}/><span>{link.label}</span><Icon name="chevron"/></a>)}
+          <Link className="menu-hajj" href="/hajj" onClick={() => setMenuOpen(false)}><Icon name="kaaba"/><span>Amanah Hajj</span><Icon name="chevron"/></Link>
+          <button type="button" aria-haspopup="dialog" onClick={() => run(onPlatform)}><Icon name="platform"/><span>Platform</span><Icon name="chevron"/></button>
+          <button type="button" aria-haspopup="dialog" onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="chevron"/></button>
+        </nav>
+        <div className="menu-utilities">
+          <button type="button" aria-haspopup="dialog" onClick={() => run(onLanguage)}>
+            <Icon name="globe"/><span>Language options<small>{language === 'en' ? 'English' : language === 'sw' ? 'Kiswahili' : 'العربية'}</small></span>
+          </button>
+          <button type="button" aria-haspopup="dialog" onClick={() => run(onNotifications)}>
+            <Icon name="bell"/><span>Notifications<small>{unreadCount ? `${unreadCount} unread` : 'All read'}</small></span>
+          </button>
+        </div>
       </div>
-      <div className="menu-footer"><span><Icon name="shield"/>Verified giving. Visible impact.</span><button className="button" onClick={() => run(onGive)}>{labels.give}<Icon name="↗"/></button></div>
+      <div className="menu-footer">
+        <span><Icon name="shield"/>Verified giving. Visible impact.</span>
+        <button className="button" type="button" aria-haspopup="dialog" onClick={() => run(onGive)}>{labels.give}<Icon name="↗"/></button>
+      </div>
     </div>}
   </header>;
 }

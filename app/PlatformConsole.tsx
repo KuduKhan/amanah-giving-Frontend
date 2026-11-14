@@ -5,7 +5,7 @@ import AmanahLogo from './AmanahLogo';
 import Image from 'next/image';
 import { downloadText } from './givingDrafts';
 
-import { createContext, FormEvent, useContext, useMemo, useState } from 'react';
+import { createContext, FormEvent, useContext, useRef, useState } from 'react';
 
 const WorkflowActions = createContext<(message: string) => void>(() => {});
 
@@ -15,13 +15,13 @@ type DonorProps = ActionProps & { onGive: () => void; notifications: boolean; se
 
 export type Portal = 'donor' | 'beneficiary' | 'organization' | 'admin' | 'finance' | 'shariah';
 
-const portals: { id: Portal; label: string; icon: string; role: string }[] = [
-  { id: 'donor', label: 'Donor', icon: '♡', role: 'Give, plan and trace impact' },
-  { id: 'beneficiary', label: 'Beneficiary', icon: '⌂', role: 'Request assistance privately' },
-  { id: 'organization', label: 'Organization', icon: '◇', role: 'Deliver verified programs' },
-  { id: 'admin', label: 'Admin', icon: '◎', role: 'Verify, review and protect' },
-  { id: 'finance', label: 'Finance', icon: '≡', role: 'Reconcile restricted funds' },
-  { id: 'shariah', label: 'Shariah', icon: '✦', role: 'Govern giving policy' },
+export const portals: { id: Portal; label: string; icon: string; role: string }[] = [
+  { id: 'donor', label: 'Donor', icon: 'heart', role: 'Give, plan and trace impact' },
+  { id: 'beneficiary', label: 'Beneficiary', icon: 'giving', role: 'Request assistance privately' },
+  { id: 'organization', label: 'Organization', icon: 'platform', role: 'Deliver verified programs' },
+  { id: 'admin', label: 'Admin', icon: 'shield', role: 'Verify, review and protect' },
+  { id: 'finance', label: 'Finance', icon: 'wallet', role: 'Reconcile restricted funds' },
+  { id: 'shariah', label: 'Shariah', icon: 'book', role: 'Govern giving policy' },
 ];
 
 const featureCatalog = [
@@ -41,11 +41,18 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [assistantReply, setAssistantReply] = useState('');
 
-  const portalTitle = useMemo(() => portals.find(item => item.id === portal)!, [portal]);
+  const workspace = useRef<HTMLDivElement>(null);
+  const portalTitle = portals.find(item => item.id === portal)!;
+  function selectPortal(id: Portal) {
+    if (id === portal) return;
+    setPortal(id);
+    setMessage('');
+    setAssistantOpen(false);
+    workspace.current?.scrollTo({ top: 0 });
+  }
   const act = (text: string) => {
     setMessage(text);
-    requestAnimationFrame(() => document.getElementById('workflow-preview')?.focus());
-
+    requestAnimationFrame(() => workspace.current?.querySelector<HTMLElement>('#workflow-preview')?.focus());
   };
 
   return <WorkflowActions.Provider value={act}><div className="platform-overlay" role="dialog" aria-modal="true" aria-label="Amanah platform console">
@@ -54,14 +61,24 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
         <div className="platform-brand"><AmanahLogo variant="light" size="sm" showTagline={false}/><div><b>AMANAH</b><small>PLATFORM</small></div></div>
         <p className="platform-kicker">YOUR WORKSPACES</p>
         <nav aria-label="Platform portals">
-          {portals.map(item => <button key={item.id} className={portal === item.id ? 'active' : ''} onClick={() => setPortal(item.id)}><i><Icon name={item.icon}/></i><span><b>{item.label}</b><small>{item.role}</small></span></button>)}
+          {portals.map(item => <button type="button" key={item.id} className={portal === item.id ? 'active' : ''} aria-label={item.label} aria-current={portal === item.id ? 'true' : undefined} aria-controls="platform-workspace" onClick={() => selectPortal(item.id)}><i><Icon name={item.icon}/></i><span><b>{item.label}</b><small>{item.role}</small></span></button>)}
         </nav>
         <div className="platform-security"><span><Icon name="●"/></span><div><b>Example workspace</b><small>No live records connected</small></div></div>
       </aside>
 
       <div className="platform-main">
-        <header className="platform-topbar"><div><p>{portalTitle.label} portal</p><h2>{portalTitle.role}</h2></div><div><button className="platform-ai" aria-expanded={assistantOpen} onClick={() => setAssistantOpen(!assistantOpen)}><Icon name="✦"/> Giving guide</button><button className="platform-close" onClick={onClose} aria-label="Close platform"><Icon name="×"/></button></div></header>
-        {assistantOpen && <form className="assistant-bar" onSubmit={(event: FormEvent) => { event.preventDefault(); setAssistantReply('Example guidance (not personalised): a verified water or education Sadaqah Jariyah campaign may fit. I can explain options, but I do not issue religious rulings or move funds.'); }}><span><Icon name="✦"/></span><input aria-label="Ask the example giving guide" placeholder="Ask about giving types, causes or your impact…"/><button>Ask</button>{assistantReply && <p>{assistantReply}</p>}</form>}
+        <header className="platform-topbar">
+          <div><p>Amanah Platform · {portalTitle.label}</p><h2 id="platform-workspace-title">{portalTitle.role}</h2></div>
+          <div>
+            <button className="platform-ai" type="button" aria-label="Giving guide" aria-expanded={assistantOpen} aria-controls="platform-guide" onClick={() => {
+              if (!assistantOpen) workspace.current?.scrollTo({ top: 0 });
+              setAssistantOpen(!assistantOpen);
+            }}><Icon name="✦"/><span>Giving guide</span></button>
+            <button className="platform-close" type="button" onClick={onClose} aria-label="Close platform"><Icon name="close"/></button>
+          </div>
+        </header>
+        <div ref={workspace} className="platform-scroll" id="platform-workspace" role="region" aria-labelledby="platform-workspace-title">
+        <form id="platform-guide" className="assistant-bar" hidden={!assistantOpen} onSubmit={(event: FormEvent) => { event.preventDefault(); setAssistantReply('Example guidance (not personalised): a verified water or education Sadaqah Jariyah campaign may fit. I can explain options, but I do not issue religious rulings or move funds.'); }}><input aria-label="Ask the example giving guide" placeholder="Ask about giving types, causes or impact" required/><button type="submit">Ask</button>{assistantReply && <p role="status">{assistantReply}</p>}</form>
 
         <div className="platform-content"><p className="preview-note">Workspace examples · Figures, records and controls are illustrative. No organization, account or financial changes are submitted.</p>{message && <section className="workflow-preview" id="workflow-preview" tabIndex={-1} aria-labelledby="workflow-title"><button className="workflow-close" aria-label="Close workflow preview" onClick={() => setMessage('')}><Icon name="close"/></button><p className="eyebrow">Workflow preview</p><h3 id="workflow-title">{message.replace(/ (opened|created|saved|submitted|approved|prepared)$/i, '')}</h3><p>This task is shown as a preview. No record was submitted, approved, downloaded or changed on a live service.</p><button className="text-link" onClick={() => downloadText('amanah-workflow-note.txt', `AMANAH GIVING — WORKFLOW NOTE\n${message}\nPreview only. No live record was changed.\n`)}>Download workflow note <Icon name="→"/></button></section>}
           {portal === 'donor' && <DonorPortal onGive={onGive} act={act} notifications={notifications} setNotifications={setNotifications} privateProfile={privateProfile} setPrivateProfile={setPrivateProfile}/>} 
@@ -70,6 +87,7 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
           {portal === 'admin' && <AdminPortal act={act}/>} 
           {portal === 'finance' && <FinancePortal act={act}/>} 
           {portal === 'shariah' && <ShariahPortal act={act}/>} 
+        </div>
         </div>
       </div>
     </div>
@@ -92,7 +110,52 @@ function DonorPortal({ onGive, act, notifications, setNotifications, privateProf
 
 function BeneficiaryPortal({ act }: ActionProps) {
   const [step, setStep] = useState(1);
-  return <><div className="portal-welcome beneficiary"><div><p className="portal-label">PRIVATE ASSISTANCE WORKFLOW</p><h3>Ask for help with dignity.</h3><p>Your request is only visible to assigned verification staff and approved delivery partners.</p></div><span className="privacy-badge"><Icon name="▣"/> Private by default</span></div><div className="portal-grid beneficiary-grid"><section className="portal-card"><CardHead eyebrow={`STEP ${step} OF 4`} title={['','Tell us what is needed','Add supporting details','Choose a safe contact','Review and submit'][step]}/><div className="form-progress"><span style={{width:`${step * 25}%`}}/></div>{step === 1 && <div className="request-types">{['Food support','Medical assistance','Education','Shelter','Water access','Other urgent need'].map(x => <button key={x} onClick={() => act(`${x} selected`)}>{x}<span><Icon name="→"/></span></button>)}</div>}{step === 2 && <label className="portal-field">Describe the situation<textarea placeholder="Share only what is needed for verification…"/></label>}{step === 3 && <div className="portal-form"><label>Preferred contact<input placeholder="07XX XXX XXX"/></label><label>Safe time to contact<select><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label></div>}{step === 4 && <div className="review-box"><b>Your privacy checklist</b><p>Identity hidden publicly · Documents encrypted · Consent required before partner sharing</p></div>}<div className="form-actions"><button disabled={step === 1} onClick={() => setStep(step-1)}><Icon name="←"/> Back</button><button className="button" onClick={() => step < 4 ? setStep(step+1) : act('Request encrypted and submitted for review')}>{step < 4 ? <>Continue <Icon name="→"/></> : 'Submit privately'}</button></div></section><section className="portal-card"><CardHead eyebrow="MY REQUESTS" title="Track without exposure"/><div className="case-card"><span className="case-status">Verification in progress</span><b>Education support · REQ-1842</b><p>Documents received. Your assigned verifier will contact you in your preferred window.</p><div><span>Submitted</span><span>Identity check</span><span className="pending">Decision</span><span className="pending">Delivery</span></div></div><div className="safety-note"><i><Icon name="shield"/></i><p><b>Your safety matters.</b><br/>Amanah never asks for payment to approve assistance. Report suspicious contact immediately.</p></div></section></div></>;
+  const [requestType, setRequestType] = useState('');
+  const [details, setDetails] = useState('');
+  const [contact, setContact] = useState('');
+  const [contactTime, setContactTime] = useState('Morning');
+
+  return <>
+    <div className="portal-welcome beneficiary">
+      <div><p className="portal-label">PRIVATE ASSISTANCE WORKFLOW</p><h3>Ask for help with dignity.</h3><p>Try the assistance process with sample information.</p></div>
+      <span className="privacy-badge"><Icon name="shield"/> Private by default</span>
+    </div>
+    <div className="portal-grid beneficiary-grid">
+      <section className="portal-card">
+        <CardHead eyebrow={`STEP ${step} OF 4`} title={['Tell us what is needed', 'Add supporting details', 'Choose a safe contact', 'Review your request'][step - 1]}/>
+        <div className="form-progress" role="progressbar" aria-label="Sample request progress" aria-valuemin={0} aria-valuemax={4} aria-valuenow={step}><span style={{ width: `${step * 25}%` }}/></div>
+        {step === 1 && <div className="request-types" role="group" aria-label="Assistance type">
+          {['Food support', 'Medical assistance', 'Education', 'Shelter', 'Water access', 'Other urgent need'].map(type => (
+            <button key={type} type="button" aria-pressed={requestType === type} onClick={() => setRequestType(type)}>{type}<span><Icon name={requestType === type ? 'check' : 'chevron'}/></span></button>
+          ))}
+        </div>}
+        {step === 2 && <label className="portal-field">Sample supporting details
+          <textarea value={details} onChange={event => setDetails(event.target.value)} placeholder="Describe an example situation"/>
+        </label>}
+        {step === 3 && <div className="portal-form">
+          <label>Sample contact<input type="tel" value={contact} onChange={event => setContact(event.target.value)} placeholder="07XX XXX XXX"/></label>
+          <label>Safe time to contact<select value={contactTime} onChange={event => setContactTime(event.target.value)}><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label>
+        </div>}
+        {step === 4 && <div className="review-box">
+          <b>{requestType}</b>
+          <p>{details.trim() || 'No supporting details added.'}</p>
+          <p>{contact.trim() ? `Sample contact provided · ${contactTime}` : 'No sample contact added.'}</p>
+        </div>}
+        <div className="form-actions">
+          <button type="button" disabled={step === 1} onClick={() => setStep(step - 1)}><Icon name="arrow-left"/> Back</button>
+          <button type="button" className="button" disabled={!requestType} onClick={() => {
+            if (step < 4) setStep(step + 1);
+            else act(`${requestType} request review`);
+          }}>{step < 4 ? <>Continue <Icon name="arrow-right"/></> : 'Preview request'}</button>
+        </div>
+      </section>
+      <section className="portal-card">
+        <CardHead eyebrow="MY REQUESTS" title="Track without exposure"/>
+        <div className="case-card"><span className="case-status">Verification in progress</span><b>Education support · REQ-1842</b><p>Documents received. Your assigned verifier will contact you in your preferred window.</p><div><span>Submitted</span><span>Identity check</span><span className="pending">Decision</span><span className="pending">Delivery</span></div></div>
+        <div className="safety-note"><i><Icon name="shield"/></i><p><b>Your safety matters.</b><br/>Amanah never asks for payment to approve assistance. Report suspicious contact immediately.</p></div>
+      </section>
+    </div>
+  </>;
 }
 
 function OrganizationPortal({ act }: ActionProps) {
@@ -100,7 +163,7 @@ function OrganizationPortal({ act }: ActionProps) {
 }
 
 function AdminPortal({ act }: ActionProps) {
-  return <><div className="portal-welcome admin"><div><p className="portal-label">AMANAH COMMAND CENTER</p><h3>Protect trust at platform scale.</h3><p>Risk, verification, content, complaints and disbursement oversight in one decision queue.</p></div><span className="live-badge"><Icon name="●"/> LIVE MONITORING</span></div><div className="portal-metrics">{[['218','Active campaigns'],['KSh 24.6M','Funds in custody'],['17','Verification queue'],['2','Risk alerts']].map(x => <div key={x[1]}><span>{x[1]}</span><b>{x[0]}</b><small>Across Kenya</small></div>)}</div><div className="portal-grid"><section className="portal-card"><CardHead eyebrow="PRIORITY QUEUE" title="Review and decide"/><DataRows rows={[['ORG-442','Identity mismatch','Risk 82','Investigate'],['WTR-614','Budget changed +18%','Risk 61','Review'],['REQ-1842','Beneficiary verified','Risk 12','Approve']]}/><button className="add-plan" onClick={() => act('Decision audit log opened')}>View immutable decision log</button></section><section className="portal-card"><CardHead eyebrow="VERIFICATION LADDER" title="Evidence, not a single badge"/><div className="level-list">{[['0','Unverified','Profile only'],['1','Identity verified','People checked'],['2','Organization verified','Registration checked'],['3','Campaign verified','Need and budget checked'],['4','Impact verified','Outcome evidence checked']].map(x => <div key={x[0]} className={x[0] === '4' ? 'active' : ''}><i>{x[0]}</i><span><b>{x[1]}</b><small>{x[2]}</small></span></div>)}</div></section></div><section className="portal-card"><CardHead eyebrow="ANTI-FRAUD CONTROL ROOM" title="Checks before money moves"/><div className="control-grid">{['Duplicate identity detection','Document tamper signals','Device and velocity checks','Sanctions and watchlist screening','Budget anomaly detection','Maker–checker–approver release'].map((x,i) => <button key={x} onClick={() => act(`${x} details opened`)}><span>{i < 5 ? <Icon name="✓"/> : '3/3'}</span><b>{x}</b><small>{i < 5 ? 'No current exception' : 'Separation of duties enforced'}</small></button>)}</div></section></>;
+  return <><div className="portal-welcome admin"><div><p className="portal-label">AMANAH COMMAND CENTER</p><h3>Protect trust at platform scale.</h3><p>Risk, verification, content, complaints and disbursement oversight in one decision queue.</p></div><span className="live-badge"><Icon name="●"/> Monitoring preview</span></div><div className="portal-metrics">{[['218','Active campaigns'],['KSh 24.6M','Funds in custody'],['17','Verification queue'],['2','Risk alerts']].map(x => <div key={x[1]}><span>{x[1]}</span><b>{x[0]}</b><small>Across Kenya</small></div>)}</div><div className="portal-grid"><section className="portal-card"><CardHead eyebrow="PRIORITY QUEUE" title="Review and decide"/><DataRows rows={[['ORG-442','Identity mismatch','Risk 82','Investigate'],['WTR-614','Budget changed +18%','Risk 61','Review'],['REQ-1842','Beneficiary verified','Risk 12','Approve']]}/><button className="add-plan" onClick={() => act('Decision audit log opened')}>View immutable decision log</button></section><section className="portal-card"><CardHead eyebrow="VERIFICATION LADDER" title="Evidence, not a single badge"/><div className="level-list">{[['0','Unverified','Profile only'],['1','Identity verified','People checked'],['2','Organization verified','Registration checked'],['3','Campaign verified','Need and budget checked'],['4','Impact verified','Outcome evidence checked']].map(x => <div key={x[0]} className={x[0] === '4' ? 'active' : ''}><i>{x[0]}</i><span><b>{x[1]}</b><small>{x[2]}</small></span></div>)}</div></section></div><section className="portal-card"><CardHead eyebrow="ANTI-FRAUD CONTROL ROOM" title="Checks before money moves"/><div className="control-grid">{['Duplicate identity detection','Document tamper signals','Device and velocity checks','Sanctions and watchlist screening','Budget anomaly detection','Maker–checker–approver release'].map((x,i) => <button key={x} onClick={() => act(`${x} details opened`)}><span>{i < 5 ? <Icon name="✓"/> : '3/3'}</span><b>{x}</b><small>{i < 5 ? 'No current exception' : 'Separation of duties enforced'}</small></button>)}</div></section></>;
 }
 
 function FinancePortal({ act }: ActionProps) {
