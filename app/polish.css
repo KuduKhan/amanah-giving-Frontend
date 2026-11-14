@@ -112,8 +112,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-hero .hero-visual::after { background: linear-gradient(180deg,#071a2c30 0%,#071a2c0d 45%,#071a2ce8 100%); }
 .refined-hero .live-giving { display: inline-flex; gap: 8px; align-items: center; border-radius: 999px; background: #0b2031f5; color: #edf6f3; }
 .refined-hero .live-giving .live-pulse { flex: none; animation: none; box-shadow: none; }
-.refined-hero .impact-card { width: min(325px, 100%); padding: clamp(16px, 1.6vw, 24px); border-radius: 20px; background: #fffffff5; }
-.refined-hero .impact-card p { font-size: clamp(18px, 1.75vw, 26px); }
+.refined-hero .impact-card { width: min(252px, 100%); padding: 10px 12px; border-radius: 13px; background: #fffffff5; }
+.refined-hero .impact-card p { margin: 5px 0 6px; font-size: 18px; line-height: 1.25; text-wrap: pretty; }
 .refined-hero .hero-caption { grid-row: 3; align-self: end; padding-bottom: 16px; }
 .refined-hero .hero-caption p { max-width: 26ch; font-size: clamp(27px, 2.65vw, 40px); }
 .refined-hero .hero-caption button { color: #fff; background: #ffffff10; border-color: #ffffff60; }
@@ -122,17 +122,19 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .hero.refined-hero { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); }
   .refined-hero .hero-copy {
     align-self: stretch;
-    padding-inline-start: max(var(--page-gutter), calc((100vw - 1520px) / 2));
-    padding-inline-end: clamp(24px, 3vw, 56px);
+    padding-inline: clamp(28px, 3vw, 72px);
   }
   .refined-hero .hero-copy h1 {
-    max-width: min(100%, 44rem);
-    font-size: clamp(37px, 3.6vw, 63px);
+    width: 100%;
+    max-width: none;
+    font-size: clamp(37px, 3.85vw, 74px);
     text-wrap: balance;
   }
-  .refined-hero .hero-giving { width: min(100%, 39rem); }
-  .refined-hero .hero-giving .hero-lead { max-width: none; }
-  .refined-hero .hero-proof { max-width: 39rem; }
+  .refined-hero .hero-giving { width: 100%; gap: 10px; }
+  .refined-hero .hero-giving .hero-lead { max-width: 70ch; font-size: clamp(17px, 1.15vw, 21px); }
+  .refined-hero .hero-actions :is(.button, .hero-secondary) { padding-inline: clamp(12px, 1.2vw, 22px); }
+  .refined-hero .hero-hajj-link { padding-inline: clamp(12px, 1.2vw, 22px); }
+  .refined-hero .hero-proof { max-width: none; }
 }
 .cause-browser-bar { min-width: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 14px; padding: 9px 12px; margin-bottom: 16px; border: 1px solid #dce6df; border-radius: 16px; background: #f5f8f2; }
 .refined-opportunities .cause-browser-bar .filter-row { width: auto; flex: 1 1 auto; margin: 0; padding: 0; }
@@ -229,11 +231,24 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-hero .hero-copy h1 { max-width: 17ch; }
   .refined-hero .hero-visual { min-height: 460px; }
 }
+@media (max-width: 780px) {
+  .refined-hero .hero-copy h1 { width: 100%; max-width: none; }
+  .refined-hero .hero-giving { width: 100%; gap: 8px; }
+  .refined-hero .hero-giving .hero-lead { max-width: 55ch; }
+  .refined-hero .hero-proof { max-width: none; margin-top: 19px; padding-top: 13px; }
+  .refined-hero .hero-proof > div { padding-inline: clamp(5px, 2vw, 14px); }
+  .refined-hero .hero-proof b { margin-bottom: 4px; }
+}
 @media (max-width: 600px) {
-  .refined-hero .hero-copy .eyebrow { font-size: 10px; margin-bottom: 13px; }
-  .refined-hero .hero-copy h1 { max-width: 15ch; font-size: clamp(34px, 8.8vw, 46px); }
+  .refined-hero .hero-copy .eyebrow { font-size: 10px; margin-bottom: 12px; }
+  .refined-hero .hero-copy h1 { font-size: clamp(32px, 8.4vw, 46px); text-wrap: balance; }
+  .refined-hero .hero-giving { margin-top: 12px; }
+  .refined-hero .hero-giving .hero-lead { font-size: 15px; }
+  .refined-hero .hero-actions :is(.button, .hero-secondary) { padding-inline: 9px; }
+  .refined-hero .hero-actions .app-icon { width: 14px; height: 14px; }
   .refined-hero .hero-visual { min-height: 410px; }
-  .refined-hero .impact-card { width: min(255px, 100%); border-radius: 16px; }
+  .refined-hero .impact-card { width: min(220px, 100%); }
+  .refined-hero .impact-card p { font-size: 16px; }
   .refined-hero .hero-caption { padding-bottom: 12px; }
   .cause-browser-bar { padding: 9px 9px 5px; }
   .refined-opportunities .cause-browser-bar .filter-row button { gap: 5px; padding-inline: 9px; font-size: 12px; }
@@ -301,13 +316,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-header .header-actions { gap: 2px; }
 }
 .refined-hero .impact-card { border-color: #fff; box-shadow: 0 8px 26px #091d2c36; backdrop-filter: none; }
-.refined-hero .hero-impact-label > .app-icon { padding: 5px; width: 29px; height: 29px; border-radius: 8px; background: #e5f3ea; color: #166446; }
-.refined-hero .hero-evidence-time { display: flex; align-items: center; gap: 6px; padding-top: 9px; border-top: 1px solid #dce8de; color: #4e675d; }
-.refined-hero .hero-evidence-time .app-icon { width: 14px; height: 14px; flex: none; color: inherit; }
+.refined-hero .hero-impact-label { gap: 6px; }
+.refined-hero .hero-impact-label > .app-icon { padding: 3px; width: 21px; height: 21px; flex: none; border-radius: 6px; background: #e5f3ea; color: #166446; }
+.refined-hero .impact-card .hero-evidence-time { display: flex; align-items: center; gap: 5px; padding-top: 5px; border-top: 1px solid #dce8de; color: #4e675d; font-size: 11px; line-height: 1.35; }
+.refined-hero .hero-evidence-time .app-icon { width: 13px; height: 13px; flex: none; color: inherit; }
 .refined-hero .hero-caption button:focus-visible { outline-color: #c0ecd2; }
-@media (max-width: 390px) {
-  .refined-hero .impact-card { padding: 13px; }
-}
 
 .overlay .campaign-search-panel {
   width: min(700px, 100%);
