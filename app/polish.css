@@ -226,7 +226,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-hero .hero-giving { width: 100%; gap: 10px; }
   .refined-hero .hero-giving .hero-lead { max-width: 70ch; font-size: clamp(17px, 1.15vw, 21px); }
   .refined-hero .hero-actions :is(.button, .hero-secondary) { padding-inline: clamp(12px, 1.2vw, 22px); }
-  .refined-hero .hero-hajj-link { padding-inline: clamp(12px, 1.2vw, 22px); }
   .refined-hero .hero-proof { max-width: none; }
 }
 .cause-browser-bar { min-width: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 14px; padding: 9px 12px; margin-bottom: 16px; border: 1px solid #dce6df; border-radius: 16px; background: #f5f8f2; }
@@ -536,13 +535,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-impact .timeline-item:last-child > div { padding-inline: 8px; }
 }
 
-.hero-hajj-link { display: grid; grid-template-columns: 34px minmax(0, 1fr) 16px; align-items: center; gap: 9px; min-width: 0; min-height: 52px; padding: 6px clamp(8px, 1.3vw, 14px); border: 1px solid #ccded1; border-radius: 12px; background: #f9fcf7; color: var(--navy); text-decoration: none; }
-.hero-hajj-link:hover { border-color: #83b49a; background: #eef7ef; }
-.hero-hajj-link :is(strong, small) { display: block; }
-.hero-hajj-link strong { font-size: 14px; }
-.hero-hajj-link small { margin-top: 2px; color: #49615a; font-size: 12px; line-height: 1.35; }
-.hero-hajj-link > .app-icon { width: 16px; height: 16px; color: var(--emerald-dark); }
-.hajj-entry-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: #f9eaf0; }
 .hajj-safeguards > a, .hajj-inline-link {
   display: inline-flex;
   align-items: center;

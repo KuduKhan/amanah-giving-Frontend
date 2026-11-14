@@ -35,6 +35,18 @@ const tones = new Map<LucideIcon, string>([
 
 /** Decorative icons inherit their accessible name from the surrounding control. */
 export default function Icon({ name, className = '' }: { name: string; className?: string }) {
+  if (name === 'kaaba') {
+    return (
+      <svg className={`app-icon ${className}`} width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m2 6.5 10-4 10 4v12l-10 4-10-4z" fill="#243833"/>
+        <path d="m2 6.5 10 4 10-4-10-4z" fill="#54655e"/>
+        <path d="m12 10.5 10-4v12l-10 4z" fill="#152923"/>
+        <path d="m2 9 10 4 10-4v2.3l-10 4-10-4z" fill="#c59b4f"/>
+        <path d="m5.5 14.1 3 1.2v4l-3-1.2z" fill="#c59b4f"/>
+      </svg>
+    );
+  }
+
   const Glyph = icons[name] || CircleCheck;
   return <Glyph className={`app-icon ${className}`} data-icon-tone={tones.get(Glyph)} size={20} strokeWidth={1.8} aria-hidden="true" focusable="false" />;
 }

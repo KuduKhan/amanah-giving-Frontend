@@ -69,6 +69,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><AmanahLogo size="md"/></a>
     <nav className="desktop-links" aria-label="Main navigation">
       {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}><Icon name={link.icon}/>{link.label}</a>)}
+      <Link href="/hajj"><Icon name="kaaba"/>Amanah Hajj</Link>
       <button className="nav-platform" aria-haspopup="dialog" onClick={onPlatform}><Icon name="platform"/>Platform</button>
     </nav>
     <div className="header-actions">
@@ -91,7 +92,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
       <p className="menu-eyebrow">EXPLORE AMANAH</p>
       <nav aria-label="Expanded navigation">
         {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => setMenuOpen(false)}><Icon name={link.icon}/><span>{link.label}</span><Icon name="→"/></a>)}
-        <Link href="/hajj" onClick={() => setMenuOpen(false)}><Icon name="giving"/><span>Amanah Hajj</span><Icon name="arrow-right"/></Link>
+        <Link href="/hajj" onClick={() => setMenuOpen(false)}><Icon name="kaaba"/><span>Amanah Hajj</span><Icon name="arrow-right"/></Link>
         <button onClick={() => run(onPlatform)}><Icon name="platform"/><span>Platform</span><Icon name="→"/></button>
         <button onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="→"/></button>
       </nav>

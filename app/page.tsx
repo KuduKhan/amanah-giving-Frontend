@@ -272,11 +272,6 @@ export default function Home() {
               <a className="button" href="#causes"><span>Explore verified causes</span><Icon name="↓"/></a>
               <a className="hero-secondary" href="#how"><span>How giving works</span><Icon name="arrow-right"/></a>
             </div>
-            <Link className="hero-hajj-link" href="/hajj">
-              <span className="hajj-entry-icon"><Icon name="giving"/></span>
-              <span><strong>Amanah Hajj</strong><small>Sponsor a pilgrim or explore support</small></span>
-              <Icon name="arrow-right"/>
-            </Link>
           </div>
           <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
         </div>
