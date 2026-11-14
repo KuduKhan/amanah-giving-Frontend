@@ -134,17 +134,64 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-hero .hero-giving .hero-lead { max-width: none; }
   .refined-hero .hero-proof { max-width: 39rem; }
 }
-.cause-browser-bar { min-width: 0; padding: 12px 14px 6px; margin-bottom: 16px; border: 1px solid #dce6df; border-radius: 16px; background: #f5f8f2; }
-.refined-opportunities .cause-browser-bar .filter-row { margin: 0; padding: 0; }
+.cause-browser-bar { min-width: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 14px; padding: 9px 12px; margin-bottom: 16px; border: 1px solid #dce6df; border-radius: 16px; background: #f5f8f2; }
+.refined-opportunities .cause-browser-bar .filter-row { width: auto; flex: 1 1 auto; margin: 0; padding: 0; }
 .refined-opportunities .cause-browser-bar .filter-row button { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 8px 13px; }
 .refined-opportunities .cause-browser-bar .filter-row button .app-icon { width: 15px; height: 15px; }
 .refined-opportunities .cause-browser-bar .filter-row button.active .app-icon { color: inherit; }
-.cause-results-line { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2px 12px; padding-top: 5px; }
+.cause-results-line { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2px 12px; }
 .cause-results-line p { min-width: 0; margin: 5px 0; color: #4c665a; font-size: 12px; overflow-wrap: anywhere; }
 .cause-results-line button { display: inline-flex; align-items: center; gap: 5px; min-height: 38px; padding: 4px 0; border: 0; background: transparent; color: #1b5c45; font-size: 12px; font-weight: 650; }
+.refined-opportunities .campaign-card { grid-template-rows: minmax(min-content, 1fr) auto; }
+.refined-opportunities .campaign-card > .campaign-image {
+  display: grid; grid-template-rows: auto minmax(18px, 1fr) auto;
+  height: auto; padding: 10px 12px 12px;
+}
+.campaign-photo-toolbar { position: relative; z-index: 2; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.refined-opportunities .campaign-photo-toolbar :is(.badge, .save) { position: static; margin: 0; }
+.refined-opportunities .campaign-photo-toolbar .badge { max-width: none; border: 1px solid #ffffff80; }
+.refined-opportunities .campaign-photo-toolbar .save { flex: 0 0 44px; }
+.refined-opportunities .campaign-image-content { position: relative; inset: auto; grid-row: 3; min-width: 0; }
+.refined-opportunities .campaign-image-content h3 { min-height: 0; margin-bottom: 5px; }
+.refined-opportunities .campaign-image-content .campaign-meta-row { margin-bottom: 5px; }
+.refined-opportunities .campaign-image-content .campaign-deadline { border-radius: 5px; padding-inline: 4px; background: #132f3b; }
+.refined-opportunities .campaign-body { background: #fff; }
+.refined-opportunities .money-row > b { background: #e8f4ec; color: #20563e; padding: 3px 6px; border-radius: 6px; }
+.refined-opportunities .card-footer button { font-weight: 750; }
+.refined-opportunities .card-footer .app-icon { flex: none; }
+@media (max-width: 380px) {
+  .refined-opportunities .campaign-card { min-block-size: 21rem; }
+}
 .refined-how .step-signature { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .refined-how .step-signature i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: #1b5c45; background: #e7f0e7; }
 .refined-how .step-signature span { color: #62786b; font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: .06em; }
+.refined-updates .section-heading > button .app-icon { flex: none; width: 16px; height: 16px; }
+.refined-updates .update-card { grid-template-rows: minmax(min-content, 1fr) auto; }
+.refined-updates .update-card > .update-image { display: grid; grid-template-rows: auto minmax(26px, 1fr) auto; height: auto; padding: 12px; }
+.refined-updates .update-image > .update-photo-badge { position: relative; inset: auto; justify-self: start; max-width: 100%; }
+.refined-updates .update-card:nth-child(2) .update-photo-badge { color: #23586a; background: #edf8f9; }
+.refined-updates .update-card:nth-child(3) .update-photo-badge { color: #694d25; background: #fcf2df; }
+.refined-updates .update-photo-badge .app-icon { flex: none; color: inherit; }
+.refined-updates .update-image-content { position: relative; inset: auto; grid-row: 3; min-width: 0; }
+.refined-updates .update-image-content h3 { text-wrap: pretty; }
+.refined-updates .update-image-content .update-meta { justify-content: flex-start; align-items: center; gap: 5px 9px; margin-bottom: 6px; }
+.refined-updates .update-image-content .update-meta span { padding: 1px 6px; border: 1px solid #ffffff42; border-radius: 5px; background: #152e3add; white-space: nowrap; }
+.refined-updates .update-card > .update-summary { display: grid; align-content: start; gap: 6px; background: #fff; }
+.refined-updates .update-card .update-summary > p { min-height: 3.2em; margin: 0; }
+.refined-updates .update-card .update-summary > button { padding: 7px 9px; border: 1px solid #d1e2d5; border-radius: 9px; background: #f0f7f1; color: #1b5c45; font-weight: 750; }
+.refined-updates .update-card .update-summary > button:hover { background: #e6f2e8; border-color: #b1cdb9; }
+.refined-how .steps-grid { align-items: stretch; margin: 0; padding: 0; list-style: none; }
+.refined-how .steps-grid > li { display: flex; align-self: stretch; min-width: 0; }
+.refined-how .steps-grid > li > article { width: 100%; padding: clamp(11px, 2vw, 20px); border-color: #dae6dc; background: #fbfdf9; }
+.refined-how .steps-grid h3 { margin-block: 9px 5px; font-size: clamp(16px, 2vw, 23px); line-height: 1.2; text-wrap: pretty; }
+.refined-how .steps-grid p { margin: 0; line-height: 1.5; }
+.refined-how .step-signature i { flex: none; }
+.refined-how .steps-grid li:nth-child(1) i { background: #e8f1fa; }
+.refined-how .steps-grid li:nth-child(2) i { background: #faeaf0; }
+.refined-how .steps-grid li:nth-child(3) i { background: #fbefd9; }
+@media (max-width: 380px) {
+  .refined-updates .update-card { min-block-size: 20rem; }
+}
 @media (max-width: 1050px) {
   .refined-hero .hero-copy h1 { max-width: 17ch; }
   .refined-hero .hero-visual { min-height: 460px; }
