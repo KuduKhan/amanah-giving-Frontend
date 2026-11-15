@@ -61,8 +61,11 @@ export default function HajjTools({ extras, ready, hasApplication, update }: Pro
           <div className="hajj-icon hajj-icon-teal"><Icon name="↻"/></div>
           <h3>Recurring pledge</h3><p>Save a weekly or monthly intention independently of the funds raised.</p>
           <form className="hajj-form" onSubmit={savePledge}>
-            <label>Fund<select name="fund">{funds.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
-            <div className="hajj-fields"><label>Pledge amount (KSh)<input name="amount" type="number" min={1} max={100000000} required/></label><label>Frequency<select name="frequency">{frequencies.map(item => <option key={item}>{item}</option>)}</select></label></div>
+            <div className="hajj-fields hajj-pledge-fields">
+              <label>Fund<select name="fund">{funds.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
+              <label>Pledge amount (KSh)<input name="amount" type="number" min={1} max={100000000} required/></label>
+              <label>Frequency<select name="frequency">{frequencies.map(item => <option key={item}>{item}</option>)}</select></label>
+            </div>
             <button className="outline-button" disabled={!ready}>Save demo pledge</button>
           </form>
           {extras.pledges.length > 0 && <ul className="hajj-tool-list">{extras.pledges.map(item => <li key={item.fund}><span>{funds.find(fund => fund.id === item.fund)?.name} · {formatKes(item.amount)} · {item.frequency}</span><button type="button" className="text-link" onClick={() => removePledge(item.fund)}>Remove pledge</button></li>)}</ul>}
@@ -77,8 +80,10 @@ export default function HajjTools({ extras, ready, hasApplication, update }: Pro
           <div className="hajj-icon hajj-icon-blue"><Icon name="support"/></div>
           <h3>Support guide</h3><p>Try preset questions with English and Kiswahili answers.</p>
           <form className="hajj-form" onSubmit={event => { event.preventDefault(); setAnswered(question); }}>
-            <label>Question<select value={question} onChange={event => setQuestion(event.target.value)}><option value="documents">Where do I review documents?</option><option value="payments">Do I pay here?</option><option value="access">Can I request accessibility support?</option></select></label>
-            <label>Answer language<select value={lang} onChange={event => setLang(event.target.value === 'sw' ? 'sw' : 'en')}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+            <div className="hajj-fields hajj-guide-fields">
+              <label>Question<select value={question} onChange={event => setQuestion(event.target.value)}><option value="documents">Where do I review documents?</option><option value="payments">Do I pay here?</option><option value="access">Can I request accessibility support?</option></select></label>
+              <label>Answer language<select value={lang} onChange={event => setLang(event.target.value === 'sw' ? 'sw' : 'en')}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+            </div>
             <button className="outline-button">Show guidance</button>
           </form>
           {answered && <p role="status" lang={lang}>{answers[answered][lang]}</p>}

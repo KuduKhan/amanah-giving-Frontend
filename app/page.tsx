@@ -261,7 +261,7 @@ export default function Home() {
       </div>
       <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
-      <p className="site-preview-note"><Icon name="shield"/><span>Preview experience · Campaigns and impact figures are illustrative. Prepare giving drafts; payments are not connected.</span></p>
+      <p className="site-preview-note"><Icon name="shield"/><span>Preview experience · Campaigns and impact figures are illustrative. <Link href="/pilot">Try the Kenya giving pilot.</Link></span></p>
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
@@ -500,7 +500,7 @@ export default function Home() {
           </nav>
           <nav aria-label="Trust and support links">
             <h3><Icon name="shield"/>Trust</h3>
-            <a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a>
+            <a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a><Link href="/pilot/transparency">Giving transparency</Link>
             <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('shariah'); setPlatformOpen(true); }}>Shariah governance</button>
           </nav>
         </div>

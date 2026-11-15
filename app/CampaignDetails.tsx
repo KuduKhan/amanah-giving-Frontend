@@ -1,6 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import Icon from './Icon';
 import { downloadText } from './givingDrafts';
+import { campaigns as pilotCampaigns } from './pilot/model';
 
 const budget = [['Project delivery', 82], ['Verification & reporting', 8], ['Payment and operations', 10]] as const;
 const stages = [
@@ -21,6 +23,7 @@ type Props = {
 
 export default function CampaignDetails({ campaign, raised, evidenceOpen, onToggleEvidence, onClose, onAction }: Props) {
   const completed = campaign.days === 0;
+  const inPilot = pilotCampaigns.some(record => record.id === campaign.id);
 
   return (
     <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="campaign-detail-title">
@@ -52,6 +55,7 @@ export default function CampaignDetails({ campaign, raised, evidenceOpen, onTogg
               <p>Review covers the organization, project scope, budget and payment destination.</p>
               <dl><div><dt>Reference</dt><dd>{campaign.id}</dd></div><div><dt>Status</dt><dd>{completed ? 'Completed delivery example' : 'Active appeal example'}</dd></div></dl>
               <button className="text-link" type="button" onClick={() => downloadText(`${campaign.id}-summary.txt`, `${campaign.title}\n${campaign.id}\n${campaign.story}\nIllustrative verification summary.`)}><Icon name="download"/>Download example summary</button>
+              {inPilot && <Link className="text-link" href={`/pilot?campaign=${campaign.id}#pilot-campaigns`} onClick={onClose}>Compare pilot verification records <Icon name="arrow-right"/></Link>}
             </div>
             <p className="campaign-example-note">Illustrative record. Original verification documents are unavailable in this preview.</p>
           </section>

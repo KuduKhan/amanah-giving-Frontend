@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import Icon from './Icon';
 import { downloadText, draftText, type GivingDraft } from './givingDrafts';
 
@@ -61,6 +62,8 @@ export default function MyGiving({ drafts, saved, onClose, onView, onRemove, onG
             </button>
           ))}
         </div>
+
+        <p className="preview-note"><Link className="text-link" href="/pilot#pilot-impact" onClick={onClose}>Find sample receipts and impact records <Icon name="arrow-right"/></Link></p>
 
         <div className="giving-library">
           <section className="giving-collection" aria-labelledby="saved-causes-title">

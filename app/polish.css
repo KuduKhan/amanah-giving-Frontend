@@ -386,6 +386,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .my-giving .dashboard-actions > .button { background: #116f54; border-color: #116f54; color: #fff; }
 .my-giving .dashboard-actions > .button:hover { background: #095a43; border-color: #095a43; }
 .giving-library { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; align-items: start; }
+.giving-library:has(.giving-empty):has(:is(.saved-campaigns, .local-drafts article)) { grid-template-columns: minmax(0, 1fr); }
 .my-giving .giving-collection { min-width: 0; margin: 0; padding: 16px; border: 1px solid #dce7df; border-radius: 15px; background: #fff; }
 .giving-collection h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 17px; }
 .giving-collection-note, .giving-empty p { margin: 0 0 8px; color: #52665c; font-size: 13px; line-height: 1.5; }
@@ -729,6 +730,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .hajj-funds button { scroll-margin-top: 105px; }
 .hajj-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 12px; }
 .hajj-tools-grid > article { min-width: 0; padding: clamp(13px, 1.6vw, 19px); background: #f8fbf8; }
+.hajj-tools-grid .hajj-form { gap: 8px; }
+.hajj-tools-grid .hajj-fields select { text-overflow: ellipsis; }
+@media (min-width: 960px) {
+  .hajj-tools-grid .hajj-pledge-fields { grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr)); }
+  .hajj-tools-grid .hajj-guide-fields { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+}
+@media (min-width: 561px) and (max-width: 959px) {
+  .hajj-tools-grid .hajj-pledge-fields > :first-child { grid-column: 1 / -1; }
+}
 .hajj-tools-grid .hajj-path > button { margin-top: 10px; }
 .hajj-journey .hajj-tool-list { display: grid; gap: 6px; padding: 0; margin: 12px 0 0; list-style: none; }
 .hajj-journey .hajj-tool-list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px; font-size: 13px; }
@@ -1215,8 +1225,20 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .platform-overlay .portal-metrics span { font-size: 11px; }
 .platform-overlay .portal-metrics b { font-size: clamp(21px, 2.5vw, 32px); overflow-wrap: anywhere; }
 .platform-overlay .portal-metrics small { color: #376454; font-size: 11px; }
-.platform-overlay .portal-grid { gap: 12px; }
-.platform-overlay .portal-card { min-width: 0; padding: clamp(11px, 1.5vw, 20px); overflow: visible; }
+.platform-overlay .portal-grid { gap: 10px; }
+.platform-overlay .portal-card { min-width: 0; padding: clamp(11px, 1.2vw, 17px); overflow: visible; }
+.platform-overlay .portal-grid.three > .portal-card { align-self: stretch; }
+.platform-overlay .portal-grid.three .module-card { display: flex; flex-direction: column; align-items: start; }
+.platform-overlay .module-card h4 { margin-top: 8px; }
+.platform-overlay .module-card p { margin: 0; }
+.platform-overlay .module-card button { margin-top: auto; }
+.platform-overlay :is(.level-list, .approval-stack) { gap: 5px; }
+.platform-overlay :is(.level-list, .approval-stack) > div { padding: 5px 7px; gap: 6px; }
+.platform-overlay .level-list > div { grid-template-columns: 26px minmax(0, 1fr); }
+.platform-overlay .level-list i { width: 26px; height: 26px; }
+.platform-overlay .level-list small { margin-top: 0; }
+.platform-overlay .finance-funds .fund-pills { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.platform-overlay .finance-funds .fund-pills button { min-height: 52px; padding: 7px 8px; }
 .platform-overlay .card-head { align-items: center; gap: 5px 10px; margin-bottom: 10px; }
 .platform-overlay .card-head > div { min-width: 0; }
 .platform-overlay .card-head p { font-size: 10px; }
@@ -1240,6 +1262,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   background: #f9fbf8;
 }
 .platform-overlay .data-rows { gap: 5px; }
+.platform-overlay .task-list { gap: 6px; }
+.platform-overlay .task-list > button { grid-template-columns: minmax(0, 1fr) auto; padding-block: 4px; }
+.platform-overlay .task-list :is(b, small) { line-height: 1.35; }
+.platform-overlay .task-list small { margin-top: 2px; }
+.platform-overlay .task-list em { font-size: 11px; }
 .platform-overlay .data-rows > button { grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr) minmax(0, .7fr) minmax(0, .8fr); }
 .platform-overlay .data-rows > button > span:first-child { font-weight: 700; color: #234d3d; }
 .platform-overlay .portal-card :is(.data-rows, .schedule-list, .task-list, .request-types, .control-grid, .fund-pills) > button:hover {
@@ -1263,6 +1290,21 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .platform-overlay .ledger-head { display: none; }
   .platform-overlay .ledger-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 10px; }
   .platform-overlay .ledger-row span::before { content: attr(data-label); display: block; color: var(--muted); font-size: 10px; }
+}
+@container (max-width: 545px) {
+  .platform-overlay .finance-funds .fund-pills { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .platform-overlay .finance-funds .fund-pills button { grid-column: span 2; }
+  .platform-overlay .finance-funds .fund-pills button:nth-last-child(-n+2) { grid-column: span 3; }
+}
+@media (min-width: 1201px) {
+  .platform-overlay .portal-grid:not(.three) { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .platform-overlay .finance-grid { grid-template-rows: min-content auto; }
+  .platform-overlay .finance-release { grid-area: 1 / 2 / span 2; }
+  .platform-overlay .level-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .platform-overlay .level-list > :last-child { grid-column: 1 / -1; }
+}
+@media (min-width: 650px) and (max-width: 1200px) {
+  .platform-overlay .portal-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 780px) {
   .platform-overlay .platform-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
@@ -1297,8 +1339,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .platform-overlay .platform-sidebar nav b { color: inherit; font-size: clamp(9px, 2.2vw, 11px); white-space: nowrap; }
   .platform-overlay .platform-sidebar nav small { display: none; }
   .platform-overlay .platform-sidebar nav i { width: 29px; height: 29px; }
-  .platform-overlay .portal-grid.three { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
   .platform-overlay .platform-scroll { scrollbar-gutter: auto; }
+}
+@media (max-width: 649px) {
+  .platform-overlay .portal-grid.three { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 480px) {
   .platform-overlay .platform-ai span { display: none; }
@@ -1325,4 +1369,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .platform-overlay .request-types button[aria-pressed='true'] { background: #e2f2e8; border-color: #83b59a; color: #164e3a; }
 .platform-overlay .form-actions button:disabled { opacity: .5; cursor: default; }
+@media (min-width: 701px) and (max-width: 1100px) {
+  .refined-updates .updates-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 .platform-overlay .form-actions > button:first-child { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; font-size: 12px; }
