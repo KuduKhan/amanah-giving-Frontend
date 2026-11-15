@@ -56,15 +56,6 @@ const causeFilters = [
   ['Water', '≈'], ['Mosque', 'bank'], ['Health', 'healthcare'], ['Education', 'education'],
 ] as const;
 
-const causeShortcuts = [
-  ['Zakat', 'giving', 'Zakat'],
-  ['Food', '□', 'Feed a family'],
-  ['Orphans', 'users', 'Sponsor an orphan'],
-  ['Water', '≈', 'Clean water'],
-  ['Mosque', 'bank', 'Build a mosque'],
-  ['Education', 'book', 'Qur’ans'],
-] as const;
-
 const givingSteps = [
   ['01', 'search', 'Discover verified need', 'Search by cause, location, giving type and verification level.'],
   ['02', 'giving', 'Choose your intention', 'Keep Zakat, Sadaqah, Sadaqah Jariyah and Waqf clearly separated.'],
@@ -296,20 +287,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="cause-strip refined-causes" aria-label="Popular causes">
-        {causeShortcuts.map(([cause, icon, label]) => (
-          <button key={cause} type="button" aria-controls="causes" aria-pressed={filter === cause} onClick={() => {
-            setFilter(cause);
-            setQuery('');
-            requestAnimationFrame(() => {
-              document.getElementById('causes-title')?.focus({ preventScroll: true });
-              document.getElementById('causes')?.scrollIntoView();
-            });
-          }}>
-            <span className="cause-icon"><Icon name={icon}/></span>
-            <span className="cause-label">{label}</span>
+      <section className="refined-ecosystem ecosystem-strip" id="giving-ecosystem" aria-labelledby="ecosystem-title">
+        <div className="cause-strip refined-causes">
+          {portals.map(({ id, icon, label, role }) => (
+            <button type="button" key={id} aria-haspopup="dialog" onClick={() => { setPlatformPortal(id); setPlatformOpen(true); }}>
+              <span className="cause-icon"><Icon name={icon}/></span>
+              <span className="cause-label">{label}</span>
+              <small>{role}</small>
+            </button>
+          ))}
+        </div>
+        <div className="platform-preview-copy">
+          <p className="eyebrow">One mission. Six coordinated products.</p>
+          <h2 id="ecosystem-title">The complete giving ecosystem.</h2>
+          <p>Donors see impact. Beneficiaries request help privately. Organizations deliver transparently. Admin, finance and Shariah teams protect every decision behind the scenes.</p>
+          <button type="button" className="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('donor'); setPlatformOpen(true); }}>
+            Explore the full platform <Icon name="arrow-right"/>
           </button>
-        ))}
+        </div>
       </section>
 
       <section className="seasonal-giving refined-seasonal" aria-labelledby="seasonal-title">
@@ -459,11 +454,6 @@ export default function Home() {
         <div className="promise-mark"><AmanahLogo variant="light" size="lg" showTagline={false}/></div>
         <div><p className="eyebrow light">The Amanah promise</p><h2>Your intention stays clear. Your gift stays accountable.</h2></div>
         <ol className="promise-points" aria-label="How your gift stays accountable">{['Giving type recorded', 'Funds restricted correctly', 'Every release approved', 'Impact evidence returned'].map((point, index) => <li key={point}><b aria-hidden="true">{String(index + 1).padStart(2, '0')}</b>{' '}<span className="promise-label">{point}</span></li>)}</ol>
-      </section>
-
-      <section className="platform-preview refined-ecosystem" aria-labelledby="ecosystem-title">
-        <div className="platform-preview-copy"><p className="eyebrow">One mission. Six coordinated products.</p><h2 id="ecosystem-title">The complete giving ecosystem.</h2><p>Donors see impact. Beneficiaries request help privately. Organizations deliver transparently. Admin, finance and Shariah teams protect every decision behind the scenes.</p><button className="button" onClick={() => { setPlatformPortal('donor'); setPlatformOpen(true); }}>Explore the full platform <Icon name="↗"/></button></div>
-        <div className="platform-preview-grid">{portals.map(({ id, icon, label, role }) => <button type="button" key={id} aria-haspopup="dialog" onClick={() => { setPlatformPortal(id); setPlatformOpen(true); }}><i><Icon name={icon}/></i><span><b>{label}</b><small>{role}</small></span><em><Icon name="chevron"/></em></button>)}</div>
       </section>
 
       <section className="organizations refined-organizations" id="organizations" aria-labelledby="organizations-title">

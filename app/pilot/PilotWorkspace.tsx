@@ -16,6 +16,10 @@ const statusLabel: Record<Status, [string, string]> = {
   failed: ['Failed', 'Haikufaulu'], reversed: ['Reversed', 'Imerejeshwa'],
 };
 const timelineSw = ['Malipo yamethibitishwa', 'Fedha zimetengwa', 'Utoaji wa fedha umeidhinishwa', 'Fedha zimetolewa', 'Uwasilishaji umerekodiwa', 'Ushahidi umekaguliwa'];
+const dateFormatters = {
+  en: new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeZone: 'Africa/Nairobi' }),
+  sw: new Intl.DateTimeFormat('sw-KE', { dateStyle: 'medium', timeZone: 'Africa/Nairobi' }),
+};
 
 function readPilot(): Pilot {
   const raw = localStorage.getItem(pilotKey);
@@ -29,10 +33,11 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
   const initial = campaigns.find(campaign => campaign.id === initialCampaign)?.id ?? campaigns[0].id;
   const [state, setState] = useState(emptyPilot);
   const [ready, setReady] = useState(false);
-  const [notice, setNotice] = useState('');
+  const [notice, setNotice] = useState<{ section: 'page' | 'give' | 'impact' | 'operations' | 'recovery'; message: string } | null>(null);
   const [language, setLanguage] = useState('en');
   const [role, setRole] = useState<typeof roles[number][0]>('Donor');
   const [campaignId, setCampaignId] = useState<string>(initial);
+  const [evidenceCampaign, setEvidenceCampaign] = useState<(typeof campaigns)[number]>(campaigns[0]);
   const [intent, setIntent] = useState<string>(initial);
   const [openGift, setOpenGift] = useState('');
   const [amount, setAmount] = useState('500');
@@ -43,6 +48,10 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
   const [matchGift, setMatchGift] = useState('');
   const sw = language === 'sw';
   const tr = (en: string, kiswahili: string) => sw ? kiswahili : en;
+  const formatDate = (value: string) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : dateFormatters[sw ? 'sw' : 'en'].format(date);
+  };
   const active = campaigns.find(campaign => campaign.id === campaignId) ?? campaigns[0];
   const selected = campaigns.find(campaign => campaign.id === intent) ?? campaigns[0];
   const report = state.reports[active.id];
@@ -54,12 +63,14 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
   const protectedRole = role === 'Admin' || role === 'Finance';
   const pendingGift = state.gifts.find(gift => gift.campaign === intent && gift.status === 'pending');
   const confirmedGifts = state.gifts.filter(gift => gift.status === 'confirmed');
+  const publishedEvidence = state.reports[evidenceCampaign.id];
+  const evidenceDialog = useRef<HTMLDialogElement>(null);
   const writing = useRef(false);
 
   useEffect(() => {
     function load() {
       try { setState(readPilot()); setReady(true); }
-      catch { setReady(false); setNotice('Demo records could not be read in this browser.'); }
+      catch { setReady(false); setNotice({ section: 'page', message: 'Demo records could not be read in this browser.' }); }
     }
     const frame = requestAnimationFrame(load);
     function sync(event: StorageEvent) { if (event.key === pilotKey) load(); }
@@ -70,6 +81,7 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
   async function dispatch(action: Event) {
     if (!ready || writing.current) return;
     writing.current = true;
+    const section = action.type === 'start' ? 'give' : action.type === 'payment' ? 'impact' : 'operations';
     function save() {
       const current = readPilot();
       const next = evolve(current, action, new Date().toISOString());
@@ -83,19 +95,23 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
         setOpenGift(action.id);
         window.location.hash = 'pilot-impact';
       }
-      setNotice(!changed
-        ? tr('The existing record was kept. Check the current status before trying again.', 'Rekodi iliyopo imehifadhiwa. Angalia hali yake kabla ya kujaribu tena.')
-        : tr('Sample record saved in this browser.', 'Rekodi ya mfano imehifadhiwa kwenye kivinjari hiki.'));
+      setNotice({
+        section: changed && action.type === 'start' ? 'impact' : section,
+        message: changed
+          ? tr('Sample record saved in this browser.', 'Rekodi ya mfano imehifadhiwa kwenye kivinjari hiki.')
+          : tr('The existing record was kept. Check the current status before trying again.', 'Rekodi iliyopo imehifadhiwa. Angalia hali yake kabla ya kujaribu tena.'),
+      });
     } catch {
-      setNotice(tr('Could not save the sample record. Check browser storage and try again.', 'Rekodi haikuhifadhiwa. Angalia hifadhi ya kivinjari na ujaribu tena.'));
+      setNotice({ section, message: tr('Could not save the sample record. Check browser storage and try again.', 'Rekodi haikuhifadhiwa. Angalia hifadhi ya kivinjari na ujaribu tena.') });
     } finally { writing.current = false; }
   }
 
   return <div className="pilot" lang={language}>
     <div className="pilot-bar">
-      <p className="preview-note"><Icon name="shield"/><span><strong>{tr('Interactive demo', 'Onyesho shirikishi')}</strong> {tr('Sample records stay in this browser. Use fictional details. No money moves.', 'Rekodi za mfano hubaki kwenye kivinjari hiki. Tumia taarifa za kubuni. Hakuna pesa zinazotumwa.')}</span></p>
-      <label>{tr('Language', 'Lugha')} <select value={language} onChange={event => setLanguage(event.target.value)}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+      <p className="preview-note"><span className="pilot-demo-icon"><Icon name="shield"/></span><span><strong>{tr('Interactive demo', 'Onyesho shirikishi')}</strong>{tr('Sample records stay in this browser. Use fictional details. No money moves.', 'Rekodi za mfano hubaki kwenye kivinjari hiki. Tumia taarifa za kubuni. Hakuna pesa zinazotumwa.')}</span></p>
+      <label><span><Icon name="globe"/> {tr('Language', 'Lugha')}</span><select value={language} onChange={event => setLanguage(event.target.value)}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
     </div>
+    <p className="pilot-status" role="status">{notice?.section === 'page' ? notice.message : ''}</p>
     {transparencyOnly ? <Link className="outline-button" href="/pilot">{tr('Open the giving pilot', 'Fungua onyesho la michango')} <Icon name="arrow-right"/></Link> : <>
     <nav className="pilot-nav" aria-label={tr('Pilot sections', 'Sehemu za onyesho')}>
       <a href="#pilot-campaigns"><Icon name="search"/><span>{tr('Compare campaigns', 'Linganisha kampeni')}</span></a>
@@ -104,8 +120,6 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
       <a href="#pilot-operations"><Icon name="platform"/><span>{tr('Workspaces', 'Sehemu za kazi')}</span></a>
       <Link href="/pilot/transparency"><Icon name="evidence"/><span>{tr('Transparency', 'Uwazi')}</span></Link>
     </nav>
-    <p className="pilot-status" role="status">{notice}</p>
-
     <section id="pilot-campaigns" aria-labelledby="pilot-campaign-title">
       <h2 id="pilot-campaign-title">{tr('Compare campaign records', 'Linganisha rekodi za kampeni')}</h2>
       <div className="pilot-grid">
@@ -113,40 +127,50 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
           const latest = state.reports[campaign.id];
           return <article className="pilot-card pilot-campaign" key={campaign.id}>
             <Image className="pilot-campaign-photo" src={campaign.image} alt="" width={640} height={280}
-              sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 380px"/>
+              sizes="(max-width: 760px) 100vw, (max-width: 1200px) 33vw, 380px"/>
             <div className="pilot-campaign-body">
             <div className="pilot-card-label"><span>{campaign.id} · {campaign.place}</span><span className="pilot-badge" data-tone={expired(campaign) ? 'warning' : 'green'}>{expired(campaign) ? tr('Review expired', 'Ukaguzi umeisha') : tr('Review current', 'Ukaguzi halali')}</span></div>
             <h3>{sw ? campaign.sw : campaign.name}</h3><p>{campaign.partner}</p>
             <dl className="pilot-facts">
               <div><dt>{tr('Giving type', 'Aina ya mchango')}</dt><dd>{campaign.fund}</dd></div>
               <div><dt>{tr('Demo fee', 'Ada ya mfano')}</dt><dd>{currency(0)}</dd></div>
-              <div><dt>{tr('Last reviewed', 'Ilikaguliwa')}</dt><dd><time>{campaign.checked}</time></dd></div>
-              <div><dt>{tr('Next update', 'Taarifa inayofuata')}</dt><dd><time>{campaign.due}</time>{campaign.due < reportingDate && latest?.stage !== 'published' && <span className="pilot-badge" data-tone="warning">{tr('Overdue', 'Imechelewa')}</span>}</dd></div>
+              <div><dt>{tr('Last reviewed', 'Ilikaguliwa')}</dt><dd><time dateTime={campaign.checked}>{formatDate(campaign.checked)}</time></dd></div>
+              <div><dt>{tr('Next update', 'Taarifa inayofuata')}</dt><dd><time dateTime={campaign.due}>{formatDate(campaign.due)}</time>{campaign.due < reportingDate && latest?.stage !== 'published' && <span className="pilot-badge" data-tone="warning">{tr('Overdue', 'Imechelewa')}</span>}</dd></div>
             </dl>
-            <details>
-              <summary>{tr('Verification and evidence', 'Ukaguzi na ushahidi')}</summary>
-              <p>{tr('Sample reviewers: organization vetting team and independent programme reviewer.', 'Wakaguzi wa mfano: timu ya uthibitishaji na mkaguzi huru wa mradi.')}</p>
-              <p>{tr('Checked: registration, budget, intended fund and delivery plan.', 'Vilivyokaguliwa: usajili, bajeti, fungu na mpango wa utekelezaji.')}</p>
-              <p>{tr('Review expires', 'Ukaguzi unaisha')} <time>{campaign.expires}</time>{campaign.fund === 'Zakat' && <> · {tr('Sample Zakat policy', 'Sera ya mfano ya Zakat')} ZKT-3.2</>}</p>
-              <ol className="pilot-timeline" aria-label={tr('Public sample timeline', 'Mfuatano wa matukio ya mfano')}>
-                <li><time>{campaign.checked}</time><span>{campaign.latest}</span></li>
-                <li><time>{campaign.due}</time><span>{campaign.milestone} · {latest?.stage === 'published' ? tr('Published', 'Imechapishwa') : campaign.delay}</span></li>
-                {latest?.stage === 'published' && <li><time>{latest.date.slice(0, 10)}</time><span>{tr('The reviewer accepted the milestone evidence. This summary displays the campaign reference and milestone.', 'Mkaguzi alikubali ushahidi wa hatua hii. Muhtasari unaonyesha kumbukumbu ya kampeni na hatua iliyofikiwa.')}</span></li>}
-              </ol>
-            </details>
-            {!expired(campaign) && !state.approved[campaign.id] ? <a className="outline-button" href="#pilot-give" onClick={() => setIntent(campaign.id)}>{tr('Choose this campaign', 'Chagua kampeni hii')} <Icon name="arrow-right"/></a>
+            <div className="pilot-campaign-actions">
+            <button className="outline-button pilot-evidence-trigger" type="button" aria-haspopup="dialog" aria-controls="pilot-evidence" onClick={() => {
+              setEvidenceCampaign(campaign);
+              evidenceDialog.current?.showModal();
+            }}><Icon name="evidence"/>{tr('Verification and evidence', 'Ukaguzi na ushahidi')}</button>
+            {!expired(campaign) && !state.approved[campaign.id] ? <a className="button" href="#pilot-give" onClick={() => setIntent(campaign.id)}>{tr('Choose this campaign', 'Chagua kampeni hii')} <Icon name="arrow-right"/></a>
               : <p className="pilot-campaign-closed"><Icon name="◷"/>{tr('Giving paused for this campaign', 'Michango ya kampeni hii imesitishwa')}</p>}
+            </div>
             </div>
           </article>;
         })}
       </div>
+      <dialog ref={evidenceDialog} id="pilot-evidence" className="pilot-card pilot-evidence" aria-labelledby="pilot-evidence-title">
+        <form method="dialog" className="pilot-evidence-header">
+          <p>{tr('Verification and evidence', 'Ukaguzi na ushahidi')} · {evidenceCampaign.id}</p>
+          <button className="outline-button" aria-label={tr('Close verification', 'Funga ukaguzi')}><Icon name="close"/></button>
+        </form>
+        <h2 id="pilot-evidence-title">{sw ? evidenceCampaign.sw : evidenceCampaign.name}</h2>
+        <p>{tr('Sample reviewers: organization vetting team and independent programme reviewer.', 'Wakaguzi wa mfano: timu ya uthibitishaji na mkaguzi huru wa mradi.')}</p>
+        <p>{tr('Checked: registration, budget, intended fund and delivery plan.', 'Vilivyokaguliwa: usajili, bajeti, fungu na mpango wa utekelezaji.')}</p>
+        <p>{tr('Review expires', 'Ukaguzi unaisha')} <time dateTime={evidenceCampaign.expires}>{formatDate(evidenceCampaign.expires)}</time>{evidenceCampaign.fund === 'Zakat' && <> · {tr('Sample Zakat policy', 'Sera ya mfano ya Zakat')} ZKT-3.2</>}</p>
+        <ol className="pilot-timeline pilot-public-timeline" aria-label={tr('Public sample timeline', 'Mfuatano wa matukio ya mfano')}>
+          <li><time dateTime={evidenceCampaign.checked}>{formatDate(evidenceCampaign.checked)}</time><span>{evidenceCampaign.latest}</span></li>
+          <li><time dateTime={evidenceCampaign.due}>{formatDate(evidenceCampaign.due)}</time><span>{evidenceCampaign.milestone} · {publishedEvidence?.stage === 'published' ? tr('Published', 'Imechapishwa') : evidenceCampaign.delay}</span></li>
+          {publishedEvidence?.stage === 'published' && <li><time dateTime={publishedEvidence.date}>{formatDate(publishedEvidence.date)}</time><span>{tr('The reviewer accepted the milestone evidence.', 'Mkaguzi alikubali ushahidi wa hatua hii.')}</span></li>}
+        </ol>
+      </dialog>
     </section>
 
     <div className="pilot-donor-grid">
     <section id="pilot-give" className="pilot-card" aria-labelledby="pilot-give-title">
       <h2 id="pilot-give-title">{tr('Try a guest gift', 'Jaribu kuchangia kama mgeni')}</h2>
       <p>{tr('Simulate M-PESA without a phone number. Your giving type is fixed by the campaign’s restricted fund.', 'Jaribu M-PESA bila nambari ya simu. Aina ya mchango hufuata fungu la kampeni.')}</p>
-      <form className="pilot-form" onSubmit={event => {
+      <form className="pilot-form pilot-gift-form" onSubmit={event => {
         event.preventDefault();
         dispatch({ type: 'start', id: 'DEMO-' + crypto.randomUUID().slice(0, 12).toUpperCase(), campaign: intent, amount: Number(amount) });
       }}>
@@ -160,12 +184,14 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
         {pendingGift ? <a className="button" href="#pilot-impact" onClick={() => setOpenGift(pendingGift.id)}>{tr('Resume pending payment', 'Endelea na malipo yanayosubiri')}</a>
           : <button className="button" disabled={!ready || expired(selected) || !!state.approved[selected.id]}>{tr('Start sample payment', 'Anza malipo ya mfano')}</button>}
       </form>
+      <p className="pilot-status" role="status">{notice?.section === 'give' ? notice.message : ''}</p>
       {(expired(selected) || state.approved[selected.id]) && <p className="pilot-badge" data-tone="warning">{tr('This campaign is closed to new sample gifts.', 'Kampeni hii imefungwa kwa michango mipya ya mfano.')}</p>}
     </section>
 
     <section id="pilot-impact" className="pilot-card" aria-labelledby="pilot-impact-title">
       <h2 id="pilot-impact-title">{tr('My impact and receipts', 'Matokeo na risiti zangu')}</h2>
       <p>{tr('Your sample gifts on this device. Open a record to review its status, simulate a payment result or get a receipt.', 'Michango yako ya mfano kwenye kifaa hiki. Fungua rekodi kuona hali, kujaribu matokeo ya malipo au kupata risiti.')}</p>
+      <p className="pilot-status" role="status">{notice?.section === 'impact' ? notice.message : ''}</p>
       {!state.gifts.length && <div className="pilot-empty"><Icon name="receipt"/><p>{tr('Your first sample gift will appear here.', 'Mchango wako wa kwanza wa mfano utaonekana hapa.')}</p></div>}
       {[...state.gifts].reverse().map(gift => {
         const name = campaigns.find(item => item.id === gift.campaign);
@@ -177,8 +203,8 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
           if (event.currentTarget.open) setOpenGift(gift.id);
           else setOpenGift(current => current === gift.id ? '' : current);
         }}>
-          <summary><span>{currency(gift.amount)} · {sw ? name?.sw : name?.name}</span> <span className="pilot-badge" data-tone={gift.status === 'confirmed' ? 'green' : 'warning'}>{statusLabel[gift.status][sw ? 1 : 0]}</span></summary>
-          <p>{gift.id} · {gift.fund} · <time>{gift.updated.slice(0, 10)}</time></p>
+          <summary><span className="pilot-gift-heading"><span><strong>{currency(gift.amount)}</strong> · {sw ? name?.sw : name?.name}</span><span className="pilot-badge" data-tone={{ confirmed: 'green', pending: 'warning', failed: 'error', reversed: 'neutral' }[gift.status]}>{statusLabel[gift.status][sw ? 1 : 0]}</span></span></summary>
+          <p className="pilot-gift-reference">{gift.id} · {gift.fund} · <time dateTime={gift.updated}>{formatDate(gift.updated)}</time></p>
           {gift.status === 'pending' && <>
             <p>{tr('Waiting for confirmation. Reopen this page to check status before trying again.', 'Inasubiri uthibitisho. Fungua ukurasa huu tena kuona hali kabla ya kujaribu tena.')}</p>
             <div className="pilot-actions">
@@ -188,7 +214,16 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
           </>}
           {gift.status === 'failed' && <a href="#pilot-give" className="outline-button" onClick={() => { setIntent(gift.campaign); setAmount(String(gift.amount)); }}>{tr('Start a new attempt', 'Anza jaribio jipya')}</a>}
           {gift.status === 'confirmed' && <>
-            <ol className="pilot-timeline">{milestones.map((milestone, index) => <li key={milestone}><span>{sw ? timelineSw[index] : milestone}</span><span>{dates[index]?.slice(0, 10) ?? tr('Pending', 'Inasubiri')}</span></li>)}</ol>
+            <ol className="pilot-timeline pilot-receipt-timeline" aria-label={tr('Gift milestones', 'Hatua za mchango')}>
+              {milestones.map((milestone, index) => {
+                const date = dates[index];
+                return <li key={milestone} data-complete={!!date}>
+                  <Icon name={date ? 'check' : '◷'}/>
+                  <span>{sw ? timelineSw[index] : milestone}</span>
+                  {date ? <time dateTime={date}>{formatDate(date)}</time> : <span className="pilot-pending">{tr('Pending', 'Inasubiri')}</span>}
+                </li>;
+              })}
+            </ol>
             <div className="pilot-actions">
               <button className="outline-button" onClick={() => downloadText(gift.id + '.txt', [tr('AMANAH GIVING · SAMPLE RECEIPT', 'AMANAH GIVING · RISITI YA MFANO'), gift.id, tr('Confirmed', 'Imethibitishwa') + ' ' + gift.confirmed, sw ? name?.sw : name?.name, gift.fund, currency(gift.amount), tr('Fee', 'Ada') + ' ' + currency(0), tr('Simulated payment only.', 'Haya ni malipo ya mfano tu.')].join('\n'))}><Icon name="download"/>{tr('Download sample receipt', 'Pakua risiti ya mfano')}</button>
               {!approved && <button className="outline-button" onClick={() => dispatch({ type: 'payment', id: gift.id, status: 'reversed' })}>{tr('Simulate reversal', 'Jaribu kurejesha malipo')}</button>}
@@ -204,7 +239,7 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
     <section id="pilot-operations" className="pilot-card" aria-labelledby="pilot-ops-title">
       <h2 id="pilot-ops-title">Pilot workspaces</h2>
       <details><summary>Walk through a complete sample gift</summary>
-        <ol className="pilot-timeline">
+        <ol className="pilot-timeline pilot-steps">
           <li>Start and confirm a gift in My impact.</li>
           <li>In Finance, flag and match the sample duplicate to your confirmed gift.</li>
           <li>In Admin, approve the release. Return to Finance to record the release.</li>
@@ -212,18 +247,35 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
           <li>In Admin, publish the redacted update. Check My impact and Transparency for the result.</li>
         </ol>
       </details>
-      <div className="pilot-roles" role="group" aria-label="Choose a sample role">{roles.map(([label, icon]) => <button type="button" key={label} className="outline-button" aria-pressed={role === label} onClick={() => { if (label === role) return; setRole(label); setVerifiedRole(''); setChallenge(''); setEvidence(''); }}><Icon name={icon}/><span>{label}</span></button>)}</div>
+      <div className="pilot-roles" role="group" aria-label="Choose a sample role">
+        {roles.map(([label, icon]) => (
+          <button type="button" key={label} className="outline-button" aria-pressed={role === label} aria-controls="pilot-role-panel" onClick={() => {
+            if (label === role) return;
+            setRole(label);
+            setVerifiedRole('');
+            setChallenge('');
+            setEvidence('');
+            setNotice(current => current?.section === 'operations' ? null : current);
+          }}><Icon name={icon}/><span>{label}</span></button>
+        ))}
+      </div>
+      <div id="pilot-role-panel" className="pilot-role-panel" role="region" aria-label={`${role} workspace`}>
+      <div className="pilot-workspace-context">
       <label className="pilot-select">Shared campaign<select value={campaignId} onChange={event => { setCampaignId(event.target.value); setEvidence(''); }}>{campaigns.map(campaign => <option key={campaign.id} value={campaign.id}>{campaign.name}</option>)}</select></label>
-      <p>{active.id} · {active.fund} · {active.partner}</p>
+      <p className="pilot-workspace-reference"><Icon name="platform"/><span>{active.id} · {active.fund} · {active.partner}</span></p>
+      </div>
+      <p className="pilot-status" role="status">{notice?.section === 'operations' ? notice.message : ''}</p>
       {protectedRole && verifiedRole !== role ? <form className="pilot-form" onSubmit={event => {
         event.preventDefault();
-        if (challenge.trim() === '246810') { setVerifiedRole(role); setNotice('Sample second-step check completed.'); }
-        else setNotice('Use the displayed sample code.');
+        if (challenge.trim() === '246810') {
+          setVerifiedRole(role);
+          setNotice({ section: 'operations', message: 'Sample second-step check completed.' });
+        } else setNotice({ section: 'operations', message: 'Use the displayed sample code.' });
       }}>
         <label>Sample second step (code 246810)<input required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={challenge} onChange={event => setChallenge(event.target.value)}/></label>
         <button className="button">Unlock {role} demo</button>
       </form> : <>
-        {role === 'Donor' && <p><a className="text-link" href="#pilot-impact">Open your sample gifts and receipts</a></p>}
+        {role === 'Donor' && <a className="outline-button pilot-workspace-link" href="#pilot-impact"><Icon name="receipt"/>Open your sample gifts and receipts<Icon name="arrow-right"/></a>}
         {role === 'Beneficiary' && <p>Private delivery case · {active.id} · {report?.stage === 'published' ? 'Delivery recorded and reviewed' : 'Waiting for reviewed delivery evidence'}. The public timeline uses the campaign reference.</p>}
         {role === 'Shariah' && <p>{active.fund === 'Zakat' ? 'Sample policy ZKT-3.2 · Eligibility and restricted allocation recorded for this campaign.' : active.fund + ' campaign · This fund does not accept Zakat in the pilot.'} <Link className="text-link" href="/policies">Read Amanah’s policies</Link></p>}
         {role === 'Finance' && <div className="pilot-workflow">
@@ -265,15 +317,19 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
           </form>}
         </div>}
       </>}
-      <details><summary>Sample audit trail</summary>{state.audit.length ? <ol className="pilot-timeline">{state.audit.map((entry, index) => <li key={index}><span>{entry.event}</span><time>{entry.date.slice(0, 10)}</time></li>)}</ol> : <p>Sample activity will appear here.</p>}</details>
+      </div>
+      <div className="pilot-operator-tools">
+      <details><summary>Sample audit trail</summary>{state.audit.length ? <ol className="pilot-timeline pilot-audit">{state.audit.map((entry, index) => <li key={index}><span>{entry.event}</span><time dateTime={entry.date}>{formatDate(entry.date)}</time></li>)}</ol> : <p>Sample activity will appear here.</p>}</details>
       <details><summary>Recovery and privacy rehearsal</summary>
         <p>Sample operator exercise. Export a recovery snapshot, verify its totals in a dry run, and check that private evidence stays out of public reports.</p>
         <div className="pilot-actions">
           <button className="outline-button" onClick={() => { const snapshot = JSON.stringify(state); setBackup(snapshot); downloadText('amanah-pilot-snapshot.json', snapshot); }}>Export sample backup</button>
-          <button className="outline-button" disabled={!backup} onClick={() => { const saved = JSON.parse(backup) as Pilot; setNotice(`Recovery dry run: ${saved.gifts.length} gifts restored to a test copy, ${currency(summarize(saved).held)} held.`); }}>Run restore dry run</button>
+          <button className="outline-button" disabled={!backup} onClick={() => { const saved = JSON.parse(backup) as Pilot; setNotice({ section: 'recovery', message: `Recovery dry run: ${saved.gifts.length} gifts restored to a test copy, ${currency(summarize(saved).held)} held.` }); }}>Run restore dry run</button>
         </div>
-        <ol><li>Pause the affected workflow and identify its last reconciled reference.</li><li>Restore a copy and compare receipt IDs, balances and audit events.</li><li>Record the outcome and review access, retention and disclosure with the responsible team.</li></ol>
+        <p className="pilot-status" role="status">{notice?.section === 'recovery' ? notice.message : ''}</p>
+        <ol className="pilot-timeline pilot-steps"><li>Pause the affected workflow and identify its last reconciled reference.</li><li>Restore a copy and compare receipt IDs, balances and audit events.</li><li>Record the outcome and review access, retention and disclosure with the responsible team.</li></ol>
       </details>
+      </div>
     </section></>}
 
     <section id="pilot-transparency" className="pilot-card" aria-labelledby="pilot-transparency-title">
