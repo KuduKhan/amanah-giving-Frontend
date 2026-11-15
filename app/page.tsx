@@ -440,6 +440,12 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="donor-promise refined-promise" aria-label="The Amanah promise">
+        <div className="promise-mark"><AmanahLogo variant="light" size="lg" showTagline={false}/></div>
+        <div><p className="eyebrow light">The Amanah promise</p><h2>Your intention stays clear. Your gift stays accountable.</h2></div>
+        <ol className="promise-points" aria-label="How your gift stays accountable">{['Giving type recorded', 'Funds restricted correctly', 'Every release approved', 'Impact evidence returned'].map((point, index) => <li key={point}><b aria-hidden="true">{String(index + 1).padStart(2, '0')}</b>{' '}<span className="promise-label">{point}</span></li>)}</ol>
+      </section>
+
       <section className="how-section refined-how" id="how" aria-labelledby="how-title">
         <div className="section-heading centered"><div><p className="eyebrow">A clearer way to give</p><h2 id="how-title">Discover. Give. Track. See impact.</h2></div></div>
         <ol className="steps-grid" role="list">
@@ -448,12 +454,6 @@ export default function Home() {
             <h3>{title}</h3><p>{description}</p>
           </article></li>)}
         </ol>
-      </section>
-
-      <section className="donor-promise refined-promise" aria-label="The Amanah promise">
-        <div className="promise-mark"><AmanahLogo variant="light" size="lg" showTagline={false}/></div>
-        <div><p className="eyebrow light">The Amanah promise</p><h2>Your intention stays clear. Your gift stays accountable.</h2></div>
-        <ol className="promise-points" aria-label="How your gift stays accountable">{['Giving type recorded', 'Funds restricted correctly', 'Every release approved', 'Impact evidence returned'].map((point, index) => <li key={point}><b aria-hidden="true">{String(index + 1).padStart(2, '0')}</b>{' '}<span className="promise-label">{point}</span></li>)}</ol>
       </section>
 
       <section className="organizations refined-organizations" id="organizations" aria-labelledby="organizations-title">
