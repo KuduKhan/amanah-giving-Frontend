@@ -106,13 +106,18 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
     } finally { writing.current = false; }
   }
 
+  const languageControl = <div className="pilot-language-control">
+    <label><span><Icon name="globe"/> {tr('Language', 'Lugha')}</span><select value={language} onChange={event => setLanguage(event.target.value)}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
+  </div>;
+
   return <div className="pilot" lang={language}>
-    <div className="pilot-bar">
-      <p className="preview-note"><span className="pilot-demo-icon"><Icon name="shield"/></span><span><strong>{tr('Interactive demo', 'Onyesho shirikishi')}</strong>{tr('Sample records stay in this browser. Use fictional details. No money moves.', 'Rekodi za mfano hubaki kwenye kivinjari hiki. Tumia taarifa za kubuni. Hakuna pesa zinazotumwa.')}</span></p>
-      <label><span><Icon name="globe"/> {tr('Language', 'Lugha')}</span><select value={language} onChange={event => setLanguage(event.target.value)}><option value="en">English</option><option value="sw">Kiswahili</option></select></label>
-    </div>
+    {transparencyOnly ? <>
+      <p className="pilot-status" role="status">{notice?.section === 'page' ? notice.message : ''}</p>
+      {languageControl}
+      <Link className="outline-button" href="/pilot">{tr('Open the giving pilot', 'Fungua onyesho la michango')} <Icon name="arrow-right"/></Link>
+    </> : <>
     <p className="pilot-status" role="status">{notice?.section === 'page' ? notice.message : ''}</p>
-    {transparencyOnly ? <Link className="outline-button" href="/pilot">{tr('Open the giving pilot', 'Fungua onyesho la michango')} <Icon name="arrow-right"/></Link> : <>
+    <div className="pilot-nav-row">
     <nav className="pilot-nav" aria-label={tr('Pilot sections', 'Sehemu za onyesho')}>
       <a href="#pilot-campaigns"><Icon name="search"/><span>{tr('Compare campaigns', 'Linganisha kampeni')}</span></a>
       <a href="#pilot-give"><Icon name="giving"/><span>{tr('Try a gift', 'Jaribu kuchangia')}</span></a>
@@ -120,29 +125,41 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
       <a href="#pilot-operations"><Icon name="platform"/><span>{tr('Workspaces', 'Sehemu za kazi')}</span></a>
       <Link href="/pilot/transparency"><Icon name="evidence"/><span>{tr('Transparency', 'Uwazi')}</span></Link>
     </nav>
+    {languageControl}
+    </div>
     <section id="pilot-campaigns" aria-labelledby="pilot-campaign-title">
       <h2 id="pilot-campaign-title">{tr('Compare campaign records', 'Linganisha rekodi za kampeni')}</h2>
       <div className="pilot-grid">
         {campaigns.map(campaign => {
           const latest = state.reports[campaign.id];
+          const isExpired = expired(campaign);
+          const isClosed = isExpired || !!state.approved[campaign.id];
           return <article className="pilot-card pilot-campaign" key={campaign.id}>
-            <Image className="pilot-campaign-photo" src={campaign.image} alt="" width={640} height={280}
-              sizes="(max-width: 760px) 100vw, (max-width: 1200px) 33vw, 380px"/>
+            <div className="pilot-campaign-media">
+              <Image className="pilot-campaign-photo" src={campaign.image} alt="" width={640} height={280}
+                sizes="(max-width: 760px) 100vw, (max-width: 1200px) 33vw, 380px"/>
+              <div className="pilot-campaign-image-meta">
+                <span className="pilot-campaign-reference">{campaign.id} · {campaign.place}</span>
+                <span className="pilot-badge" data-tone={isExpired ? 'warning' : 'green'}>{isExpired ? tr('Review expired', 'Ukaguzi umeisha') : tr('Review current', 'Ukaguzi halali')}</span>
+              </div>
+              <div className="pilot-campaign-overlay">
+                <h3>{sw ? campaign.sw : campaign.name}</h3>
+                <p>{campaign.partner}</p>
+              </div>
+            </div>
             <div className="pilot-campaign-body">
-            <div className="pilot-card-label"><span>{campaign.id} · {campaign.place}</span><span className="pilot-badge" data-tone={expired(campaign) ? 'warning' : 'green'}>{expired(campaign) ? tr('Review expired', 'Ukaguzi umeisha') : tr('Review current', 'Ukaguzi halali')}</span></div>
-            <h3>{sw ? campaign.sw : campaign.name}</h3><p>{campaign.partner}</p>
             <dl className="pilot-facts">
               <div><dt>{tr('Giving type', 'Aina ya mchango')}</dt><dd>{campaign.fund}</dd></div>
               <div><dt>{tr('Demo fee', 'Ada ya mfano')}</dt><dd>{currency(0)}</dd></div>
               <div><dt>{tr('Last reviewed', 'Ilikaguliwa')}</dt><dd><time dateTime={campaign.checked}>{formatDate(campaign.checked)}</time></dd></div>
               <div><dt>{tr('Next update', 'Taarifa inayofuata')}</dt><dd><time dateTime={campaign.due}>{formatDate(campaign.due)}</time>{campaign.due < reportingDate && latest?.stage !== 'published' && <span className="pilot-badge" data-tone="warning">{tr('Overdue', 'Imechelewa')}</span>}</dd></div>
             </dl>
-            <div className="pilot-campaign-actions">
+            <div className={`pilot-campaign-actions${isClosed ? ' is-closed' : ''}`}>
             <button className="outline-button pilot-evidence-trigger" type="button" aria-haspopup="dialog" aria-controls="pilot-evidence" onClick={() => {
               setEvidenceCampaign(campaign);
               evidenceDialog.current?.showModal();
             }}><Icon name="evidence"/>{tr('Verification and evidence', 'Ukaguzi na ushahidi')}</button>
-            {!expired(campaign) && !state.approved[campaign.id] ? <a className="button" href="#pilot-give" onClick={() => setIntent(campaign.id)}>{tr('Choose this campaign', 'Chagua kampeni hii')} <Icon name="arrow-right"/></a>
+            {!isClosed ? <a className="button" href="#pilot-give" onClick={() => setIntent(campaign.id)}>{tr('Choose this campaign', 'Chagua kampeni hii')} <Icon name="arrow-right"/></a>
               : <p className="pilot-campaign-closed"><Icon name="◷"/>{tr('Giving paused for this campaign', 'Michango ya kampeni hii imesitishwa')}</p>}
             </div>
             </div>
@@ -275,7 +292,7 @@ export default function PilotWorkspace({ initialCampaign, transparencyOnly = fal
         <label>Sample second step (code 246810)<input required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={challenge} onChange={event => setChallenge(event.target.value)}/></label>
         <button className="button">Unlock {role} demo</button>
       </form> : <>
-        {role === 'Donor' && <a className="outline-button pilot-workspace-link" href="#pilot-impact"><Icon name="receipt"/>Open your sample gifts and receipts<Icon name="arrow-right"/></a>}
+        {role === 'Donor' && <div className="pilot-workflow"><h3>Donor activity</h3><p><strong>{state.gifts.length}</strong> sample {state.gifts.length === 1 ? 'gift' : 'gifts'} recorded on this device.</p></div>}
         {role === 'Beneficiary' && <p>Private delivery case · {active.id} · {report?.stage === 'published' ? 'Delivery recorded and reviewed' : 'Waiting for reviewed delivery evidence'}. The public timeline uses the campaign reference.</p>}
         {role === 'Shariah' && <p>{active.fund === 'Zakat' ? 'Sample policy ZKT-3.2 · Eligibility and restricted allocation recorded for this campaign.' : active.fund + ' campaign · This fund does not accept Zakat in the pilot.'} <Link className="text-link" href="/policies">Read Amanah’s policies</Link></p>}
         {role === 'Finance' && <div className="pilot-workflow">
