@@ -52,7 +52,7 @@
 }
 .seo-content:has(.pilot) > .seo-lead-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(330px, .9fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
   align-items: center;
   gap: clamp(24px, 4.5vw, 64px);
   margin-bottom: clamp(18px, 2.4vw, 28px);
@@ -317,7 +317,7 @@
 @media (min-width: 601px) and (max-width: 949px) {
   .pilot-gift-form > :is(a, button) { justify-self: stretch; justify-content: center; }
 }
-@media (max-width: 760px) {
+@media (max-width: 820px) {
   .seo-content:has(.pilot) > .seo-lead-layout { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .seo-content:has(.pilot) > .seo-lead-layout { margin-bottom: 18px; }
   .pilot-demo-card { padding: 18px; }
