@@ -7,6 +7,32 @@
 body { font-family: var(--font-geist-sans), Arial, sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button, .button { touch-action: manipulation; }
+.site-preview-note {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+  padding: 4px var(--page-gutter);
+  border-bottom: 1px solid #dce8df;
+  background: #eff5ed;
+}
+.site-preview-copy { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.site-preview-copy strong { margin-inline-end: 6px; color: #234d3d; }
+.site-preview-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding-inline: 9px;
+  border-radius: 8px;
+  color: #12553e;
+  font-weight: 750;
+  text-underline-offset: 3px;
+}
+.site-preview-link:hover { background: #dfede2; }
+@media (max-width: 600px) {
+  .site-preview-note { justify-content: start; gap: 0 8px; padding-block: 6px 3px; }
+  .site-preview-link { padding-inline: 0 5px; }
+}
 .app-icon { stroke-width: 1.8; }
 :is(h1,h2,h3) { text-wrap: pretty; }
 .button, .refined-opportunities .donate-mini {
@@ -161,16 +187,58 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-hero .hero-secondary { border: 1px solid #bbd1c1; background: #f9fcf7; color: #1b5c45; }
 .refined-hero .hero-secondary:hover { background: #e9f4eb; border-color: #8fb59b; }
 .refined-hero .hero-proof { width: 100%; margin-top: 26px; }
-.refined-hero .hero-visual { grid-template-rows: auto 1fr auto; align-content: stretch; }
+.refined-hero .hero-visual { grid-template-rows: auto 1fr auto; align-content: stretch; overflow: clip; animation: none; }
 .refined-hero .hero-visual::after { background: linear-gradient(180deg,#071a2c30 0%,#071a2c0d 45%,#071a2ce8 100%); }
 .refined-hero .live-giving { display: inline-flex; gap: 8px; align-items: center; border-radius: 999px; background: #0b2031f5; color: #edf6f3; }
-.refined-hero .live-giving .live-pulse { flex: none; animation: none; box-shadow: none; }
+.refined-hero .live-giving .live-pulse { position: relative; flex: none; margin: 0; animation: none; box-shadow: none; }
 .refined-hero .impact-card { width: min(252px, 100%); padding: 10px 12px; border-radius: 13px; background: #fffffff5; }
 .refined-hero .impact-card p { margin: 5px 0 6px; font-size: 18px; line-height: 1.25; text-wrap: pretty; }
 .refined-hero .hero-caption { grid-row: 3; align-self: end; padding-bottom: 16px; }
 .refined-hero .hero-caption p { max-width: 26ch; font-size: clamp(27px, 2.65vw, 40px); }
 .refined-hero .hero-caption button { color: #fff; background: #ffffff10; border-color: #ffffff60; }
 .refined-hero .hero-caption button:hover { background: #ffffff25; }
+
+@keyframes amanah-hero-photo-drift {
+  from { transform: scale(1); }
+  to { transform: scale(1.045); }
+}
+
+@keyframes amanah-hero-overlay-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes amanah-donor-ring {
+  0% { opacity: .7; transform: scale(1); }
+  45%, 100% { opacity: 0; transform: scale(2.2); }
+}
+
+.refined-opportunities .campaign-card .campaign-image > img,
+.refined-updates .update-card .update-image > img { transform: none; filter: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .refined-hero .hero-visual > img { animation: amanah-hero-photo-drift 12s ease-in-out infinite alternate; }
+  .refined-hero .live-giving { animation: amanah-hero-overlay-enter .52s cubic-bezier(.2, .75, .25, 1) both; }
+  .refined-hero .impact-card { animation: amanah-hero-overlay-enter .64s cubic-bezier(.2, .75, .25, 1) .14s both; }
+  .refined-hero .live-pulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid #62d4ac;
+    border-radius: inherit;
+    opacity: 0;
+    animation: amanah-donor-ring 3.2s ease-out .6s infinite;
+  }
+  .refined-opportunities .campaign-card .campaign-image > img,
+  .refined-updates .update-card .update-image > img { transition: transform .65s cubic-bezier(.2, .75, .25, 1); }
+  .refined-opportunities .campaign-card:has(:focus-visible) .campaign-image > img,
+  .refined-updates .update-card:has(:focus-visible) .update-image > img { transform: scale(1.04); }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .refined-opportunities .campaign-card:hover .campaign-image > img,
+  .refined-updates .update-card:hover .update-image > img { transform: scale(1.04); }
+}
 .cause-strip.refined-causes { gap: 5px; padding: 6px; border-color: #d9e5dc; background: #fbfdf9; }
 .refined-causes button {
   display: grid; grid-template-rows: auto 1fr; justify-items: center; align-items: center;

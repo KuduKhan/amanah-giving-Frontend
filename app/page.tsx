@@ -261,7 +261,10 @@ export default function Home() {
       </div>
       <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
-      <p className="site-preview-note"><Icon name="shield"/><span>Preview experience · Campaigns and impact figures are illustrative. <Link href="/pilot">Try the Kenya giving pilot.</Link></span></p>
+      <aside className="site-preview-note" aria-label="Amanah Giving preview">
+        <span className="site-preview-copy"><Icon name="shield"/><span><strong>Preview experience</strong><span>Campaigns and impact figures are illustrative.</span></span></span>
+        <Link className="site-preview-link" href="/pilot">Try the Kenya giving pilot <Icon name="arrow-right"/></Link>
+      </aside>
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
