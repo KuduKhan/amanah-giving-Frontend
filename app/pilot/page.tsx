@@ -14,14 +14,14 @@ export default async function PilotPage({ searchParams }: { searchParams: Promis
   const { campaign } = await searchParams;
   return (
     <SeoPage eyebrow="Amanah Giving · Kenya pilot" title="Follow a gift from intention to impact."
-      intro="Try a connected giving journey with sample campaigns, M-PESA payment outcomes, restricted funds and verified delivery evidence."
+      intro="Explore sample campaigns, M-PESA outcomes, restricted funds and verified delivery evidence."
       headerAside={
         <aside className="pilot-demo-card" aria-label="Sample environment">
           <span className="pilot-demo-mark"><Icon name="shield"/></span>
           <div>
             <p className="pilot-demo-label">INTERACTIVE DEMO</p>
             <h2>Explore every step safely.</h2>
-            <p>Use fictional details. Demo activity stays on this device and never triggers a real payment.</p>
+            <p>Use fictional details only. Activity stays on this device and never triggers a real payment.</p>
           </div>
         </aside>
       }>

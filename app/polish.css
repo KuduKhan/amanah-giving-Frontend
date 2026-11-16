@@ -42,10 +42,19 @@ button, .button { touch-action: manipulation; }
 .site-preview-link:hover { border-color: #9ebfa7; background: #edf5ed; }
 .site-preview-link:focus-visible { outline-color: #287452; outline-offset: 2px; }
 @media (max-width: 600px) {
-  .site-preview-note { align-items: flex-start; justify-content: space-between; gap: 7px 12px; padding-block: 8px; }
-  .site-preview-message { gap: 2px 6px; }
-  .site-preview-message > span { font-size: 11px; }
-  .site-preview-link { min-height: 38px; }
+  .site-preview-note {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: stretch;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+  .site-preview-copy { align-items: flex-start; gap: 9px; }
+  .site-preview-mark { width: 28px; height: 28px; border-radius: 8px; }
+  .site-preview-message { display: grid; align-content: center; gap: 2px; }
+  .site-preview-message strong { font-size: 10px; }
+  .site-preview-message > span { font-size: 11px; line-height: 1.4; }
+  .site-preview-link { justify-self: start; max-width: 100%; min-height: 40px; margin-inline-start: 37px; }
 }
 .app-icon { stroke-width: 1.8; }
 :is(h1,h2,h3) { text-wrap: pretty; }
