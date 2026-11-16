@@ -497,7 +497,21 @@ export default function Home() {
             <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('shariah'); setPlatformOpen(true); }}>Shariah governance</button>
           </nav>
         </div>
-        <div className="footer-cta"><p>Ready to make an impact?</p><button className="button sand" type="button" aria-haspopup="dialog" onClick={() => startDonation()}>Give now <Icon name="arrow-right"/></button></div>
+        <div className="footer-cta">
+          <p>Ready to make an impact?</p>
+          <button className="button sand" type="button" aria-haspopup="dialog" onClick={() => startDonation()}>Give now <Icon name="arrow-right"/></button>
+          <div className="footer-apps">
+            <p>Get the Amanah app</p>
+            <a className="footer-app-link" href="https://apps.apple.com/search?term=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on the Apple App Store">
+              <Icon name="apple" className="footer-store-icon apple"/>
+              <strong>App Store</strong>
+            </a>
+            <a className="footer-app-link" href="https://play.google.com/store/search?q=Amanah%20Giving&c=apps" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on Google Play">
+              <Icon name="play" className="footer-store-icon play"/>
+              <strong>Google Play</strong>
+            </a>
+          </div>
+        </div>
       </footer>
       <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span className="footer-language"><Icon name="globe"/><span>English · More languages planned</span></span><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
 

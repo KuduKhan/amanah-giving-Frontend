@@ -70,9 +70,44 @@ footer.refined-footer {
 .refined-footer .footer-links h3 .app-icon { flex: none; width: 14px; height: 14px; color: inherit; }
 .refined-footer .footer-links :is(a, button) { min-height: 36px; padding: 6px 0; color: #c9dadb; }
 .refined-footer .footer-links :is(a, button):hover { text-decoration: underline; text-underline-offset: 4px; }
-.refined-footer .footer-cta { min-width: 0; gap: 10px; padding: 13px; border: 1px solid #395452; border-radius: 13px; background: #173339; }
-.refined-footer .footer-cta p { max-width: none; font-size: clamp(18px, 2vw, 24px); }
-.refined-footer .footer-cta .button { min-height: 44px; min-width: 0; padding: 8px 12px; gap: 8px; white-space: nowrap; }
+.refined-footer .footer-cta { min-width: 0; gap: 8px; padding: 12px; border: 1px solid #395452; border-radius: 13px; background: #173339; }
+.refined-footer .footer-cta > p { max-width: none; margin: 0; font-size: clamp(17px, 1.7vw, 21px); line-height: 1.2; }
+.refined-footer .footer-cta .button { min-height: 40px; min-width: 0; padding: 7px 11px; gap: 8px; white-space: nowrap; }
+.refined-footer .footer-apps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  padding-top: 9px;
+  border-top: 1px solid #315052;
+}
+.refined-footer .footer-apps > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #c1d5d0;
+  font-size: 10px;
+  font-weight: 700;
+}
+.refined-footer .footer-app-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 32px;
+  padding: 4px 5px;
+  border: 1px solid #45615f;
+  border-radius: 8px;
+  background: #0b2833;
+  color: #f5faf7;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .18s, border-color .18s;
+}
+.refined-footer .footer-app-link:hover { border-color: #83bda8; background: #12363b; }
+.refined-footer .footer-app-link .app-icon { flex: 0 0 auto; width: 13px; height: 13px; }
+.refined-footer .footer-store-icon.apple { color: #e7f0eb; }
+.refined-footer .footer-store-icon.play { color: #7bd1a2; }
+.refined-footer .footer-app-link strong { font-size: 9px; line-height: 1.2; }
 .footer-bottom.refined-footer-bottom { background: #071a25; color: #bacdd0; }
 .refined-footer-bottom > div { gap: 6px 15px; }
 .refined-footer-bottom :is(.footer-language, .footer-security) { display: inline-flex; align-items: center; gap: 5px; }
@@ -80,7 +115,7 @@ footer.refined-footer {
 .refined-footer-bottom .footer-language .app-icon { color: #a7c8ea; }
 @media (min-width: 781px) {
   footer.refined-footer {
-    grid-template-columns: minmax(150px, 1fr) minmax(0, 2.65fr) minmax(148px, 1fr);
+    grid-template-columns: minmax(150px, 1fr) minmax(0, 2.65fr) minmax(180px, 1fr);
     column-gap: clamp(18px, 3vw, 44px);
     padding-inline: max(var(--page-gutter), calc((100% - 1440px) / 2));
   }
@@ -104,9 +139,18 @@ footer.refined-footer {
 @media (max-width: 780px) {
   footer.refined-footer { grid-template-columns: minmax(0, 1fr); gap: 17px; }
   .refined-footer .footer-links :is(a, button) { min-height: 44px; padding: 5px 0; }
-  .refined-footer .footer-cta { flex-direction: row; align-items: center; justify-content: space-between; }
+  .refined-footer .footer-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
   .refined-footer .footer-cta .button { width: auto; flex: none; }
+  .refined-footer .footer-apps { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer-bottom.refined-footer-bottom { gap: 5px; }
+}
+@media (max-width: 390px) {
+  .refined-footer .footer-cta { grid-template-columns: minmax(0, 1fr); align-items: stretch; gap: 16px; }
+  .refined-footer .footer-cta .button { width: 100%; }
+}
+@media (min-width: 781px) and (max-width: 1100px) {
+  .refined-footer .footer-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(250px, 1.1fr); }
+  .refined-footer .footer-apps { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 0; border-top: 0; }
 }
 :is(.refined-opportunities .campaign-card, .refined-updates .update-card, .refined-seasonal .seasonal-track article, .refined-how .steps-grid article, .saved-campaigns article, .support-composer) { border-color: var(--finish-border); box-shadow: var(--finish-shadow); }
 .refined-opportunities .campaign-card:hover, .refined-updates .update-card:hover { border-color: #aac7b7; box-shadow: 0 6px 22px #1026380c; }
