@@ -96,6 +96,7 @@ export default function Home() {
   const [recurring, setRecurring] = useState(false);
   const [coverFees, setCoverFees] = useState(true);
   const [toast, setToast] = useState('');
+  const [shareStatus, setShareStatus] = useState('');
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [platformOpen, setPlatformOpen] = useState(false);
   const [platformPortal, setPlatformPortal] = useState<Portal>('donor');
@@ -210,6 +211,37 @@ export default function Home() {
     setPlannerOpen(true);
   }
 
+  async function sharePage() {
+    setShareStatus('');
+    const shareData = {
+      title: document.title,
+      text: 'Transparent, secure and Shariah-aware digital giving.',
+      url: window.location.href,
+    };
+
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share(shareData);
+        setShareStatus('Thanks for sharing!');
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+      }
+    }
+
+    if (typeof navigator.clipboard?.writeText !== 'function') {
+      setShareStatus('Copy the page link from your browser.');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      setShareStatus('Link copied.');
+    } catch {
+      setShareStatus('Could not copy link.');
+    }
+  }
+
   function startDonation(campaign?: Campaign | null, preset?: string) {
     setDonationCampaign(campaign || null);
     setDonationStep(1);
@@ -253,8 +285,11 @@ export default function Home() {
       <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
       <aside className="site-preview-note" aria-label="Amanah Giving preview">
-        <span className="site-preview-copy"><Icon name="shield"/><span><strong>Preview experience</strong><span>Campaigns and impact figures are illustrative.</span></span></span>
-        <Link className="site-preview-link" href="/pilot">Try the Kenya giving pilot <Icon name="arrow-right"/></Link>
+        <span className="site-preview-copy">
+          <span className="site-preview-mark"><Icon name="shield"/></span>
+          <span className="site-preview-message"><strong>Preview experience</strong><span>Campaigns and impact figures are illustrative.</span></span>
+        </span>
+        <Link className="site-preview-link" href="/pilot">Explore the Kenya giving pilot <Icon name="arrow-right"/></Link>
       </aside>
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
@@ -395,7 +430,7 @@ export default function Home() {
             <p className="eyebrow">Project trace</p>
             <span className="complete"><Icon name="check"/>Completed</span>
             <h3>Al-Huda Water Project</h3>
-            <small>{completedWater.id} · Example record</small>
+            <small className="trace-record"><span>{completedWater.id}</span><span>Example record</span></small>
           </div>
           <ol className="impact-stages" aria-label="Project milestones">
             {waterProjectStages.map(({ date, dateTime, title, detail, icon }) => (
@@ -479,7 +514,17 @@ export default function Home() {
       </section>
 
       <footer className="refined-footer">
-        <div className="footer-brand"><a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a><p>Transparent, secure and Shariah-aware digital giving.</p></div>
+        <div className="footer-brand">
+          <a className="brand inverse" href="#top" aria-label="Amanah Giving home"><AmanahLogo variant="light" size="md"/></a>
+          <p>Transparent, secure and Shariah-aware digital giving.</p>
+          <p className="footer-feedback-copy" role={shareStatus ? 'status' : undefined} aria-live={shareStatus ? 'polite' : undefined}>
+            {shareStatus || 'Your feedback helps us improve.'}
+          </p>
+          <div className="footer-brand-actions">
+            <Link className="footer-brand-action" href="/contact#support-title"><Icon name="comment"/>Leave a comment</Link>
+            <button className="footer-brand-action" type="button" onClick={sharePage}><Icon name="share"/>Share</button>
+          </div>
+        </div>
         <div className="footer-links">
           <nav aria-label="Giving links">
             <h3><Icon name="giving"/>Give</h3>
