@@ -10,9 +10,9 @@ const notices = [
   { id: 'security', category: 'Security', icon: 'shield', label: 'New sign-in protected', title: 'A sign-in from Nairobi was verified', description: 'If this was not you, secure your account.', time: '3d', timeLabel: '3 days ago' },
 ];
 const channels = ['In-app', 'Email', 'SMS', 'WhatsApp'];
-type Props = { read: string[]; onRead: (ids: string[]) => void; onClose: () => void };
+type Props = { read: string[]; onRead: (ids: string[]) => void; readError: string; onClose: () => void };
 
-export default function NotificationCenter({ read, onRead, onClose }: Props) {
+export default function NotificationCenter({ read, onRead, readError, onClose }: Props) {
   const [filter, setFilter] = useState('All');
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [preferences, setPreferences] = useState<string[]>(() => {
@@ -40,6 +40,7 @@ export default function NotificationCenter({ read, onRead, onClose }: Props) {
             onRead(notices.map(item => item.id));
           }}><Icon name="check"/>Mark all read</button>
         </div>
+        {readError && <p className="form-error" role="status">{readError}</p>}
       </div>
       <div className="notification-tabs" role="group" aria-label="Filter notifications">
         {['All', 'Impact', 'Payments', 'Plans'].map(category => <button key={category} className={filter === category ? 'active' : ''} aria-pressed={filter === category} onClick={() => setFilter(category)}>{category}{category === 'All' && unread > 0 && <span aria-label={`${unread} unread`}>{unread}</span>}</button>)}

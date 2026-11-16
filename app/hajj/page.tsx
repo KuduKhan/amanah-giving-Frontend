@@ -18,7 +18,7 @@ export default function HajjPage() {
         <section className="hajj-safeguards" aria-labelledby="hajj-safeguards-title">
           <h2 id="hajj-safeguards-title">How sponsorship would be safeguarded</h2>
           <ul>
-            <li><Icon name="wallet"/><div><strong>Sadaqah funding</strong><p>Each sponsorship would have a separate funding record, with documented approvals and expense reconciliation. The pilot would keep these gifts separate from Zakat.</p></div></li>
+            <li><Icon name="wallet"/><div><strong>Sadaqah funding</strong><p>Each sponsorship would have a separate funding record, with documented approvals and expense reconciliation. These gifts would remain separate from Zakat.</p></div></li>
             <li><Icon name="evidence"/><div><strong>Authorised channels</strong><p>Live funding targets would use verified provider quotations. Travel and visas would go through the official channels applicable to each pilgrim. The demo simulates refunds and reassignment of restricted funds.</p></div></li>
             <li><Icon name="shield"/><div><strong>Privacy and dignity</strong><p>Reviewers would assess financial need and travel readiness privately. Public stories or photos would require informed consent.</p></div></li>
           </ul>

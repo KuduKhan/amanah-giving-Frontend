@@ -1,8 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import Icon from './Icon';
 import { downloadText } from './givingDrafts';
-import { campaigns as pilotCampaigns } from './pilot/model';
 
 const budget = [['Project delivery', 82], ['Verification & reporting', 8], ['Payment and operations', 10]] as const;
 const stages = [
@@ -13,7 +11,7 @@ const stages = [
 ] as const;
 
 type Props = {
-  campaign: { id: string; title: string; image: string; story: string; donors: number; days: number };
+  campaign: { id: string; title: string; image: string; story: string; donors: number; days: number; zakat: boolean };
   raised: string;
   evidenceOpen: boolean;
   onToggleEvidence: () => void;
@@ -23,7 +21,6 @@ type Props = {
 
 export default function CampaignDetails({ campaign, raised, evidenceOpen, onToggleEvidence, onClose, onAction }: Props) {
   const completed = campaign.days === 0;
-  const inPilot = pilotCampaigns.some(record => record.id === campaign.id);
 
   return (
     <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="campaign-detail-title">
@@ -40,7 +37,7 @@ export default function CampaignDetails({ campaign, raised, evidenceOpen, onTogg
           </div>
         </div>
         <div className="detail-content">
-          <p className="verified"><Icon name="shield"/>Campaign verified · {campaign.id}</p>
+          <p className="verified"><Icon name="shield"/>Example campaign · {campaign.id}</p>
           <h2 id="campaign-detail-title">{campaign.title}</h2>
           <p className="campaign-detail-story">{campaign.story}</p>
           <dl className="detail-facts">
@@ -55,7 +52,6 @@ export default function CampaignDetails({ campaign, raised, evidenceOpen, onTogg
               <p>Review covers the organization, project scope, budget and payment destination.</p>
               <dl><div><dt>Reference</dt><dd>{campaign.id}</dd></div><div><dt>Status</dt><dd>{completed ? 'Completed delivery example' : 'Active appeal example'}</dd></div></dl>
               <button className="text-link" type="button" onClick={() => downloadText(`${campaign.id}-summary.txt`, `${campaign.title}\n${campaign.id}\n${campaign.story}\nIllustrative verification summary.`)}><Icon name="download"/>Download example summary</button>
-              {inPilot && <Link className="text-link" href={`/pilot?campaign=${campaign.id}#pilot-campaigns`} onClick={onClose}>Compare pilot verification records <Icon name="arrow-right"/></Link>}
             </div>
             <p className="campaign-example-note">Illustrative record. Original verification documents are unavailable in this preview.</p>
           </section>
@@ -80,7 +76,7 @@ export default function CampaignDetails({ campaign, raised, evidenceOpen, onTogg
           <section className="campaign-detail-card campaign-safeguards" aria-labelledby="campaign-safeguards-title">
             <h3 id="campaign-safeguards-title">What we verified</h3>
             <p>Responsible organization, supporting documents, field need, budget, payment destination and update schedule.</p>
-            <ul role="list"><li><Icon name="wallet"/>Restricted fund</li><li><Icon name="calendar"/>Update schedule</li><li><Icon name="support"/>Complaint channel</li></ul>
+            <ul role="list"><li><Icon name="giving"/>{campaign.zakat ? 'Zakat eligible' : 'Not Zakat eligible'}</li><li><Icon name="wallet"/>Restricted fund</li><li><Icon name="calendar"/>Update schedule</li><li><Icon name="support"/>Complaint channel</li></ul>
           </section>
           <button className="button full" type="button" onClick={onAction}>{completed ? 'Explore active causes' : 'Donate to this campaign'} <Icon name="arrow-right"/></button>
         </div>

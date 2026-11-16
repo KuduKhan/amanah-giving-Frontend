@@ -33,6 +33,18 @@ const featureCatalog = [
   { title: 'Corporate giving', text: 'Team budgets, matching, payroll giving and consolidated reporting.', status: 'Ready', icon: '▦' },
 ];
 
+const financeJournal: string[][] = [
+  ['AMN-948231', 'M-PESA clearing', '5,090', '—', 'Matched'],
+  ['AMN-948231', 'WTR-284 restricted', '—', '5,000', 'Posted'],
+  ['AMN-948231', 'Payment costs', '—', '90', 'Posted'],
+  ['DIS-28114', 'WTR-284 restricted', '240,000', '—', 'Approved'],
+];
+
+function financeJournalCsv() {
+  const rows = [['Reference', 'Account', 'Debit', 'Credit', 'Status'], ...financeJournal];
+  return `\uFEFF${rows.map(row => row.map(value => `"${value.replace(/"/g, '""')}"`).join(',')).join('\r\n')}`;
+}
+
 export default function PlatformConsole({ onClose, onGive, initialPortal = 'donor' }: { onClose: () => void; onGive: () => void; initialPortal?: Portal }) {
   const [portal, setPortal] = useState<Portal>(initialPortal);
   const [message, setMessage] = useState('');
@@ -167,13 +179,42 @@ function AdminPortal({ act }: ActionProps) {
 }
 
 function FinancePortal({ act }: ActionProps) {
-  return <><div className="portal-welcome finance"><div><p className="portal-label">RESTRICTED-FUND LEDGER</p><h3>Every shilling has a source and destination.</h3><p>Double-entry accounting, payment reconciliation and auditable disbursement controls.</p></div><span className="reconciled"><Icon name="✓"/> Books reconciled</span></div><div className="portal-metrics">{[['KSh 24.6M','Custodial balance'],['KSh 6.2M','Zakat restricted'],['KSh 1.8M','Pending release'],['100%','Entries balanced']].map(x => <div key={x[1]}><span>{x[1]}</span><b>{x[0]}</b><small>As of today</small></div>)}</div><div className="portal-grid finance-grid"><section className="portal-card ledger-card"><CardHead eyebrow="RECENT JOURNAL" title="Balanced entries" action="Export CSV"/><div className="ledger-head"><span>Reference</span><span>Account</span><span>Debit</span><span>Credit</span><span>Status</span></div>{[['AMN-948231','M-PESA clearing','5,090','—','Matched'],['AMN-948231','WTR-284 restricted','—','5,000','Posted'],['AMN-948231','Payment costs','—','90','Posted'],['DIS-28114','WTR-284 restricted','240,000','—','Approved']].map(x => <div className="ledger-row" key={x.join()}>{x.map((v,i) => <span key={i} data-label={["Reference", "Account", "Debit", "Credit", "Status"][i]}>{v}</span>)}</div>)}</section><section className="portal-card finance-release"><CardHead eyebrow="RELEASE CONTROL" title="DIS-28114 · KSh 240,000"/><div className="approval-stack">{[['Maker','Yusuf Ali','Prepared'],['Checker','Maryam Noor','Verified'],['Approver','Finance lead','Approved']].map(x => <div key={x[0]}><i><Icon name="✓"/></i><span><small>{x[0]}</small><b>{x[1]}</b></span><em>{x[2]}</em></div>)}</div><div className="restricted-note"><b>Restriction check passed</b><p>Campaign WTR-284 · contractor invoice · milestone 3 of 4 · available balance KSh 812,400.</p></div><button className="button full" onClick={() => act('Payment instruction prepared for secure settlement')}>Prepare settlement <Icon name="→"/></button></section><section className="portal-card finance-funds"><CardHead eyebrow="FUND SEGREGATION" title="Giving types remain immutable"/><div className="fund-pills">{[['Zakat','KSh 6.2M'],['Sadaqah','KSh 9.4M'],['Sadaqah Jariyah','KSh 7.1M'],['Waqf','KSh 1.3M'],['Fidyah / Kaffarah','KSh 0.6M']].map(x => <button key={x[0]} onClick={() => act(`${x[0]} sub-ledger opened`)}><span>{x[0]}</span><b>{x[1]}</b></button>)}</div></section></div></>;
+  return <>
+    <div className="portal-welcome finance">
+      <div><p className="portal-label">RESTRICTED-FUND LEDGER</p><h3>Every shilling has a source and destination.</h3><p>Double-entry accounting, payment reconciliation and auditable disbursement controls.</p></div>
+      <span className="reconciled"><Icon name="✓"/> Books reconciled</span>
+    </div>
+    <div className="portal-metrics">{[['KSh 24.6M','Custodial balance'],['KSh 6.2M','Zakat restricted'],['KSh 1.8M','Pending release'],['100%','Entries balanced']].map(x => <div key={x[1]}><span>{x[1]}</span><b>{x[0]}</b><small>As of today</small></div>)}</div>
+    <div className="portal-grid finance-grid">
+      <section className="portal-card ledger-card">
+        <CardHead eyebrow="RECENT JOURNAL" title="Balanced entries" action="Export CSV" onAction={() => downloadText('amanah-example-finance-ledger.csv', financeJournalCsv(), 'text/csv;charset=utf-8')}/>
+        <div className="ledger-head"><span>Reference</span><span>Account</span><span>Debit</span><span>Credit</span><span>Status</span></div>
+        {financeJournal.map(row => <div className="ledger-row" key={row.join()}>{row.map((value, index) => <span key={index} data-label={['Reference', 'Account', 'Debit', 'Credit', 'Status'][index]}>{value}</span>)}</div>)}
+      </section>
+      <section className="portal-card finance-release">
+        <CardHead eyebrow="RELEASE CONTROL" title="DIS-28114 · KSh 240,000"/>
+        <div className="approval-stack">{[['Maker','Yusuf Ali','Prepared'],['Checker','Maryam Noor','Verified'],['Approver','Finance lead','Approved']].map(x => <div key={x[0]}><i><Icon name="✓"/></i><span><small>{x[0]}</small><b>{x[1]}</b></span><em>{x[2]}</em></div>)}</div>
+        <div className="restricted-note"><b>Restriction check passed</b><p>Campaign WTR-284 · contractor invoice · milestone 3 of 4 · available balance KSh 812,400.</p></div>
+        <button className="button full" onClick={() => act('Payment instruction prepared for secure settlement')}>Prepare settlement <Icon name="→"/></button>
+      </section>
+      <section className="portal-card finance-funds">
+        <CardHead eyebrow="FUND SEGREGATION" title="Giving types remain immutable"/>
+        <div className="fund-pills">{[['Zakat','KSh 6.2M'],['Sadaqah','KSh 9.4M'],['Sadaqah Jariyah','KSh 7.1M'],['Waqf','KSh 1.3M'],['Fidyah / Kaffarah','KSh 0.6M']].map(x => <button key={x[0]} onClick={() => act(`${x[0]} sub-ledger opened`)}><span>{x[0]}</span><b>{x[1]}</b></button>)}</div>
+      </section>
+    </div>
+  </>;
 }
 
 function ShariahPortal({ act }: ActionProps) {
   return <><div className="portal-welcome shariah"><div><p className="portal-label">SHARIAH GOVERNANCE CONSOLE</p><h3>Clear policy. Versioned decisions. Visible accountability.</h3><p>Eligibility, fund handling and distribution rules are reviewed without exposing private donor data.</p></div><span className="policy-badge">POLICY v3.2 ACTIVE</span></div><div className="portal-grid"><section className="portal-card"><CardHead eyebrow="POLICY REGISTER" title="Active rules and decisions"/><DataRows rows={[['ZKT-3.2','Zakat eligibility & segregation','Active','12 Jun 2026'],['WQF-1.4','Waqf principal protection','Active','05 May 2026'],['FDY-2.1','Fidyah distribution standard','Review','30 Aug 2026']]}/></section><section className="portal-card"><CardHead eyebrow="REVIEW QUEUE" title="Scholarly decisions needed"/><div className="task-list">{[['Mixed-benefit water campaign','Zakat eligibility','2 opinions'],['Corporate matching fund','Restricted use','New'],['Digital Waqf pilot','Principal custody','Priority']].map(x => <button key={x[0]} onClick={() => act(`${x[0]} review opened`)}><span><b>{x[0]}</b><small>{x[1]}</small></span><em>{x[2]}</em></button>)}</div></section></div><section className="portal-card"><CardHead eyebrow="GOVERNANCE BOUNDARIES" title="What the platform enforces"/><div className="governance-grid">{[['Immutable intention','A donation’s giving type cannot be silently changed after payment.'],['Restricted distribution','Zakat and other restricted funds can only reach approved categories.'],['Versioned policy','Every eligibility decision records the policy version used.'],['Independent oversight','Scholars review rules and exceptions; operators cannot self-approve.'],['Public explanation','Donors see plain-language policy without private case data.'],['AI boundaries','The assistant explains platform policy but never issues a fatwa.']].map(x => <div key={x[0]}><i><Icon name="✓"/></i><span><b>{x[0]}</b><p>{x[1]}</p></span></div>)}</div></section></>;
 }
 
-function CardHead({ eyebrow, title, action }: { eyebrow: string; title: string; action?: string }) { const act = useContext(WorkflowActions); return <div className="card-head"><div><p>{eyebrow}</p><h4>{title}</h4></div>{action && <button onClick={() => act(`${title}: ${action.replace(/\s*→$/, "")}`)}>{action.replace(/\s*→$/, "")}<Icon name="→"/></button>}</div>; }
+function CardHead({ eyebrow, title, action, onAction }: { eyebrow: string; title: string; action?: string; onAction?: () => void }) {
+  const act = useContext(WorkflowActions);
+  return <div className="card-head"><div><p>{eyebrow}</p><h4>{title}</h4></div>{action && <button type="button" onClick={() => {
+    if (onAction) onAction();
+    else act(`${title}: ${action.replace(/\s*→$/, '')}`);
+  }}>{action.replace(/\s*→$/, '')}<Icon name="→"/></button>}</div>;
+}
 function Toggle({ label, checked, setChecked }: { label: string; checked: boolean; setChecked: (value: boolean) => void }) { return <button className="toggle-row" role="switch" aria-checked={checked} onClick={() => setChecked(!checked)}><span>{label}</span><i className={checked ? 'on' : ''}><b/></i></button>; }
 function DataRows({ rows }: { rows: string[][] }) { const act = useContext(WorkflowActions); return <div className="data-rows">{rows.map(row => <button key={row[0]} onClick={() => act(`Review ${row[0]}: ${row[1]}`)}>{row.map((cell,index) => <span key={cell} className={index === row.length-1 ? 'row-action' : ''}>{cell}</span>)}</button>)}</div>; }

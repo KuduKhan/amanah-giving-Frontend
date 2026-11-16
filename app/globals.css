@@ -2750,8 +2750,6 @@ textarea:focus-visible { outline: 2px solid var(--control-focus); outline-offset
 }
 
 /* Clear local-preview states and complete account workflows. */
-.site-preview-note { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 10px 20px; background: #f2f5ef; color: #4a6157; font-size: 12px; line-height: 1.5; }
-.site-preview-note .app-icon { flex-shrink: 0; width: 16px; height: 16px; }
 .preview-note { padding: 12px 14px; border: 1px solid #dce7df; border-radius: 12px; background: #f0f6f1; color: #345c4a; font-size: 13px; line-height: 1.6; }
 .preview-note b { display: block; }
 .preview-note p { margin: 4px 0 0; font-size: inherit; color: inherit; }
@@ -2798,7 +2796,6 @@ textarea:focus-visible { outline: 2px solid var(--control-focus); outline-offset
   .local-drafts article { align-items: flex-start; flex-direction: column; gap: 4px; }
   .dashboard-welcome { gap: 12px; }
   .dashboard-welcome h2 { font-size: 27px; }
-  .site-preview-note { padding-inline: 16px; justify-content: flex-start; font-size: 11px; }
 }
 
 /* Account summaries and support fields remain readable on compact screens. */

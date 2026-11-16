@@ -7,55 +7,6 @@
 body { font-family: var(--font-geist-sans), Arial, sans-serif; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button, .button { touch-action: manipulation; }
-.site-preview-note {
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 20px;
-  padding: 8px var(--page-gutter);
-  border-bottom: 1px solid #dce8df;
-  background: linear-gradient(90deg, #eff6ed, #f6f7f0);
-}
-.site-preview-copy { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.site-preview-mark { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; border: 1px solid #d3e2d4; border-radius: 9px; background: #fff; color: #28664d; }
-.site-preview-mark .app-icon { width: 16px; height: 16px; }
-.site-preview-message { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 9px; min-width: 0; }
-.site-preview-message strong { color: #234d3d; font-size: 11px; font-weight: 750; letter-spacing: .02em; }
-.site-preview-message > span { color: #586e60; font-size: 12px; line-height: 1.5; }
-.site-preview-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 36px;
-  padding: 6px 11px;
-  border: 1px solid #c7d9c9;
-  border-radius: 9px;
-  background: #fff;
-  color: #12553e;
-  font-size: 12px;
-  font-weight: 700;
-  text-underline-offset: 3px;
-  text-decoration: none;
-  transition: background .18s, border-color .18s;
-}
-.site-preview-link .app-icon { width: 14px; height: 14px; }
-.site-preview-link:hover { border-color: #9ebfa7; background: #edf5ed; }
-.site-preview-link:focus-visible { outline-color: #287452; outline-offset: 2px; }
-@media (max-width: 600px) {
-  .site-preview-note {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    justify-content: stretch;
-    gap: 8px;
-    padding: 10px 16px;
-  }
-  .site-preview-copy { align-items: flex-start; gap: 9px; }
-  .site-preview-mark { width: 28px; height: 28px; border-radius: 8px; }
-  .site-preview-message { display: grid; align-content: center; gap: 2px; }
-  .site-preview-message strong { font-size: 10px; }
-  .site-preview-message > span { font-size: 11px; line-height: 1.4; }
-  .site-preview-link { justify-self: start; max-width: 100%; min-height: 40px; margin-inline-start: 37px; }
-}
 .app-icon { stroke-width: 1.8; }
 :is(h1,h2,h3) { text-wrap: pretty; }
 .button, .refined-opportunities .donate-mini {
@@ -196,7 +147,25 @@ footer.refined-footer {
   .refined-footer .footer-cta .button { width: 100%; }
 }
 @media (min-width: 781px) and (max-width: 1100px) {
-  .refined-footer .footer-cta { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(250px, 1.1fr); }
+  footer.refined-footer {
+    grid-template-columns: minmax(150px, .8fr) minmax(0, 2fr);
+    column-gap: clamp(22px, 3vw, 36px);
+    row-gap: 24px;
+  }
+  .refined-footer .footer-links { column-gap: clamp(12px, 2vw, 22px); }
+  .refined-footer .footer-cta {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(148px, auto) minmax(250px, 1.1fr);
+    align-items: center;
+    gap: clamp(14px, 2vw, 24px);
+    padding: 18px 0 0;
+    border: 0;
+    border-top: 1px solid #315052;
+    border-radius: 0;
+    background: transparent;
+  }
+  .refined-footer .footer-cta .button { width: auto; min-width: 0; }
   .refined-footer .footer-apps { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 0; border-top: 0; }
 }
 :is(.refined-opportunities .campaign-card, .refined-updates .update-card, .refined-seasonal .seasonal-track article, .refined-how .steps-grid article, .saved-campaigns article, .support-composer) { border-color: var(--finish-border); box-shadow: var(--finish-shadow); }
@@ -227,6 +196,8 @@ footer.refined-footer {
 .refined-checkout .intention-option { border-color: #dfe7e1; background: #fff; transition: border-color .18s, background .18s; }
 .refined-checkout .intention-option:hover { border-color: #9bbbAA; background: #fafcf9; }
 .refined-checkout .intention-option.selected { border-color: #267c58; background: #eff7f0; box-shadow: inset 0 0 0 1px #267c58; }
+.refined-checkout .intention-option.unavailable { cursor: not-allowed; opacity: .6; background: #f5f7f4; }
+.refined-checkout .intention-option.unavailable:hover { border-color: #dfe7e1; background: #f5f7f4; }
 :is(.season-icon,.cause-icon,.intention-icon,.notice-icon,.platform-preview-grid i) { box-shadow: inset 0 1px 0 #ffffff80; }
 .premium-dashboard .dashboard-stats > div { border: 1px solid #e5e8db; background: linear-gradient(145deg,#f6f3ea,#f0eee4); border-radius: 14px; }
 .premium-dashboard .dashboard-actions > button { border: 1px solid #dee8e0; background: #f8fbf7; border-radius: 11px; padding-inline: 14px; }
@@ -1798,24 +1769,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   margin: 0;
   font-size: clamp(15px, 1.8vw, 19px);
 }
-.seo-content:has(.pilot) .seo-hero { padding: clamp(24px, 4vw, 46px); }
-.seo-content:has(.pilot) .seo-hero .eyebrow { margin: 0; }
-.seo-content:has(.pilot) .seo-hero h1 {
-  max-width: 15ch;
-  margin-block: 10px 14px;
-  font-size: clamp(40px, 6vw, 72px);
-}
-.seo-content:has(.pilot) .seo-hero .seo-intro {
-  max-width: 62ch;
-  margin: 0;
-  font-size: clamp(16px, 1.8vw, 19px);
-}
-.seo-content:has(.pilot) > .seo-lead-layout {
-  grid-template-columns: minmax(0, 1.08fr) minmax(270px, .92fr);
-}
 @media (max-width: 820px) {
   .seo-content > .seo-hero.seo-lead-layout { grid-template-columns: minmax(0, 1fr); }
-  .seo-content:has(.pilot) > .seo-lead-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
   .seo-header { min-height: 60px; padding: 8px 16px; }
@@ -1825,7 +1780,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     padding-block: 26px 52px;
   }
   .seo-hero,
-  .seo-content:has(.pilot) .seo-hero,
   .seo-content:has(.hajj-programme) .seo-hero {
     margin-bottom: 19px;
     padding: 25px 21px;
@@ -1833,7 +1787,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   }
   .seo-hero::after { top: -150px; right: -150px; width: 270px; }
   .seo-hero h1,
-  .seo-content:has(.pilot) .seo-hero h1,
   .seo-content:has(.hajj-programme) .seo-hero h1 {
     max-width: 17ch;
     margin-block: 15px 12px;
@@ -1841,7 +1794,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     line-height: 1.04;
   }
   .seo-hero .seo-intro,
-  .seo-content:has(.pilot) .seo-hero .seo-intro,
   .seo-content:has(.hajj-programme) .seo-hero .seo-intro {
     font-size: 15px;
     line-height: 1.62;

@@ -10,10 +10,13 @@ export function readDrafts(): GivingDraft[] {
     return Array.isArray(data) ? data.filter((item): item is GivingDraft => !!item && typeof item === 'object' && typeof item.id === 'string' && typeof item.createdAt === 'string' && typeof item.amount === 'number' && typeof item.campaign === 'string' && typeof item.intention === 'string' && typeof item.total === 'number') : [];
   } catch { return []; }
 }
-export function downloadText(filename: string, content: string) {
-  const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
+export function downloadText(filename: string, content: string, contentType = 'text/plain;charset=utf-8') {
+  const url = URL.createObjectURL(new Blob([content], { type: contentType }));
   const anchor = document.createElement('a');
-  anchor.href = url; anchor.download = filename; anchor.click();
+  anchor.href = url; anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 export function draftText(drafts: GivingDraft[]) {

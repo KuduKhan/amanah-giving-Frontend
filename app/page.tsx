@@ -39,6 +39,9 @@ const campaigns: Campaign[] = [
   { id: 'EDU-390', title: 'Equip a community Qur’an learning centre', category: 'Education', meta: 'Nakuru, Kenya', raised: 925000, goal: 1600000, donors: 318, days: 19, image: '/quran-learning.jpg', badge: 'Sadaqah Jariyah', zakat: false, story: 'Provide Qur’ans, desks, lighting and accessible learning materials for children and adult students in the local community.' },
 ];
 
+const notificationIds = ['impact', 'receipt', 'plan', 'security'];
+const notificationReadKey = 'amanah-notifications-read';
+
 const completedWater: Campaign = { ...campaigns[0], id: 'WTR-183', title: 'Al-Huda water project in Garissa', raised: 5000000, goal: 5000000, days: 0, badge: 'Completed', story: 'This example completed project serves 340 people. The timeline illustrates how a completed delivery is recorded separately from an active appeal.' };
 
 const completedFood: Campaign = { ...campaigns[2], id: 'FOD-398', title: 'Food distribution to 250 Mombasa households', raised: 1250000, goal: 1250000, days: 0, badge: 'Completed', story: 'This example completed distribution reached 250 households. Delivery counts and distribution records illustrate a closed delivery, separate from the current appeal.' };
@@ -104,6 +107,7 @@ export default function Home() {
   const [plannerOccasion, setPlannerOccasion] = useState<GivingOccasion>('jumuah');
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [readNotifications, setReadNotifications] = useState<string[]>(['security']);
+  const [notificationReadError, setNotificationReadError] = useState('');
   const [dedication, setDedication] = useState('');
   const [onBehalf, setOnBehalf] = useState(false);
   const [schedule, setSchedule] = useState('Monthly');
@@ -114,6 +118,20 @@ export default function Home() {
   const t = copy[language];
   const dialogOpen = languagesOpen || searchOpen || !!selected || donationStep > 0 || dashboardOpen || platformOpen || plannerOpen || notificationsOpen;
   const modalKey = languagesOpen ? 'languages' : searchOpen ? 'search' : selected ? `campaign-${selected.id}` : donationStep ? `giving-${donationStep}` : dashboardOpen ? 'dashboard' : platformOpen ? 'platform' : plannerOpen ? 'planner' : notificationsOpen ? 'notifications' : '';
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      try {
+        const saved: unknown = JSON.parse(localStorage.getItem(notificationReadKey) || 'null');
+        if (Array.isArray(saved)) {
+          setReadNotifications(saved.filter((id): id is string => typeof id === 'string' && notificationIds.includes(id)));
+        }
+      } catch {
+        setNotificationReadError('Read status is only available for this session.');
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     if (!dialogOpen) return;
@@ -206,6 +224,17 @@ export default function Home() {
     catch { setToast('Updated for this session. Device storage is unavailable.'); }
   };
 
+  const updateReadNotifications = (ids: string[]) => {
+    const next = notificationIds.filter(id => ids.includes(id));
+    setReadNotifications(next);
+    try {
+      localStorage.setItem(notificationReadKey, JSON.stringify(next));
+      setNotificationReadError('');
+    } catch {
+      setNotificationReadError('Read status is only saved for this session.');
+    }
+  };
+
   function openPlanner(occasion: GivingOccasion = 'jumuah') {
     setPlannerOccasion(occasion);
     setPlannerOpen(true);
@@ -277,20 +306,13 @@ export default function Home() {
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
       <div className="trustbar refined-trustbar" role="note" aria-label="Giving safeguards">
         <ul className="trustbar-inner">
-          <li className="trustbar-item"><i><Icon name="shield"/></i><span>Verified campaigns</span></li>
-          <li className="trustbar-item"><i><Icon name="wallet"/></i><span>Zakat funds kept separate</span></li>
-          <li className="trustbar-item"><i><Icon name="receipt"/></i><span>Giving draft preview</span></li>
+          <li className="trustbar-item"><i><Icon name="shield"/></i><span>Sample campaigns</span></li>
+          <li className="trustbar-item"><i><Icon name="wallet"/></i><span>No live payments</span></li>
+          <li className="trustbar-item"><i><Icon name="receipt"/></i><span>Local draft only</span></li>
         </ul>
       </div>
-      <SiteHeader labels={t} language={language} unreadCount={['impact', 'receipt', 'plan', 'security'].filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
+      <SiteHeader labels={t} language={language} unreadCount={notificationIds.filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
-      <aside className="site-preview-note" aria-label="Amanah Giving preview">
-        <span className="site-preview-copy">
-          <span className="site-preview-mark"><Icon name="shield"/></span>
-          <span className="site-preview-message"><strong>Preview experience</strong><span>Campaigns and impact figures are illustrative.</span></span>
-        </span>
-        <Link className="site-preview-link" href="/pilot">Explore the Kenya giving pilot <Icon name="arrow-right"/></Link>
-      </aside>
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">{t.eyebrow}</p>
@@ -302,17 +324,17 @@ export default function Home() {
               <a className="hero-secondary" href="#how"><span>How giving works</span><Icon name="arrow-right"/></a>
             </div>
           </div>
-          <div className="hero-proof" aria-label="Amanah Giving at a glance"><div><b>4.9/5</b><small>donor trust</small></div><div><b>218</b><small>active campaigns</small></div><div><b>KSh 246M+</b><small>verified impact</small></div></div>
+          <div className="hero-proof" aria-label="Illustrative Amanah Giving figures"><div><b>4.9/5</b><small>sample rating</small></div><div><b>218</b><small>sample campaigns</small></div><div><b>KSh 246M+</b><small>sample impact</small></div></div>
         </div>
         <div className="hero-visual">
           <Image src="/water-community.jpg" alt="Children gathering at a rural community water well" width={1400} height={1200} priority sizes="(max-width: 1050px) 100vw, 50vw" />
           <div className="live-giving">
-            <span className="live-pulse" aria-hidden="true"/><span><b>38 donors</b> gave in the last hour</span>
+            <span className="live-pulse" aria-hidden="true"/><span><b>38 sample gifts</b> in this example</span>
           </div>
           <div className="impact-card">
-            <div className="hero-impact-label"><Icon name="shield"/><b>Impact verified</b></div>
+            <div className="hero-impact-label"><Icon name="shield"/><b>Example impact</b></div>
             <p>Garissa water project now serves 340 people.</p>
-            <small className="hero-evidence-time"><Icon name="◷"/>Evidence reviewed 2 days ago</small>
+            <small className="hero-evidence-time"><Icon name="◷"/>Sample evidence record</small>
           </div>
           <div className="hero-caption">
             <span>WTR-183 · SADAQAH JARIYAH</span>
@@ -364,7 +386,7 @@ export default function Home() {
       </section>
 
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
-        <div className="section-heading"><div><p className="eyebrow">Verified opportunities</p><h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
+        <div className="section-heading"><div><p className="eyebrow">Example opportunities</p><h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
         <div className="cause-browser-bar">
           <div className="filter-row" role="group" aria-label="Filter verified causes">
             {causeFilters.map(([label, icon]) => <button className={filter === label ? 'active' : ''} aria-pressed={filter === label} key={label} onClick={() => setFilter(label)}><Icon name={icon}/>{label}</button>)}
@@ -385,7 +407,7 @@ export default function Home() {
                   <button className={`save ${saved.includes(campaign.id) ? 'saved' : ''}`} aria-pressed={saved.includes(campaign.id)} onClick={() => toggleSaved(campaign.id)} aria-label={`${saved.includes(campaign.id) ? 'Remove' : 'Save'} ${campaign.title}`}><Icon name={saved.includes(campaign.id) ? '♥' : '♡'}/></button>
                 </div>
                 <div className="campaign-image-content">
-                <div className="campaign-meta-row"><p className="verified"><Icon name="shield"/><span>Campaign verified <span className="campaign-code">· {campaign.id}</span></span></p><span className={`campaign-deadline ${campaign.days <= 12 ? 'deadline-soon' : ''}`}><Icon name="◷"/>{campaign.days} days left</span></div>
+                <div className="campaign-meta-row"><p className="verified"><Icon name="shield"/><span>Example verification <span className="campaign-code">· {campaign.id}</span></span></p><span className={`campaign-deadline ${campaign.days <= 12 ? 'deadline-soon' : ''}`}><Icon name="◷"/>{campaign.days} days left</span></div>
                 <h3 id={`title-${campaign.id}`}>{campaign.title}</h3>
                 <p className="muted campaign-location"><span>{campaign.meta}</span><span aria-hidden="true">·</span><span>{campaign.donors.toLocaleString()} donors</span>{campaign.zakat && campaign.badge !== 'Zakat eligible' && <span className="campaign-eligibility">Zakat eligible</span>}</p>
                 </div>
@@ -405,10 +427,10 @@ export default function Home() {
           <p className="eyebrow light">Dedicated Zakat Center</p>
           <h2 id="zakat-title"><span>Calculate with clarity.</span>{' '}<span>Give with confidence.</span></h2>
           <p>Your Zakat is recorded as a restricted giving type and never mixed with ordinary Sadaqah. Eligible campaigns are reviewed against versioned Shariah policy.</p>
-          <ul role="list"><li><i><Icon name="giving"/></i>2.5% calculation using the current nisab</li><li><i><Icon name="wallet"/></i>Separate ledger and distribution reporting</li><li><i><Icon name="shield"/></i>Calculation stays private on this device</li></ul>
+          <ul role="list"><li><i><Icon name="giving"/></i>Illustrative 2.5% estimate at the shown threshold</li><li><i><Icon name="wallet"/></i>Separate ledger and distribution reporting</li><li><i><Icon name="shield"/></i>Calculation stays private on this device</li></ul>
         </div>
         <div className="calculator">
-          <div className="calculator-top"><div><span>Current nisab</span><b>KSh {nisab.toLocaleString('en-KE')}</b></div><span className="verified-pill"><Icon name="shield"/>Policy reviewed</span></div>
+          <div className="calculator-top"><div><span>Illustrative nisab</span><b>KSh {nisab.toLocaleString('en-KE')}</b></div><span className="verified-pill"><Icon name="shield"/>Example threshold</span></div>
           <div className="calc-grid">
             {[['cash','Cash & savings'],['gold','Gold & silver value'],['investments','Investments'],['business','Business assets'],['receivables','Money owed to you'],['liabilities','Short-term liabilities']].map(([key,label]) => <label key={key}><span>{label}</span><div><small aria-hidden="true">KSh</small><input inputMode="numeric" aria-label={`${label} in Kenyan shillings`} autoComplete="off" value={zakat[key as keyof typeof zakat]} onChange={event => setZakat({...zakat, [key]: event.target.value.replace(/\D/g,'').slice(0,12)})} placeholder="0" /></div></label>)}
           </div>
@@ -457,12 +479,12 @@ export default function Home() {
       </section>
 
       <section className="updates-section refined-updates" aria-labelledby="updates-title">
-        <div className="section-heading"><div><p className="eyebrow">Latest verified updates</p><h2 id="updates-title">Proof of progress, not promises.</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setNotificationsOpen(true)}>See all your updates <Icon name="arrow-right"/></button></div>
+        <div className="section-heading"><div><p className="eyebrow">Example impact updates</p><h2 id="updates-title">Proof of progress, not promises.</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setNotificationsOpen(true)}>See all your updates <Icon name="arrow-right"/></button></div>
         <div className="updates-grid">
           {[
-            { campaign: completedWater, date: '18 Mar 2026', isoDate: '2026-03-18', icon: 'shield', label: 'Impact verified', title: 'Clean water is now flowing for 340 people', body: 'Independent water testing passed and the final contractor payment was reconciled.' },
-            { campaign: completedFood, date: '12 Mar 2026', isoDate: '2026-03-12', icon: 'evidence', label: 'Distribution verified', title: '250 food packs reached Mombasa households', body: 'Recipient counts, delivery photos and signed distribution records were reviewed.' },
-            { campaign: campaigns[1], date: '06 Mar 2026', isoDate: '2026-03-06', icon: 'check', label: 'Milestone reached', title: 'Al-Rahmah mosque roofing is complete', body: 'The next approved release covers electrical work and the accessible water facility.' },
+            { campaign: completedWater, date: '18 Mar 2026', isoDate: '2026-03-18', icon: 'shield', label: 'Example impact', title: 'Clean water is now flowing for 340 people', body: 'Independent water testing passed and the final contractor payment was reconciled.' },
+            { campaign: completedFood, date: '12 Mar 2026', isoDate: '2026-03-12', icon: 'evidence', label: 'Example distribution', title: '250 food packs reached Mombasa households', body: 'Recipient counts, delivery photos and signed distribution records are shown as examples.' },
+            { campaign: campaigns[1], date: '06 Mar 2026', isoDate: '2026-03-06', icon: 'check', label: 'Example milestone', title: 'Al-Rahmah mosque roofing is complete', body: 'An example next release covers electrical work and the accessible water facility.' },
           ].map(update => <article className="update-card" key={update.campaign.id} aria-labelledby={`update-${update.campaign.id}`}>
             <div className="update-image">
               <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
@@ -493,7 +515,7 @@ export default function Home() {
 
       <section className="organizations refined-organizations" id="organizations" aria-labelledby="organizations-title">
         <div className="organizations-copy">
-          <p className="eyebrow light">Verified organizations</p>
+          <p className="eyebrow light">Example organization profile</p>
           <h2 id="organizations-title">Trusted locally.<br/>Accountable publicly.</h2>
           <p>Every organization profile clearly shows what was checked, who is responsible, and the latest verified impact.</p>
           <Link className="outline-button" href="/verified-charities">Explore organizations <Icon name="arrow-right"/></Link>
@@ -501,7 +523,7 @@ export default function Home() {
         <article className="org-card" aria-labelledby="featured-org-title">
           <div className="org-card-heading">
             <span className="org-logo" aria-hidden="true">AR</span>
-            <span className="org-verification"><Icon name="shield"/>Organization verified</span>
+            <span className="org-verification"><Icon name="shield"/>Sample profile</span>
             <div className="score">A+<small>Rating</small></div>
           </div>
           <h3 id="featured-org-title">Al-Rahmah Community Trust</h3>
@@ -538,7 +560,7 @@ export default function Home() {
           </nav>
           <nav aria-label="Trust and support links">
             <h3><Icon name="shield"/>Trust</h3>
-            <a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a><Link href="/pilot/transparency">Giving transparency</Link>
+            <a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a>
             <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('shariah'); setPlatformOpen(true); }}>Shariah governance</button>
           </nav>
         </div>
@@ -576,7 +598,7 @@ export default function Home() {
             <div className="filter-row" role="group" aria-label="Filter search results">
               {causeFilters.map(([label]) => <button className={filter === label ? 'active' : ''} aria-pressed={filter === label} key={label} onClick={() => setFilter(label)}>{label}</button>)}
             </div>
-            <p className="search-count" role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'verified campaign' : 'verified campaigns'}</p>
+            <p className="search-count" role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'example campaign' : 'example campaigns'}</p>
             {filteredCampaigns.length > 0 ? (
               <div className="search-results">
                 {filteredCampaigns.map(campaign => (
@@ -621,7 +643,7 @@ export default function Home() {
       {platformOpen && <PlatformConsole initialPortal={platformPortal} onClose={() => setPlatformOpen(false)} onGive={() => { setPlatformOpen(false); startDonation(); }}/>}
       {plannerOpen && <GivingPlanner initialOccasion={plannerOccasion} onClose={() => setPlannerOpen(false)} onCreate={plan => { setPlannerOpen(false); startDonation(null, 'Sadaqah'); setAmount(plan.amount); setRecurring(true); setSchedule(plan.schedule === 'Monthly Sadaqah' ? 'Monthly' : plan.schedule); setPlanCause(plan.cause); setPlanReminders(plan.reminders); }}/>}
 
-      {notificationsOpen && <NotificationCenter read={readNotifications} onRead={setReadNotifications} onClose={() => setNotificationsOpen(false)}/>}
+      {notificationsOpen && <NotificationCenter read={readNotifications} onRead={updateReadNotifications} readError={notificationReadError} onClose={() => setNotificationsOpen(false)}/>}
 
       {languagesOpen && <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="language-title"><div className="search-panel language-panel"><button className="close" aria-label="Close languages" onClick={() => setLanguagesOpen(false)}><Icon name="close"/></button><p className="eyebrow">Language</p><h2 id="language-title">Read with clarity.</h2><p>English is available throughout this preview. Other languages will be offered after every page and giving step has been translated.</p><div className="language-options"><button aria-pressed="true" onClick={() => setLanguagesOpen(false)}><b>English</b><span>Current language <Icon name="check"/></span></button><div><b>Kiswahili</b><span>Translation in preparation</span></div><div lang="ar"><b>العربية</b><span lang="en">Translation in preparation</span></div></div></div></div>}
       {toast && <div className="toast" role="status" aria-live="polite"><span><Icon name="✓"/></span>{toast}</div>}
@@ -636,9 +658,18 @@ export default function Home() {
     return <div className="overlay" role="dialog" aria-modal="true" aria-label="Donation checkout"><div className="donation-panel refined-checkout"><button className="close" aria-label="Close dialog" onClick={() => { setDonationStep(0); setDraft(null); setDraftError(''); setDonationCampaign(null); }}><Icon name="×"/></button>{donationStep < 4 && <><div className="checkout-heading"><p className="eyebrow">Prepare your gift</p><div className="checkout-assurance"><span><Icon name="▣"/> Local draft</span><span><Icon name="✓"/> No payment</span><span><Icon name="shield"/> Private</span></div></div><ol className="checkout-stages" aria-label="Donation progress">{['Intention', 'Amount', 'Review'].map((label, index) => <li key={label} className={donationStep > index + 1 ? 'done' : donationStep === index + 1 ? 'current' : ''} aria-current={donationStep === index + 1 ? 'step' : undefined}><span aria-hidden="true">{donationStep > index + 1 ? <Icon name="✓"/> : index + 1}</span><b>{label}</b></li>)}</ol></>}
       {donationStep === 1 && <form className="donation-step intention-step" onSubmit={event => { event.preventDefault(); setDonationStep(2); }}><h2 id="intention-title">What is your intention?</h2><p id="intention-help">Your selected giving type stays with your donation for clear accounting.</p><fieldset className="intention-options" aria-describedby="intention-help"><legend className="sr-only">Choose your giving intention</legend>{[
         ['Sadaqah','heart','Verified giving'], ['Zakat','shield','Restricted fund'], ['Sadaqah Jariyah','∞','Ongoing benefit'], ['Waqf','bank','Verified giving'], ['Fidyah / Kaffarah','giving','Verified giving'], ['General charity','gift','Verified giving'],
-      ].map(([item, icon, description]) => <label className={`intention-option ${intention === item ? 'selected' : ''}`} key={item}><input type="radio" name="giving-intention" value={item} checked={intention === item} onChange={() => setIntention(item)}/><span className="intention-icon" aria-hidden="true"><Icon name={icon}/></span><span className="intention-check" aria-hidden="true">{intention === item && <Icon name="✓"/>}</span><b>{item}</b><small>{description}</small></label>)}</fieldset><button className="button full" type="submit">Continue to amount <Icon name="→"/></button></form>}
+      ].map(([item, icon, description]) => {
+        const zakatAvailable = item !== 'Zakat' || !donationCampaign || donationCampaign.zakat;
+        return <label className={`intention-option ${intention === item ? 'selected' : ''} ${zakatAvailable ? '' : 'unavailable'}`} key={item}>
+          <input type="radio" name="giving-intention" value={item} checked={intention === item} disabled={!zakatAvailable} onChange={() => setIntention(item)}/>
+          <span className="intention-icon" aria-hidden="true"><Icon name={icon}/></span>
+          <span className="intention-check" aria-hidden="true">{intention === item && <Icon name="✓"/>}</span>
+          <b>{item}</b>
+          <small>{!zakatAvailable ? 'Not eligible for this campaign' : description}</small>
+        </label>;
+      })}</fieldset><button className="button full" type="submit">Continue to amount <Icon name="→"/></button></form>}
       {donationStep === 2 && <div className="donation-step"><button className="back" onClick={() => setDonationStep(1)}><Icon name="←"/> Back</button><h2>Shape your gift</h2>{donationCampaign && <div className="donation-campaign"><Image src={donationCampaign.image} alt="" width={100} height={80}/><span><small>Giving to</small><b>{donationCampaign.title}</b></span></div>}<div className="amount-grid">{['500','1000','2500','5000'].map(value => <button className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>)}</div><label className="custom-amount"><span>Custom amount</span><div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div></label><label className="check-row"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/><span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span></label><label className="check-row"><input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/><span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span></label>{onBehalf && <label className="dedication-field"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}<label className="check-row"><input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/><span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span></label>{recurring && <label className="schedule-field"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}<button className="button full" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button></div>}
-      {donationStep === 3 && <form className="donation-step" onSubmit={finishDonation} aria-busy={draftSaving}><button type="button" className="back" onClick={() => setDonationStep(2)}><Icon name="←"/> Back</button><h2>Review your giving draft</h2><p className="preview-note">No money will move. Your choices are saved only in this browser.</p><div className="payment-tabs three-tabs"><button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button><button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button><button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button></div><div className="preview-note" role="note"><b>{payment} · Not connected</b><p>{payment === 'M-PESA' ? 'No M-PESA prompt will be sent. Save your preferred method for later.' : payment === 'Card' ? 'Card checkout is not connected. Do not enter card details in this preview.' : 'No bank transfer will be reserved. Bank details will be available when payments are connected.'}</p></div><label className="check-row"><input type="checkbox" checked={coverFees} onChange={event => setCoverFees(event.target.checked)}/><span><b>Include estimated payment costs</b><small>Add KSh {Math.ceil(numericAmount * 0.018).toLocaleString()} in this illustrative estimate. Actual provider costs may differ.</small></span></label><div className="tip-control"><div><span><b>Support the Amanah platform</b><small>Optional and always shown separately.</small></span><strong>{platformTip}%</strong></div><input aria-label="Optional platform support percentage" type="range" min="0" max="10" step="2" value={platformTip} onChange={event => setPlatformTip(Number(event.target.value))}/><div><button type="button" onClick={() => setPlatformTip(0)}>No tip</button><button type="button" onClick={() => setPlatformTip(5)}>5%</button><button type="button" onClick={() => setPlatformTip(10)}>10%</button></div></div><dl className="plan-review"><div><dt>Preferred cause</dt><dd>{donationCampaign?.title || planCause}</dd></div>{recurring && <><div><dt>Schedule</dt><dd>{schedule}</dd></div><div><dt>Reminders</dt><dd>{planReminders ? 'Requested · not activated' : 'Off'}</dd></div></>}<div><dt>Public identity</dt><dd>{anonymous ? 'Anonymous' : 'Not anonymous'}</dd></div>{onBehalf && dedication && <div><dt>Dedication</dt><dd>{dedication}</dd></div>}</dl><div className="payment-summary"><span>Your {intention}{recurring ? ` · ${schedule}` : ''}</span><b>KSh {(numericAmount + fee + tip).toLocaleString()}</b><small>Gift {numericAmount.toLocaleString()} + costs {fee.toLocaleString()} + optional support {tip.toLocaleString()}</small></div>{draftError && <p className="form-error" role="alert">{draftError}</p>}<button className="button full" type="submit" disabled={draftSaving}>{draftSaving ? 'Saving draft…' : 'Save giving draft'} <Icon name="→"/></button><p className="secure-note"><Icon name="▣"/> This saves a plan, not a payment receipt. No recurring charges are enabled.</p></form>}
+      {donationStep === 3 && <form className="donation-step" onSubmit={finishDonation} aria-busy={draftSaving}><button type="button" className="back" onClick={() => setDonationStep(2)}><Icon name="←"/> Back</button><h2>Review your giving draft</h2><p className="preview-note">No money will move. Your choices are saved only in this browser.</p><div className="payment-tabs three-tabs"><button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button><button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button><button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button></div><div className="preview-note" role="note"><b>{payment} · Not connected</b><p>{payment === 'M-PESA' ? 'No M-PESA prompt will be sent. Save your preferred method for later.' : payment === 'Card' ? 'Card checkout is not connected. Do not enter card details in this preview.' : 'No bank transfer will be reserved. Bank details will be available when payments are connected.'}</p></div><label className="check-row"><input type="checkbox" checked={coverFees} onChange={event => setCoverFees(event.target.checked)}/><span><b>Include estimated payment costs</b><small>Add KSh {Math.ceil(numericAmount * 0.018).toLocaleString()} in this illustrative estimate. Actual provider costs may differ.</small></span></label><div className="tip-control"><div><span><b>Support the Amanah platform</b><small>Optional and always shown separately.</small></span><strong>{platformTip}%</strong></div><input aria-label="Optional platform support percentage" type="range" min="0" max="10" step="1" value={platformTip} onChange={event => setPlatformTip(Number(event.target.value))}/><div><button type="button" onClick={() => setPlatformTip(0)}>No tip</button><button type="button" onClick={() => setPlatformTip(5)}>5%</button><button type="button" onClick={() => setPlatformTip(10)}>10%</button></div></div><dl className="plan-review"><div><dt>Preferred cause</dt><dd>{donationCampaign?.title || planCause}</dd></div>{recurring && <><div><dt>Schedule</dt><dd>{schedule}</dd></div><div><dt>Reminders</dt><dd>{planReminders ? 'Requested · not activated' : 'Off'}</dd></div></>}<div><dt>Public identity</dt><dd>{anonymous ? 'Anonymous' : 'Not anonymous'}</dd></div>{onBehalf && dedication && <div><dt>Dedication</dt><dd>{dedication}</dd></div>}</dl><div className="payment-summary"><span>Your {intention}{recurring ? ` · ${schedule}` : ''}</span><b>KSh {(numericAmount + fee + tip).toLocaleString()}</b><small>Gift {numericAmount.toLocaleString()} + costs {fee.toLocaleString()} + optional support {tip.toLocaleString()}</small></div>{draftError && <p className="form-error" role="alert">{draftError}</p>}<button className="button full" type="submit" disabled={draftSaving}>{draftSaving ? 'Saving draft…' : 'Save giving draft'} <Icon name="→"/></button><p className="secure-note"><Icon name="▣"/> This saves a plan, not a payment receipt. No recurring charges are enabled.</p></form>}
       {donationStep === 4 && draft && <div className="receipt"><span className="receipt-check"><Icon name="check"/></span><p className="eyebrow">Giving draft saved</p><h2>Your intention, ready for later.</h2><p>Saved on this device. No payment was made and no recurring schedule was activated.</p><div className="receipt-card"><span>GIFT<b>KSh {draft.amount.toLocaleString()}</b></span><span>TYPE<b>{draft.intention}</b></span><span>CAUSE<b>{draft.campaign}</b></span><span>DRAFT REFERENCE<b>{draft.id}</b></span></div><button className="button full" onClick={() => { setDonationStep(0); setDashboardOpen(true); }}>Open My Giving <Icon name="arrow-right"/></button><button className="download-receipt" onClick={() => downloadText(`${draft.id}.txt`, draftText([draft]))}>Download giving draft <Icon name="download"/></button></div>}</div></div>;
   }
 }
