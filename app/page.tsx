@@ -141,6 +141,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const timeline = document.querySelector<HTMLElement>('.refined-impact .impact-timeline');
+    if (!timeline || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry) timeline.classList.toggle('is-active', entry.isIntersecting);
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+    observer.observe(timeline);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (!dialogOpen) return;
     const previousFocus = document.activeElement as HTMLElement | null;
     const background = Array.from(document.getElementById('main-content')?.children || []).filter((child): child is HTMLElement => child instanceof HTMLElement && !child.matches('[aria-modal=true], .toast'));

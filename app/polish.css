@@ -197,14 +197,14 @@ footer.refined-footer {
 .knowledge-card { position: relative; display: flex; min-width: 0; min-height: 250px; flex-direction: column; padding: 20px; overflow: hidden; border: 1px solid var(--finish-border); border-radius: 18px; background: linear-gradient(155deg, #fff 15%, #fbfcf9 100%); box-shadow: var(--finish-shadow); transition: border-color .2s, box-shadow .2s, transform .2s; }
 .knowledge-card:hover { border-color: #b9d0c0; box-shadow: 0 10px 24px #1026380b; transform: translateY(-2px); }
 .knowledge-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
-.knowledge-icon { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 1px solid transparent; border-radius: 13px; background: #3b233a; box-shadow: inset 0 1px 0 #ffffff1a; }
-.knowledge-card:nth-child(2) .knowledge-icon { background: #393127; }
-.knowledge-card:nth-child(3) .knowledge-icon { background: #183c36; }
-.knowledge-card:nth-child(4) .knowledge-icon { background: #20364a; }
-.knowledge-card:nth-child(1) .knowledge-icon > .app-icon { color: #f1a8c0; }
-.knowledge-card:nth-child(2) .knowledge-icon > .app-icon { color: #edc989; }
-.knowledge-card:nth-child(3) .knowledge-icon > .app-icon { color: #a6dfc4; }
-.knowledge-card:nth-child(4) .knowledge-icon > .app-icon { color: #a9c8e8; }
+.knowledge-icon { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 1px solid #efd6df; border-radius: 13px; background: #f9eaf0; box-shadow: inset 0 1px 0 #ffffffa6; }
+.knowledge-card:nth-child(2) .knowledge-icon { border-color: #eadfc5; background: #f8f0df; }
+.knowledge-card:nth-child(3) .knowledge-icon { border-color: #cfe5d6; background: #e6f3ea; }
+.knowledge-card:nth-child(4) .knowledge-icon { border-color: #d4e2f2; background: #eaf2fc; }
+.knowledge-card:nth-child(1) .knowledge-icon > .app-icon { color: #b94b68; }
+.knowledge-card:nth-child(2) .knowledge-icon > .app-icon { color: #8e6825; }
+.knowledge-card:nth-child(3) .knowledge-icon > .app-icon { color: #147554; }
+.knowledge-card:nth-child(4) .knowledge-icon > .app-icon { color: #326fba; }
 .knowledge-icon > .app-icon { width: 22px; height: 22px; stroke-width: 2; }
 .knowledge-card-top > .eyebrow { display: inline-flex; min-height: 28px; align-items: center; margin: 0; padding: 5px 9px; border: 1px solid #e4ebe3; border-radius: 999px; background: #f7f9f5; color: var(--emerald-dark); font-size: 9px; letter-spacing: .06em; line-height: 1.2; text-align: end; }
 .knowledge-card h3 { margin: 0 0 8px; font: 600 21px/1.2 Georgia, serif; color: var(--navy); }
@@ -751,7 +751,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   border-radius: 9px;
   background: #edf5ef;
 }
-.refined-impact .timeline-dot .app-icon { width: 15px; height: 15px; }
+.refined-impact .timeline-dot .app-icon { width: 16px; height: 16px; stroke-width: 2; }
+.refined-impact .timeline-item:nth-child(1) .timeline-dot { color: #b94b68; background: #f9eaf0; box-shadow: inset 0 0 0 1px #efd6df; }
+.refined-impact .timeline-item:nth-child(2) .timeline-dot { color: #8e6825; background: #f8f0df; box-shadow: inset 0 0 0 1px #eadfc5; }
+.refined-impact .timeline-item:nth-child(3) .timeline-dot { color: #147554; background: #e6f3ea; box-shadow: inset 0 0 0 1px #cfe5d6; }
+.refined-impact .timeline-item:nth-child(4) .timeline-dot { color: #326fba; background: #eaf2fc; box-shadow: inset 0 0 0 1px #d4e2f2; }
+.refined-impact .timeline-item:nth-child(-n + 4) .timeline-dot .app-icon { color: inherit; }
 .refined-impact .timeline-item time {
   align-self: start;
   padding: 4px 3px;
@@ -772,6 +777,52 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-impact .timeline-item:last-child .timeline-dot { color: #fff; background: #15624c; box-shadow: none; }
 .refined-impact .timeline-item:last-child .timeline-dot .app-icon { color: inherit; }
 .refined-impact .timeline-item:last-child > div { border-radius: 9px; background: #edf7ef; padding: 7px 10px; }
+.refined-impact .impact-stages { position: relative; isolation: isolate; }
+.refined-impact .impact-stages::before,
+.refined-impact .impact-stages::after {
+  position: absolute;
+  inset-inline-start: 13px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  border-radius: 999px;
+  content: '';
+  pointer-events: none;
+}
+.refined-impact .impact-stages::before { z-index: 0; background: #dce9df; }
+.refined-impact .impact-stages::after {
+  z-index: 0;
+  background: linear-gradient(180deg, #70c69a, #15624c);
+  box-shadow: 0 0 8px #2c966c55;
+  opacity: .48;
+  transform: scaleY(1);
+  transform-origin: top;
+}
+.refined-impact .timeline-item { position: relative; z-index: 1; }
+.refined-impact .timeline-item::after { display: none; }
+@keyframes impact-trace-loading-loop {
+  0%, 4% { opacity: .5; transform: scaleY(0); }
+  72%, 80% { opacity: 1; transform: scaleY(1); }
+  96%, 100% { opacity: .5; transform: scaleY(0); }
+}
+@keyframes impact-trace-dot-pulse {
+  0%, 7%, 100% { filter: none; transform: scale(1); }
+  2%, 5% { filter: drop-shadow(0 2px 4px #15624c55); transform: scale(1.1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .refined-impact .impact-timeline.is-active .impact-stages::after {
+    animation: impact-trace-loading-loop 5.8s linear infinite;
+  }
+  .refined-impact .impact-timeline.is-active .timeline-dot {
+    animation: impact-trace-dot-pulse 5.8s cubic-bezier(.2, .8, .2, 1) infinite;
+  }
+  .refined-impact .timeline-item:nth-child(1) { --trace-delay: .25s; }
+  .refined-impact .timeline-item:nth-child(2) { --trace-delay: 1.3s; }
+  .refined-impact .timeline-item:nth-child(3) { --trace-delay: 2.35s; }
+  .refined-impact .timeline-item:nth-child(4) { --trace-delay: 3.4s; }
+  .refined-impact .timeline-item:nth-child(5) { --trace-delay: 4.45s; }
+  .refined-impact .impact-timeline.is-active .timeline-dot { animation-delay: var(--trace-delay); }
+}
 .refined-impact .evidence-row { margin-top: 14px; padding-top: 13px; gap: 9px; }
 .refined-impact .evidence-files { list-style: none; padding: 0; margin: 0; min-width: 0; }
 .refined-impact .evidence-files li {
