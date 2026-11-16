@@ -278,6 +278,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-hero .hero-secondary:hover { background: #e9f4eb; border-color: #8fb59b; }
 .refined-hero .hero-proof { width: 100%; margin-top: 26px; }
 .refined-hero .hero-visual { grid-template-rows: auto 1fr auto; align-content: stretch; overflow: clip; animation: none; }
+.refined-hero .hero-visual > img { animation: none; transform: none; }
 .refined-hero .hero-visual::after { background: linear-gradient(180deg,#071a2c30 0%,#071a2c0d 45%,#071a2ce8 100%); }
 .refined-hero .live-giving { display: inline-flex; gap: 8px; align-items: center; border-radius: 999px; background: #0b2031f5; color: #edf6f3; }
 .refined-hero .live-giving .live-pulse { position: relative; flex: none; margin: 0; animation: none; box-shadow: none; }
@@ -303,14 +304,38 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   45%, 100% { opacity: 0; transform: scale(2.2); }
 }
 
+@keyframes amanah-impact-card-glow {
+  0%, 100% { box-shadow: 0 8px 26px #091d2c36; }
+  50% { box-shadow: 0 11px 30px #091d2c45; }
+}
+
+@keyframes amanah-impact-mark-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes amanah-evidence-tick {
+  0%, 7%, 100% { transform: rotate(0); }
+  2% { transform: rotate(12deg); }
+  4% { transform: rotate(-8deg); }
+}
+
+@keyframes amanah-hero-cta-nudge {
+  0%, 82%, 100% { transform: translateX(0); }
+  88%, 93% { transform: translateX(3px); }
+}
+
 .refined-opportunities .campaign-card .campaign-image > img,
 .refined-updates .update-card .update-image > img { transform: none; filter: none; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .refined-hero .hero-visual > img { animation: amanah-hero-photo-drift 12s ease-in-out infinite alternate; }
-  .refined-hero .live-giving { animation: amanah-hero-overlay-enter .52s cubic-bezier(.2, .75, .25, 1) both; }
-  .refined-hero .impact-card { animation: amanah-hero-overlay-enter .64s cubic-bezier(.2, .75, .25, 1) .14s both; }
-  .refined-hero .live-pulse::after {
+  .refined-hero .hero-visual.is-active > img { animation: amanah-hero-photo-drift 8.5s ease-in-out infinite alternate; }
+  .refined-hero .hero-visual.is-active .live-giving { animation: amanah-hero-overlay-enter .52s cubic-bezier(.2, .75, .25, 1) both; }
+  .refined-hero .hero-visual.is-active .impact-card {
+    animation: amanah-hero-overlay-enter .64s cubic-bezier(.2, .75, .25, 1) .14s both, amanah-impact-card-glow 6.4s ease-in-out 1s infinite;
+  }
+  .refined-hero .hero-visual.is-active .hero-caption { animation: amanah-hero-overlay-enter .58s cubic-bezier(.2, .75, .25, 1) .28s both; }
+  .refined-hero .hero-visual.is-active .live-pulse::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -319,6 +344,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     opacity: 0;
     animation: amanah-donor-ring 3.2s ease-out .6s infinite;
   }
+  .refined-hero .hero-visual.is-active .hero-impact-label > .app-icon { animation: amanah-impact-mark-breathe 4.8s ease-in-out .75s infinite; }
+  .refined-hero .hero-visual.is-active .hero-evidence-time > .app-icon { animation: amanah-evidence-tick 6.4s ease-in-out 1.15s infinite; }
+  .refined-hero .hero-caption button > .app-icon { transition: transform .22s ease; }
+  .refined-hero .hero-visual.is-active .hero-caption button > .app-icon { animation: amanah-hero-cta-nudge 5.2s ease-in-out 1.5s infinite; }
   .refined-opportunities .campaign-card .campaign-image > img,
   .refined-updates .update-card .update-image > img { transition: transform .65s cubic-bezier(.2, .75, .25, 1); }
   .refined-opportunities .campaign-card:has(:focus-visible) .campaign-image > img,
@@ -326,6 +355,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .refined-hero .hero-caption button:hover > .app-icon { transform: translateX(3px); }
   .refined-opportunities .campaign-card:hover .campaign-image > img,
   .refined-updates .update-card:hover .update-image > img { transform: scale(1.04); }
 }

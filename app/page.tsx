@@ -141,12 +141,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const timeline = document.querySelector<HTMLElement>('.refined-impact .impact-timeline');
-    if (!timeline || typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry) timeline.classList.toggle('is-active', entry.isIntersecting);
+    const animatedSections = document.querySelectorAll<HTMLElement>('.refined-impact .impact-timeline, .refined-hero .hero-visual');
+    if (!animatedSections.length || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.target.classList.toggle('is-active', entry.isIntersecting));
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
-    observer.observe(timeline);
+    animatedSections.forEach(section => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
