@@ -39,6 +39,13 @@ const campaigns: Campaign[] = [
   { id: 'EDU-390', title: 'Equip a community Qur’an learning centre', category: 'Education', meta: 'Nakuru, Kenya', raised: 925000, goal: 1600000, donors: 318, days: 19, image: '/quran-learning.jpg', badge: 'Sadaqah Jariyah', zakat: false, story: 'Provide Qur’ans, desks, lighting and accessible learning materials for children and adult students in the local community.' },
 ];
 
+const knowledgePrograms = [
+  { title: 'Qur’an distribution', category: 'Qur’an access', icon: 'book', summary: 'Place Qur’ans in community learning spaces and study circles.' },
+  { title: 'Madrasa books & supplies', category: 'Madrasa learning', icon: 'education', summary: 'Equip learners with books and essential classroom materials.' },
+  { title: 'Sponsor a student', category: 'Student support', icon: 'users', summary: 'Help students pursue Islamic studies with the resources they need.' },
+  { title: 'Accessible Qur’an projects', category: 'Inclusive learning', icon: 'evidence', summary: 'Make learning more inclusive with translations, Braille Qur’ans and accessible formats.' },
+];
+
 const notificationIds = ['impact', 'receipt', 'plan', 'security'];
 const notificationReadKey = 'amanah-notifications-read';
 
@@ -271,14 +278,14 @@ export default function Home() {
     }
   }
 
-  function startDonation(campaign?: Campaign | null, preset?: string) {
+  function startDonation(campaign?: Campaign | null, preset?: string, cause = 'Where most needed') {
     setDonationCampaign(campaign || null);
     setDonationStep(1);
     setDraft(null); setDraftError('');
     setIntention(preset || (campaign?.zakat ? 'Zakat' : 'Sadaqah'));
     setAmount('1000');
     setAnonymous(false); setRecurring(false); setCoverFees(true); setPayment('M-PESA');
-    setPlanCause('Where most needed'); setPlanReminders(false);
+    setPlanCause(cause); setPlanReminders(false);
     setDedication('');
     setOnBehalf(false);
     setSchedule('Monthly');
@@ -422,6 +429,28 @@ export default function Home() {
         {!filteredCampaigns.length && <div className="empty-state" role="status">No verified campaigns match this search yet.</div>}
       </section>
 
+      <section className="section refined-knowledge" id="knowledge" aria-labelledby="knowledge-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">Spread knowledge</p><h2 id="knowledge-title">Make learning part of your giving.</h2></div>
+        </div>
+        <p className="knowledge-intro">Choose an example learning initiative to prepare a local draft. No payment is processed or delivery arranged.</p>
+        <div className="knowledge-grid">
+          {knowledgePrograms.map(program => (
+            <article className="knowledge-card" key={program.title}>
+              <div className="knowledge-card-top">
+                <span className="knowledge-icon"><Icon name={program.icon}/></span>
+                <p className="eyebrow">{program.category}</p>
+              </div>
+              <h3>{program.title}</h3>
+              <p>{program.summary}</p>
+              <button type="button" aria-haspopup="dialog" aria-label={`Prepare a local draft for ${program.title}`} onClick={() => startDonation(null, 'Sadaqah', `Knowledge · ${program.title}`)}>
+                Prepare a local draft <Icon name="arrow-right"/>
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="zakat-section refined-zakat" id="zakat" aria-labelledby="zakat-title">
         <div className="zakat-copy">
           <p className="eyebrow light">Dedicated Zakat Center</p>
@@ -550,7 +579,7 @@ export default function Home() {
         <div className="footer-links">
           <nav aria-label="Giving links">
             <h3><Icon name="giving"/>Give</h3>
-            <a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="/sadaqah">Sadaqah giving</a>
+            <a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="#knowledge">Knowledge projects</a><a href="/sadaqah">Sadaqah giving</a>
           </nav>
           <nav aria-label="Platform links">
             <h3><Icon name="platform"/>Platform</h3>
