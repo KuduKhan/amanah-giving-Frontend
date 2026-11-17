@@ -3096,7 +3096,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   text-align: center;
   opacity: 1;
   transition: opacity .32s ease;
-  animation: amanah-welcome-failsafe 6s steps(1, end) forwards;
+  animation: amanah-welcome-failsafe 16s steps(1, end) forwards;
 }
 .amanah-welcome[data-stage="leaving"] {
   opacity: 0;
@@ -3278,5 +3278,5 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .amanah-welcome-skip { transition: none; }
   .amanah-welcome-message-block { animation: none; }
   /* Preserve a non-moving timed failsafe even when global motion rules shorten animations. */
-  .amanah-welcome { animation-duration: 6s !important; animation-iteration-count: 1 !important; }
+  .amanah-welcome { animation-duration: 16s !important; animation-iteration-count: 1 !important; }
 }
