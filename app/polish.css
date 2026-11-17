@@ -4366,3 +4366,144 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .overlay .donation-panel.refined-checkout .intention-option { transition: none; }
 }
+
+/* Amanah footer — authentic store and social brand marks, three-part responsive alignment. */
+.refined-footer .footer-apps .footer-app-link .footer-brand-icon {
+  display: block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+.refined-footer .footer-apps .footer-app-link .footer-brand-icon--apple { color: #f8fbf9; }
+.refined-footer .footer-apps .footer-app-link .footer-brand-icon--googleplay { color: initial; }
+.refined-footer .footer-apps .footer-app-link {
+  min-height: 38px;
+  border-color: #56716a;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.refined-footer .footer-apps .footer-app-link:hover {
+  border-color: #a0d7b7;
+  transform: none;
+}
+.refined-footer .footer-apps .footer-app-link strong {
+  font-weight: 750;
+  letter-spacing: -.005em;
+}
+.footer-bottom.refined-footer-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: stretch;
+  justify-content: stretch;
+  gap: 8px clamp(8px, 2vw, 20px);
+  min-width: 0;
+  padding-block: 10px;
+  text-align: start;
+}
+.refined-footer-bottom .footer-legal {
+  min-width: 0;
+  justify-self: start;
+  color: #bed0d0;
+  font-size: 11px;
+  font-weight: 580;
+  line-height: 1.5;
+  white-space: normal;
+}
+.refined-footer-bottom .footer-social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: 6px;
+  min-width: 0;
+}
+.refined-footer-bottom .footer-social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-sizing: border-box;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  border: 1px solid #294c51;
+  border-radius: 12px;
+  background: #10313b;
+  color: #eaf4f1;
+  text-decoration: none;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.refined-footer-bottom .footer-social-links a:hover {
+  border-color: #78bba5;
+  background: #1b454d;
+}
+.refined-footer-bottom .footer-social-links a:focus-visible {
+  outline: 2px solid #a4e6c4;
+  outline-offset: 3px;
+}
+.refined-footer-bottom .footer-social-links .footer-brand-icon {
+  display: block;
+  width: 19px;
+  height: 19px;
+  flex: none;
+}
+.refined-footer-bottom .footer-social-links .footer-brand-icon--youtube { color: #ff4448; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--instagram { color: #f9a8ce; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--facebook { color: #83b8ff; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--tiktok { color: #fff; }
+.refined-footer-bottom .footer-trust {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.refined-footer-bottom .footer-trust .footer-security {
+  min-height: 32px;
+  padding: 6px 10px;
+}
+@media (max-width: 800px) {
+  .footer-bottom.refined-footer-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    justify-items: center;
+    gap: 5px;
+    padding: 13px 15px max(18px, env(safe-area-inset-bottom));
+    text-align: center;
+  }
+  .refined-footer-bottom .footer-legal,
+  .refined-footer-bottom .footer-trust,
+  .refined-footer-bottom .footer-social-links {
+    justify-self: center;
+  }
+  .refined-footer-bottom .footer-legal { font-size: 11px; }
+  .refined-footer-bottom .footer-social-links { gap: 9px; }
+  .refined-footer-bottom .footer-social-links a {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+@media (max-width: 400px) {
+  .refined-footer .footer-apps { column-gap: 5px; }
+  .refined-footer .footer-apps > p { font-size: 10px; }
+  .refined-footer .footer-apps .footer-app-link {
+    min-height: 38px;
+    padding-inline: 5px;
+    gap: 5px;
+  }
+  .refined-footer .footer-apps .footer-app-link .footer-brand-icon {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
+  }
+  .refined-footer .footer-apps .footer-app-link strong { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-footer .footer-app-link,
+  .refined-footer-bottom .footer-social-links a { transition: none; }
+}
