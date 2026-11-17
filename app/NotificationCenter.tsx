@@ -73,11 +73,11 @@ export default function NotificationCenter({ read, onRead, readError, onClose }:
         <Icon name="settings"/>
         <span className="notification-settings-copy">
           <b>Delivery preferences</b>
-          <small className="notification-saved-channels">
+          <div className="notification-saved-channels" aria-label="Saved delivery preferences">
             {preferences.length ? preferences.map(channel => (
-              <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/>{channel}</span>
-            )) : 'No channels selected'}
-          </small>
+              <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/><span className="notification-saved-channel-label">{channel}</span></span>
+            )) : <span className="notification-no-channels">No channels selected</span>}
+          </div>
         </span>
         <button type="button" aria-expanded={preferencesOpen} aria-controls="notification-preferences" onClick={() => {
           if (!preferencesOpen) { setDraftChannels(preferences); setSavedMessage(''); }
