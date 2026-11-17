@@ -1,6 +1,7 @@
 'use client';
 
 import Icon from './Icon';
+import FooterBrandIcon from './FooterBrandIcon';
 import CampaignDetails from './CampaignDetails';
 import SiteHeader from './SiteHeader';
 import AmanahLogo from './AmanahLogo';
@@ -609,17 +610,44 @@ export default function Home() {
           <div className="footer-apps">
             <p>Get the app</p>
             <a className="footer-app-link" href="https://apps.apple.com/search?term=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on the Apple App Store">
-              <Icon name="apple" className="footer-store-icon apple"/>
+              <FooterBrandIcon brand="apple" className="footer-store-icon apple"/>
               <span><strong>App Store</strong></span>
             </a>
             <a className="footer-app-link" href="https://play.google.com/store/search?q=Amanah%20Giving&c=apps" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on Google Play">
-              <Icon name="play" className="footer-store-icon play"/>
+              <FooterBrandIcon brand="googleplay" className="footer-store-icon play"/>
               <span><strong>Google Play</strong></span>
             </a>
           </div>
         </div>
       </footer>
-      <div className="footer-bottom refined-footer-bottom"><span>© 2026 Amanah Giving · Kenya</span><div><span className="footer-security"><Icon name="shield"/>Secure giving</span></div></div>
+      <div className="footer-bottom refined-footer-bottom">
+        <span className="footer-legal">
+          <span className="footer-copyright">© 2026</span>
+          <span className="footer-legal-brand">Amanah Giving</span>
+          <span className="footer-legal-separator" aria-hidden="true">·</span>
+          <span className="footer-legal-region">Kenya</span>
+        </span>
+        <nav className="footer-social-links" aria-label="Find Amanah Giving on social media">
+          <a href="https://www.youtube.com/results?search_query=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on YouTube" title="Search Amanah Giving on YouTube">
+            <FooterBrandIcon brand="youtube"/>
+          </a>
+          <a href="https://www.instagram.com/explore/search/keyword/?q=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on Instagram" title="Search Amanah Giving on Instagram">
+            <FooterBrandIcon brand="instagram"/>
+          </a>
+          <a href="https://www.facebook.com/search/top?q=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on Facebook" title="Search Amanah Giving on Facebook">
+            <FooterBrandIcon brand="facebook"/>
+          </a>
+          <a href="https://www.tiktok.com/search?q=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on TikTok" title="Search Amanah Giving on TikTok">
+            <FooterBrandIcon brand="tiktok"/>
+          </a>
+        </nav>
+        <div className="footer-trust">
+          <span className="footer-security">
+            <span className="footer-security-icon" aria-hidden="true"><Icon name="shield"/></span>
+            <span className="footer-security-copy">Secure giving</span>
+          </span>
+        </div>
+      </div>
 
       <MobileNavigation onGive={() => startDonation()} onAccount={() => setDashboardOpen(true)} accountOpen={dashboardOpen}/>
 

@@ -3554,3 +3554,1118 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .amanah-welcome-notice { animation: none; }
 }
+
+/* My Giving v2 — private, trust-first personal dashboard polish. */
+.overlay .my-giving.my-giving-v2 {
+  width: min(1040px, 100%);
+  max-height: calc(100dvh - 24px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(18px, 2vw, 24px) clamp(14px, 2vw, 20px) clamp(16px, 2.5vw, 22px);
+  border: 1px solid #d7e4d9;
+  border-radius: 23px;
+  background: linear-gradient(155deg, #fcfdfb 0%, #f6f9f4 57%, #f9faf5 100%);
+  box-shadow: 0 24px 80px #061c1a30;
+}
+.overlay .my-giving-v2 > .close {
+  top: 9px;
+  inset-inline-end: 10px;
+  border: 1px solid #dce7dd;
+  background: #fff;
+  color: #23493b;
+}
+.my-giving-v2 .my-giving-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: start;
+  gap: 10px 16px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid #dde8df;
+}
+.my-giving-v2 .my-giving-hero-copy { min-width: 0; }
+.my-giving-v2 .my-giving-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 8px;
+  color: #236d54;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  line-height: 1.3;
+}
+.my-giving-v2 .my-giving-kicker-symbol {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border: 1px solid #bcd9c4;
+  border-radius: 10px;
+  background: #e7f2e9;
+  color: #0f7755;
+}
+.my-giving-v2 .my-giving-kicker-symbol .app-icon { width: 14px; height: 14px; }
+.my-giving-v2 .my-giving-kicker-rule { width: 18px; height: 1px; background: #baccc0; }
+.overlay .my-giving-v2 .my-giving-hero h2 {
+  margin: 0;
+  max-width: 680px;
+  color: #102d28;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -.034em;
+}
+.my-giving-v2 .my-giving-intro {
+  max-width: 660px;
+  margin: 7px 0 9px;
+  color: #587064;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.my-giving-v2 .my-giving-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.my-giving-v2 .my-giving-trust > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 25px;
+  padding: 4px 8px;
+  border: 1px solid #d5e5d8;
+  border-radius: 999px;
+  background: #ecf5ed;
+  color: #355c4a;
+  font-size: 10px;
+  font-weight: 640;
+  line-height: 1.4;
+}
+.my-giving-v2 .my-giving-trust > span:last-child {
+  border-color: #e9dfc5;
+  background: #fbf8ed;
+  color: #776039;
+}
+.my-giving-v2 .my-giving-trust .app-icon { flex: none; width: 13px; height: 13px; }
+.overlay .my-giving-v2 .my-giving-hero > .my-giving-export {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  justify-self: end;
+  margin-inline-end: 52px;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #bdd5c6;
+  border-radius: 11px;
+  background: #fff;
+  color: #155c43;
+  box-shadow: 0 2px 8px #0b3e2a0a;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.my-giving-v2 .my-giving-export .app-icon { width: 16px; height: 16px; }
+.overlay .my-giving-v2 .my-giving-hero > .my-giving-export:not(:disabled):hover {
+  border-color: #7eb69b;
+  background: #eff7f1;
+}
+.overlay .my-giving-v2 .my-giving-hero > .my-giving-export:disabled {
+  opacity: 1;
+  border-color: #e0e8df;
+  background: #f0f3ef;
+  color: #88978c;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.my-giving-v2 .my-giving-overview { margin-top: 14px; }
+.my-giving-v2 .my-giving-shortcuts { margin-top: 12px; }
+.my-giving-v2 .my-giving-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 7px;
+}
+.my-giving-v2 .my-giving-section-heading p {
+  margin: 0;
+  color: #245745;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .13em;
+}
+.my-giving-v2 .my-giving-section-heading > span {
+  color: #718478;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.my-giving-v2 .dashboard-stats.my-giving-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  align-items: stretch;
+  gap: 8px;
+  margin: 0;
+}
+.overlay .my-giving-v2 .my-giving-stats > .my-giving-stat {
+  position: relative;
+  min-width: 0;
+  min-height: 107px;
+  padding: 11px 12px 12px;
+  overflow: hidden;
+  border: 1px solid #dfe9df;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 10px #072f2709;
+}
+.overlay .my-giving-v2 .my-giving-stats > .my-giving-stat-primary {
+  border-color: #c7ddce;
+  background: linear-gradient(155deg, #ecf7ee, #f5faf3 85%);
+}
+.my-giving-v2 .my-giving-stat-accent {
+  position: absolute;
+  top: 0;
+  inset-inline: 12px;
+  height: 2px;
+  border-radius: 0 0 5px 5px;
+  background: #cedbcf;
+}
+.my-giving-v2 .my-giving-stat-primary .my-giving-stat-accent {
+  background: #15815e;
+}
+.my-giving-v2 .my-giving-stats dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 25px;
+  color: #3c594a;
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.my-giving-v2 .my-giving-stats dt > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.my-giving-v2 .my-giving-stat-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #d6e5d8;
+  border-radius: 9px;
+  background: #f0f7f1;
+  color: #126d53;
+}
+.my-giving-v2 .my-giving-stat-icon .app-icon { width: 14px; height: 14px; }
+.my-giving-v2 .my-giving-stats dd { margin: 8px 0 0; }
+.my-giving-v2 .my-giving-stats b {
+  display: block;
+  margin: 0 0 3px;
+  color: #123b2f;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 760;
+  line-height: 1.18;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+.my-giving-v2 .my-giving-stats small {
+  display: block;
+  color: #61786c;
+  font-size: 10px;
+  line-height: 1.35;
+}
+.my-giving-v2 .dashboard-actions.my-giving-actions {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 8px;
+  margin: 0;
+}
+.overlay .my-giving-v2 .my-giving-actions > button {
+  display: grid;
+  grid-template-columns: 26px minmax(0,1fr) 14px;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 7px 10px;
+  border: 1px solid #dce8dd;
+  border-radius: 13px;
+  background: #fff;
+  color: #295544;
+  text-align: start;
+  box-shadow: 0 2px 9px #0b2e1a08;
+  transform: none;
+}
+.overlay .my-giving-v2 .my-giving-actions > .my-giving-primary-action {
+  border-color: #0d6b50;
+  background: linear-gradient(150deg, #187d5e, #095d49);
+  color: #fff;
+  box-shadow: 0 3px 10px #125d4918;
+}
+.overlay .my-giving-v2 .my-giving-actions > button:not(.my-giving-primary-action):hover {
+  border-color: #a4cdb0;
+  background: #f4faf5;
+}
+.overlay .my-giving-v2 .my-giving-actions > .my-giving-primary-action:hover {
+  background: #085641;
+}
+.my-giving-v2 .my-giving-action-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #dceade;
+  border-radius: 10px;
+  background: #eef5ee;
+  color: #176e53;
+}
+.my-giving-v2 .my-giving-primary-action .my-giving-action-icon {
+  border-color: #ffffff39;
+  background: #ffffff22;
+  color: #fff;
+}
+.my-giving-v2 .my-giving-action-icon .app-icon { width: 15px; height: 15px; }
+.my-giving-v2 .my-giving-actions .my-giving-action-label {
+  margin: 0;
+  min-width: 0;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+.my-giving-v2 .my-giving-actions > button > .app-icon:last-child {
+  width: 15px;
+  height: 15px;
+  color: inherit;
+  opacity: .72;
+}
+.my-giving-v2 .my-giving-library,
+.my-giving-v2 .my-giving-library:has(.giving-empty):has(:is(.saved-campaigns, .local-drafts article)) {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 14px;
+}
+.overlay .my-giving-v2 .my-giving-collection {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 13px;
+  border: 1px solid #dae6dd;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 14px #082d1d0b;
+}
+.my-giving-v2 .my-giving-collection-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.my-giving-v2 .my-giving-collection-heading h3 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: #1c4133;
+  font-size: 15px;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+.my-giving-v2 .my-giving-collection-heading p {
+  margin: 3px 0 0 32px;
+  color: #718478;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.my-giving-v2 .my-giving-collection-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #d6e7dc;
+  border-radius: 9px;
+  background: #eef7f0;
+  color: #1c785a;
+}
+.my-giving-v2 .my-giving-collection-icon .app-icon { width: 15px; height: 15px; }
+.my-giving-v2 .my-giving-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 23px;
+  padding: 3px 8px;
+  border: 1px solid #e0e9e1;
+  border-radius: 999px;
+  background: #f5f8f4;
+  color: #4b6454;
+  font-size: 10px;
+  font-weight: 750;
+}
+.my-giving-v2 .giving-collection-note.my-giving-draft-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0 0 8px;
+  padding: 7px 9px;
+  border: 1px solid #eee2c9;
+  border-radius: 10px;
+  background: #fbf8ef;
+  color: #725f3c;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.my-giving-v2 .my-giving-draft-disclaimer .app-icon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+.my-giving-v2 .giving-empty.my-giving-empty {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  grid-template-rows: repeat(3, auto);
+  align-content: center;
+  justify-items: start;
+  align-items: start;
+  column-gap: 10px;
+  flex: 1;
+  min-height: 118px;
+  padding: 12px;
+  border: 1px dashed #cfdfd2;
+  border-radius: 13px;
+  background: linear-gradient(155deg, #f7faf6, #fcfdfb);
+  text-align: left;
+}
+.my-giving-v2 .my-giving-empty-symbol {
+  display: grid;
+  place-items: center;
+  grid-column: 1;
+  grid-row: 1 / 4;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  border: 1px solid #cce2d3;
+  border-radius: 13px;
+  background: #e7f2e9;
+  color: #1d7958;
+}
+.my-giving-v2 .my-giving-empty-symbol .app-icon { width: 16px; height: 16px; }
+.my-giving-v2 .my-giving-empty strong {
+  grid-column: 2;
+  margin-bottom: 3px;
+  color: #274538;
+  font-size: 14px;
+  font-weight: 770;
+}
+.my-giving-v2 .my-giving-empty p {
+  grid-column: 2;
+  max-width: 330px;
+  margin: 0 0 4px;
+  color: #65796d;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.my-giving-v2 .my-giving-empty .text-link {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #137354;
+  font-size: 12px;
+  font-weight: 750;
+}
+.my-giving-v2 .my-giving-empty .text-link:hover {
+  background: #e9f4ed;
+  color: #075c42;
+}
+.my-giving-v2 .my-giving-empty .text-link .app-icon { width: 14px; height: 14px; }
+.my-giving-v2 .my-giving-saved-campaigns { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; }
+.my-giving-v2 .my-giving-saved-campaigns article {
+  padding: 10px;
+  border-color: #e2e9e1;
+  background: #fcfdfb;
+}
+.my-giving-v2 .my-giving-saved-campaigns img {
+  width: 60px;
+  height: 60px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+.my-giving-v2 .my-giving-saved-campaigns .saved-remove {
+  border-radius: 9px;
+  background: #f4f7f3;
+}
+.my-giving-v2 .my-giving-drafts-list article {
+  margin: 0;
+  padding: 12px 4px;
+  border-bottom: 1px solid #e7ede6;
+}
+.my-giving-v2 .my-giving-drafts-list article:last-child { border-bottom: 0; }
+.my-giving-v2 .my-giving-privacy-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 10px 2px 0;
+  color: #728178;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.my-giving-v2 .my-giving-privacy-note .app-icon { width: 14px; height: 14px; flex: none; color: #428769; }
+@media (max-width: 820px) {
+  .my-giving-v2 .my-giving-hero { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .overlay .my-giving-v2 .my-giving-hero > .my-giving-export {
+    justify-self: start;
+    margin-inline-end: 0;
+  }
+}
+@media (max-width: 740px) {
+  .my-giving-v2 .dashboard-stats.my-giving-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .my-giving-v2 .my-giving-library,
+  .my-giving-v2 .my-giving-library:has(.giving-empty):has(:is(.saved-campaigns, .local-drafts article)) {
+    grid-template-columns: minmax(0,1fr);
+  }
+}
+@media (max-width: 700px) {
+  .overlay .my-giving.my-giving-v2 {
+    max-height: calc(100dvh - 12px);
+    padding: max(20px, env(safe-area-inset-top)) 12px max(15px, env(safe-area-inset-bottom));
+    border-radius: 15px;
+  }
+  .my-giving-v2 .my-giving-hero { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-bottom: 10px; }
+  .my-giving-v2 .my-giving-kicker { max-width: calc(100% - 48px); }
+  .my-giving-v2 .my-giving-kicker { gap: 6px; margin-bottom: 6px; font-size: 9px; }
+  .my-giving-v2 .my-giving-kicker-symbol { width: 25px; height: 25px; border-radius: 8px; }
+  .overlay .my-giving-v2 .my-giving-hero h2 { font-size: clamp(25px, 6.3vw, 31px); }
+  .my-giving-v2 .my-giving-intro { margin: 6px 0 8px; font-size: 12px; }
+  .my-giving-v2 .my-giving-trust > span { font-size: 10px; min-height: 26px; }
+  .overlay .my-giving-v2 .my-giving-hero > .my-giving-export { display: inline-flex; min-height: 42px; width: auto; }
+  .my-giving-v2 .my-giving-overview { margin-top: 12px; }
+  .my-giving-v2 .my-giving-shortcuts { margin-top: 11px; }
+  .my-giving-v2 .dashboard-actions.my-giving-actions { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+  .my-giving-v2 .dashboard-actions.my-giving-actions > button:last-child { grid-column: 1 / -1; }
+  .overlay .my-giving-v2 .my-giving-actions > button { min-height: 45px; grid-template-columns: 24px minmax(0,1fr) 12px; gap: 6px; padding: 6px 9px; }
+  .my-giving-v2 .my-giving-action-icon { width: 24px; height: 24px; }
+  .my-giving-v2 .my-giving-actions .my-giving-action-label { font-size: 11px; }
+  .my-giving-v2 .my-giving-library,
+  .my-giving-v2 .my-giving-library:has(.giving-empty):has(:is(.saved-campaigns, .local-drafts article)) { margin-top: 12px; gap: 9px; }
+  .overlay .my-giving-v2 .my-giving-collection { padding: 12px; }
+  .my-giving-v2 .giving-empty.my-giving-empty { min-height: 100px; padding: 10px; }
+}
+@media (max-width: 380px) {
+  .overlay .my-giving.my-giving-v2 { padding-inline: 12px; }
+  .my-giving-v2 .dashboard-stats.my-giving-stats { gap: 7px; }
+  .overlay .my-giving-v2 .my-giving-stats > .my-giving-stat { padding: 9px 8px 10px; min-height: 98px; }
+  .my-giving-v2 .my-giving-stats dt { gap: 5px; font-size: 10px; line-height: 1.25; }
+  .my-giving-v2 .my-giving-stat-icon { width: 22px; height: 22px; }
+  .my-giving-v2 .my-giving-stats b { font-size: clamp(18px, 5.2vw, 22px); }
+  .my-giving-v2 .my-giving-collection-heading h3 { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .my-giving-v2 .my-giving-actions > button,
+  .my-giving-v2 .my-giving-export { transition: none; }
+}
+
+/* Prepare your gift — compact, accessible donation-intention layout. */
+.overlay .donation-panel.refined-checkout {
+  width: min(810px, 100%);
+  max-height: calc(100dvh - 24px);
+  padding: 20px clamp(14px, 2.4vw, 24px) 20px;
+  border: 1px solid #d8e5dc;
+  border-radius: 20px;
+  background: linear-gradient(155deg, #fbfdfb 0%, #f6f9f5 100%);
+  box-shadow: 0 22px 75px #071c2035;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.overlay .donation-panel.refined-checkout > button.close {
+  top: 8px;
+  inset-inline-end: 9px;
+}
+.overlay .donation-panel.refined-checkout .checkout-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px 12px;
+  min-height: 34px;
+  margin: 0 0 11px;
+  padding: 0;
+  padding-inline-end: 48px;
+}
+.overlay .donation-panel.refined-checkout .checkout-heading > .eyebrow {
+  margin: 0;
+  color: #205d47;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .12em;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 25px;
+  padding: 4px 8px;
+  border: 1px solid #d6e5dc;
+  border-radius: 999px;
+  background: #eff6f0;
+  color: #376551;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance > span:nth-child(2) {
+  background: #faf7ef;
+  border-color: #e8ddc5;
+  color: #78603c;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance .app-icon {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 7px;
+  border: 1px solid #dce8de;
+  border-radius: 12px;
+  background: #f0f6f0;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 3px 4px;
+  border-radius: 8px;
+  color: #718176;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li.current {
+  background: #e3f0e6;
+  color: #165f44;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li.done {
+  color: #287956;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li > span {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages b {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+.overlay .donation-panel.refined-checkout .intention-step h2 {
+  margin: 0 0 5px;
+  color: #102e26;
+  font-size: clamp(26px, 3.1vw, 33px);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+}
+.overlay .donation-panel.refined-checkout .intention-step > p {
+  margin: 0;
+  max-width: 650px;
+  color: #5e7669;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.overlay .donation-panel.refined-checkout .intention-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  margin: 13px 0 14px;
+}
+.overlay .donation-panel.refined-checkout .intention-option {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) 15px;
+  grid-template-rows: auto auto;
+  align-items: center;
+  align-content: center;
+  column-gap: 8px;
+  row-gap: 2px;
+  min-height: 72px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #dce7dd;
+  border-radius: 11px;
+  background: #fff;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.overlay .donation-panel.refined-checkout .intention-option:hover:not(.unavailable) {
+  border-color: #9bc3aa;
+  background: #f6faf6;
+}
+.overlay .donation-panel.refined-checkout .intention-option.selected {
+  border-color: #16805b;
+  background: #edf7ef;
+  box-shadow: inset 0 0 0 1px #16805b;
+}
+.overlay .donation-panel.refined-checkout .intention-option.unavailable {
+  opacity: .62;
+  cursor: not-allowed;
+}
+.overlay .donation-panel.refined-checkout .intention-icon {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  width: 27px;
+  height: 27px;
+  margin: 0;
+  border-radius: 8px;
+}
+.overlay .donation-panel.refined-checkout .intention-icon .app-icon { width: 16px; height: 16px; }
+.overlay .donation-panel.refined-checkout .intention-check {
+  display: grid;
+  grid-column: 3;
+  grid-row: 1 / 3;
+  position: static;
+  width: 15px;
+  height: 15px;
+}
+.overlay .donation-panel.refined-checkout .intention-option b {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .intention-option small {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  margin: 0;
+  color: #657a6d;
+  font-size: 10px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .intention-step > .button.full {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding: 9px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 750;
+}
+@media (max-width: 760px) {
+  .overlay .donation-panel.refined-checkout {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    padding: 17px 13px max(18px, env(safe-area-inset-bottom));
+    border-radius: 16px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-heading {
+    justify-content: flex-start;
+    gap: 7px;
+    padding-inline-end: 42px;
+  }
+  .overlay .donation-panel.refined-checkout .intention-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin: 12px 0;
+  }
+  .overlay .donation-panel.refined-checkout .intention-option {
+    min-height: 72px;
+    padding: 9px;
+  }
+}
+@media (max-width: 480px) {
+  .overlay .donation-panel.refined-checkout {
+    padding: max(14px, env(safe-area-inset-top)) 11px max(18px, env(safe-area-inset-bottom));
+  }
+  .overlay .donation-panel.refined-checkout .checkout-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-assurance { gap: 5px; }
+  .overlay .donation-panel.refined-checkout .checkout-assurance > span {
+    padding: 3px 6px;
+    min-height: 23px;
+    font-size: 9px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages {
+    margin-bottom: 11px;
+    padding: 5px;
+    gap: 4px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages li {
+    gap: 5px;
+    padding: 3px 1px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages li > span {
+    flex-basis: 22px;
+    width: 22px;
+    height: 22px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages b { font-size: 10px; }
+  .overlay .donation-panel.refined-checkout .intention-step h2 { font-size: clamp(23px, 6.4vw, 29px); }
+  .overlay .donation-panel.refined-checkout .intention-step > p { font-size: 11px; line-height: 1.4; }
+  .overlay .donation-panel.refined-checkout .intention-option {
+    grid-template-columns: minmax(0, 1fr) 14px;
+    min-height: 69px;
+    padding: 9px;
+    column-gap: 5px;
+  }
+  .overlay .donation-panel.refined-checkout .intention-icon { display: none; }
+  .overlay .donation-panel.refined-checkout .intention-option b,
+  .overlay .donation-panel.refined-checkout .intention-option small { grid-column: 1; }
+  .overlay .donation-panel.refined-checkout .intention-check { grid-column: 2; }
+}
+@media (max-width: 360px) {
+  .overlay .donation-panel.refined-checkout .checkout-assurance > span { font-size: 8px; }
+  .overlay .donation-panel.refined-checkout .intention-option b { font-size: 11px; }
+  .overlay .donation-panel.refined-checkout .intention-option small { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay .donation-panel.refined-checkout .intention-option { transition: none; }
+}
+
+/* Amanah footer — authentic store and social brand marks, three-part responsive alignment. */
+.refined-footer .footer-apps .footer-app-link .footer-brand-icon {
+  display: block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+.refined-footer .footer-apps .footer-app-link .footer-brand-icon--apple { color: #f8fbf9; }
+.refined-footer .footer-apps .footer-app-link .footer-brand-icon--googleplay { color: initial; }
+.refined-footer .footer-apps .footer-app-link {
+  min-height: 38px;
+  border-color: #56716a;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.refined-footer .footer-apps .footer-app-link:hover {
+  border-color: #a0d7b7;
+  transform: none;
+}
+.refined-footer .footer-apps .footer-app-link strong {
+  font-weight: 750;
+  letter-spacing: -.005em;
+}
+.footer-bottom.refined-footer-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: stretch;
+  justify-content: stretch;
+  gap: 8px clamp(8px, 2vw, 20px);
+  min-width: 0;
+  padding-block: 10px;
+  text-align: start;
+}
+.refined-footer-bottom .footer-legal {
+  min-width: 0;
+  justify-self: start;
+  color: #bed0d0;
+  font-size: 11px;
+  font-weight: 580;
+  line-height: 1.5;
+  white-space: normal;
+}
+.refined-footer-bottom .footer-social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: 10px;
+  min-width: 0;
+}
+.refined-footer-bottom .footer-social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #eaf4f1;
+  text-decoration: none;
+  transition: opacity .16s ease;
+}
+.refined-footer-bottom .footer-social-links a:hover {
+  background: transparent;
+  opacity: .8;
+}
+.refined-footer-bottom .footer-social-links a:focus-visible {
+  outline: 2px solid #a4e6c4;
+  outline-offset: 3px;
+}
+.refined-footer-bottom .footer-social-links .footer-brand-icon {
+  display: block;
+  width: 21px;
+  height: 21px;
+  flex: none;
+}
+.refined-footer-bottom .footer-social-links .footer-brand-icon--youtube { color: #ff4448; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--instagram { color: #f9a8ce; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--facebook { color: #83b8ff; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--tiktok { color: #fff; }
+.refined-footer-bottom .footer-trust {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.refined-footer-bottom .footer-trust .footer-security {
+  min-height: 32px;
+  padding: 6px 10px;
+}
+@media (max-width: 800px) {
+  .footer-bottom.refined-footer-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    justify-items: center;
+    gap: 5px;
+    padding: 13px 15px max(18px, env(safe-area-inset-bottom));
+    text-align: center;
+  }
+  .refined-footer-bottom .footer-legal,
+  .refined-footer-bottom .footer-trust,
+  .refined-footer-bottom .footer-social-links {
+    justify-self: center;
+  }
+  .refined-footer-bottom .footer-legal { font-size: 11px; }
+  .refined-footer-bottom .footer-social-links { gap: 8px; }
+}
+@media (max-width: 400px) {
+  .refined-footer .footer-apps { column-gap: 5px; }
+  .refined-footer .footer-apps > p { font-size: 10px; }
+  .refined-footer .footer-apps .footer-app-link {
+    min-height: 38px;
+    padding-inline: 5px;
+    gap: 5px;
+  }
+  .refined-footer .footer-apps .footer-app-link .footer-brand-icon {
+    flex-basis: 16px;
+    width: 16px;
+    height: 16px;
+  }
+  .refined-footer .footer-apps .footer-app-link strong { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-footer .footer-app-link,
+  .refined-footer-bottom .footer-social-links a { transition: none; }
+}
+
+/* Refined footer sign-off: copyright hierarchy and restrained security identifier. */
+.footer-bottom.refined-footer-bottom {
+  border-top-color: #30505a;
+  background: linear-gradient(100deg, #071923, #0a232b 55%, #071923);
+}
+.refined-footer-bottom .footer-legal {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  flex-wrap: wrap;
+  column-gap: 6px;
+  row-gap: 2px;
+  min-width: 0;
+  color: #aec6c6;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: .008em;
+  white-space: normal;
+}
+.refined-footer-bottom .footer-copyright { color: #a8bdc0; }
+.refined-footer-bottom .footer-legal-brand {
+  color: #e3eee9;
+  font-weight: 750;
+  letter-spacing: .015em;
+}
+.refined-footer-bottom .footer-legal-separator {
+  color: #d7b876;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: .75;
+}
+.refined-footer-bottom .footer-legal-region {
+  color: #c8dbd4;
+  font-weight: 600;
+}
+.refined-footer-bottom .footer-trust .footer-security {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid #376154;
+  border-radius: 999px;
+  background: #10362f;
+  box-shadow: inset 0 1px 0 #e4f9eb0b;
+  color: #d5eade;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: .012em;
+  white-space: nowrap;
+}
+.refined-footer-bottom .footer-security-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #1a5140;
+  color: #a6e5bf;
+}
+.refined-footer-bottom .footer-security-icon .app-icon {
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: inherit;
+}
+@media (max-width: 800px) {
+  .refined-footer-bottom .footer-legal {
+    justify-self: center;
+    justify-content: center;
+    column-gap: 5px;
+    font-size: 11px;
+    text-align: center;
+  }
+  .refined-footer-bottom .footer-trust .footer-security {
+    min-height: 33px;
+    padding-block: 4px;
+  }
+}
+@media (max-width: 350px) {
+  .refined-footer-bottom .footer-legal {
+    font-size: 10.5px;
+    column-gap: 4px;
+  }
+}
+
+/* Phone-only: compact Secure giving trust indicator, unchanged on desktop. */
+@media (max-width: 600px) {
+  .refined-footer-bottom .footer-trust .footer-security {
+    gap: 5px;
+    min-height: 29px;
+    padding: 3px 9px 3px 4px;
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    box-shadow: none;
+  }
+  .refined-footer-bottom .footer-security-icon {
+    width: 19px;
+    height: 19px;
+  }
+  .refined-footer-bottom .footer-security-icon .app-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+@media (max-width: 350px) {
+  .refined-footer-bottom .footer-trust .footer-security {
+    gap: 4px;
+    min-height: 27px;
+    padding: 3px 8px 3px 4px;
+    font-size: 9.5px;
+  }
+  .refined-footer-bottom .footer-security-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Compact Skip intro pill on desktop and phone — preserve 44px hit region. */
+.amanah-welcome .amanah-welcome-skip {
+  box-sizing: border-box;
+  top: max(15px, env(safe-area-inset-top));
+  inset-inline-end: clamp(16px, 3vw, 28px);
+  min-width: 91px;
+  min-height: 36px;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 680;
+  line-height: 1.2;
+}
+.amanah-welcome .amanah-welcome-skip svg {
+  width: 13px;
+  height: 13px;
+}
+.amanah-welcome .amanah-welcome-skip::before {
+  position: absolute;
+  inset: -4px;
+  content: '';
+}
+@media (max-width: 600px) {
+  .amanah-welcome .amanah-welcome-skip {
+    top: max(13px, env(safe-area-inset-top));
+    inset-inline-end: max(14px, env(safe-area-inset-right));
+    min-width: 85px;
+    min-height: 32px;
+    gap: 4px;
+    padding: 5px 9px;
+    font-size: 10px;
+  }
+  .amanah-welcome .amanah-welcome-skip svg {
+    width: 12px;
+    height: 12px;
+  }
+  .amanah-welcome .amanah-welcome-skip::before {
+    inset: -6px;
+  }
+}
