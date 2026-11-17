@@ -735,7 +735,50 @@ export default function Home() {
           <small>{!zakatAvailable ? 'Not eligible for this campaign' : description}</small>
         </label>;
       })}</fieldset><button className="button full" type="submit">Continue to amount <Icon name="→"/></button></form>}
-      {donationStep === 2 && <div className="donation-step"><button className="back" type="button" onClick={() => setDonationStep(1)} aria-label="Return to previous giving step"><Icon name="arrow-left"/> Back</button><h2>Shape your gift</h2>{donationCampaign && <div className="donation-campaign"><Image src={donationCampaign.image} alt="" width={100} height={80}/><span><small>Giving to</small><b>{donationCampaign.title}</b></span></div>}<div className="amount-grid">{['500','1000','2500','5000'].map(value => <button className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>)}</div><label className="custom-amount"><span>Custom amount</span><div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div></label><label className="check-row"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/><span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span></label><label className="check-row"><input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/><span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span></label>{onBehalf && <label className="dedication-field"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}<label className="check-row"><input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/><span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span></label>{recurring && <label className="schedule-field"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}<button className="button full" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button></div>}
+      {donationStep === 2 && (
+        <div className="donation-step giving-amount-step">
+          <header className="giving-amount-heading">
+            <button className="back" type="button" onClick={() => setDonationStep(1)} aria-label="Return to previous giving step"><Icon name="arrow-left"/> Back</button>
+            <h2>Shape your gift</h2>
+          </header>
+          <div className="giving-amount-layout">
+            <section className="giving-amount-panel" aria-label="Gift amount">
+              {donationCampaign && (
+                <div className="donation-campaign giving-amount-campaign">
+                  <Image src={donationCampaign.image} alt="" width={100} height={80}/>
+                  <span><small>Giving to</small><b>{donationCampaign.title}</b></span>
+                </div>
+              )}
+              <div className="amount-grid giving-amount-presets" role="group" aria-label="Choose a suggested gift amount">
+                {['500','1000','2500','5000'].map(value => (
+                  <button type="button" className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>
+                ))}
+              </div>
+              <label className="custom-amount giving-amount-custom">
+                <span>Custom amount</span>
+                <div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div>
+              </label>
+            </section>
+            <section className="giving-amount-preferences" aria-label="Gift preferences">
+              <label className="check-row giving-amount-option">
+                <input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/>
+                <span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span>
+              </label>
+              <label className="check-row giving-amount-option">
+                <input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/>
+                <span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span>
+              </label>
+              {onBehalf && <label className="dedication-field giving-amount-extra"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}
+              <label className="check-row giving-amount-option">
+                <input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/>
+                <span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span>
+              </label>
+              {recurring && <label className="schedule-field giving-amount-extra"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}
+            </section>
+          </div>
+          <button className="button full giving-amount-next" type="button" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button>
+        </div>
+      )}
       {donationStep === 3 && (
         <form className="donation-step giving-review-step" onSubmit={finishDonation} aria-busy={draftSaving}>
           <header className="giving-review-heading">
