@@ -5429,3 +5429,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .overlay .donation-panel.refined-checkout .giving-amount-presets button { transition: none; }
 }
+
+/* Direct hero entry after removing the obsolete homepage assurance ribbon. */
+/* The sticky header now meets the hero directly, without an intervening notice bar. */
+main > .site-header.refined-header {
+  box-shadow: 0 3px 14px #071a2c0d;
+}
+main > .site-header.refined-header + .hero.refined-hero {
+  margin-block-start: 0;
+  border-block-start: 0;
+}
+@media (min-width: 781px) {
+  main > .site-header.refined-header + .hero.refined-hero .hero-copy {
+    padding-block-start: clamp(26px, 2.5vw, 34px);
+  }
+}
+@media (max-width: 780px) {
+  main > .site-header.refined-header + .hero.refined-hero .hero-copy {
+    padding-block-start: clamp(24px, 4vw, 30px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  main > .site-header.refined-header { scroll-behavior: auto; }
+}
