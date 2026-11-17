@@ -2739,3 +2739,217 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .platform-overlay .donor-grid :is(button, .portal-card) { transition: none; }
 }
+
+/* Admin workspace: compact priority queue and verification ladder. */
+.platform-overlay .admin-review-grid {
+  align-items: stretch;
+  gap: 10px;
+  margin-block: 10px;
+}
+@media (min-width: 1201px) {
+  .platform-overlay .portal-grid.admin-review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.platform-overlay .admin-review-grid > .portal-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(11px, 1vw, 15px);
+  border: 1px solid #dce9df;
+  border-radius: 14px;
+  background: linear-gradient(155deg, #ffffff, #fbfdfb);
+  box-shadow: 0 3px 13px #142f2210;
+}
+.platform-overlay .admin-review-grid .card-head {
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 9px;
+}
+.platform-overlay .admin-review-grid .card-head > div { min-width: 0; }
+.platform-overlay .admin-review-grid .card-head p {
+  margin: 0 0 2px;
+  color: #25745b;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .1em;
+}
+.platform-overlay .admin-review-grid .card-head h4 {
+  margin: 0;
+  font-size: clamp(17px, 1.65vw, 20px);
+  line-height: 1.2;
+  font-weight: 550;
+}
+.platform-overlay .admin-queue-card .data-rows {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.platform-overlay .admin-queue-card .data-rows > button {
+  display: grid;
+  grid-template-columns: minmax(60px, .7fr) minmax(0, 1.5fr) auto auto;
+  align-items: center;
+  gap: 6px 9px;
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  margin: 0;
+  padding: 7px 9px;
+  border: 1px solid #e0eae3;
+  border-radius: 9px;
+  background: #f8fbf8;
+  color: #254a38;
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: start;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.platform-overlay .admin-queue-card .data-rows > button:hover {
+  border-color: #a9d3b8;
+  background: #edf7ef;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span { min-width: 0; }
+.platform-overlay .admin-queue-card .data-rows > button > span:first-child {
+  color: #155a43;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span:nth-child(2) {
+  overflow-wrap: break-word;
+  font-size: 11px;
+  font-weight: 600;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span:nth-child(3) {
+  justify-self: start;
+  padding: 4px 6px;
+  border: 1px solid #ecd4a6;
+  border-radius: 6px;
+  background: #fff4e4;
+  color: #84541b;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.platform-overlay .admin-queue-card .data-rows > button:first-child > span:nth-child(3) {
+  border-color: #edc0c1;
+  background: #fff0ef;
+  color: #aa3538;
+}
+.platform-overlay .admin-queue-card .data-rows > button:nth-child(3) > span:nth-child(3) {
+  border-color: #c0ddc8;
+  background: #eaf7ee;
+  color: #216d46;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span.row-action {
+  justify-self: end;
+  color: #17694e;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.platform-overlay .admin-queue-card .data-rows > button:first-child > span.row-action { color: #a63838; }
+.platform-overlay .admin-queue-card .data-rows > button:nth-child(2) > span.row-action { color: #936019; }
+.platform-overlay .admin-queue-card .add-plan {
+  min-height: 37px;
+  margin-top: 7px;
+  padding: 7px 10px;
+  border: 1px dashed #a4cdb1;
+  border-radius: 9px;
+  background: #f0f8f1;
+  color: #176c4c;
+  font-size: 11px;
+  font-weight: 750;
+}
+.platform-overlay .admin-queue-card .add-plan:hover {
+  border-color: #6da786;
+  background: #e4f3e8;
+}
+/* Five evenly sized ladder rows: retain the whole audit sequence in a smaller footprint. */
+.platform-overlay .admin-verification-card .level-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  min-width: 0;
+}
+.platform-overlay .admin-verification-card .level-list > div,
+.platform-overlay .admin-verification-card .level-list > div:last-child {
+  display: grid;
+  grid-column: auto;
+  grid-template-columns: 27px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 38px;
+  padding: 5px 8px;
+  border: 1px solid #e0eae3;
+  border-radius: 9px;
+  background: #f8fbf8;
+}
+.platform-overlay .admin-verification-card .level-list i {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border: 1px solid #dce7df;
+  border-radius: 8px;
+  background: #edf2ee;
+  color: #406d59;
+  font-size: 11px;
+  font-weight: 800;
+}
+.platform-overlay .admin-verification-card .level-list span { min-width: 0; }
+.platform-overlay .admin-verification-card .level-list b {
+  display: block;
+  color: #244e3a;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.22;
+}
+.platform-overlay .admin-verification-card .level-list small {
+  display: block;
+  margin-top: 1px;
+  color: #61756a;
+  font-size: 10px;
+  line-height: 1.22;
+}
+.platform-overlay .admin-verification-card .level-list > div.active {
+  border-color: #9ecab0;
+  background: #eaf7ef;
+}
+.platform-overlay .admin-verification-card .level-list > div.active i {
+  border-color: #176e50;
+  background: #176e50;
+  color: #fff;
+}
+.platform-overlay .admin-review-grid :is(button):focus-visible {
+  outline: 2px solid #288564;
+  outline-offset: 2px;
+}
+@container (max-width: 570px) {
+  .platform-overlay .admin-queue-card .data-rows > button {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    min-height: 50px;
+    padding: 6px 8px;
+  }
+  .platform-overlay .admin-queue-card .data-rows > button > span:first-child { grid-area: 1 / 1; }
+  .platform-overlay .admin-queue-card .data-rows > button > span:nth-child(2) { grid-area: 2 / 1; }
+  .platform-overlay .admin-queue-card .data-rows > button > span:nth-child(3) {
+    grid-area: 1 / 2;
+    justify-self: end;
+  }
+  .platform-overlay .admin-queue-card .data-rows > button > span.row-action { grid-area: 2 / 2; }
+}
+@media (max-width: 780px) {
+  .platform-overlay .admin-review-grid > .portal-card { padding: 11px; }
+  .platform-overlay .admin-review-grid { gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .platform-overlay .admin-queue-card .data-rows > button { transition: none; }
+}
