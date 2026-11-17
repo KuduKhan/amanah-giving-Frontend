@@ -2083,3 +2083,93 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .seo-links a { justify-content: space-between; border-top: 1px solid #e8eee8; }
   .seo-footer { gap: 8px 20px; padding-inline: 16px; font-size: 11px; }
 }
+
+/* Back navigation: context-preserving, compact, keyboard-friendly controls. */
+.seo-header .seo-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 14px 6px 7px;
+  border: 1px solid #c9dfd2;
+  border-radius: 999px;
+  background: #f2f9f4;
+  color: #1c5b45;
+  font: 700 12px/1.3 var(--font-geist-sans), Arial, sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.seo-header .seo-back-button .seo-back-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #dceee3;
+  color: #1b7653;
+}
+.seo-header .seo-back-button .app-icon { width: 16px; height: 16px; }
+.seo-header .seo-back-button:hover {
+  border-color: #99c5aa;
+  background: #e7f4e9;
+  box-shadow: 0 2px 8px #195c3b11;
+}
+.seo-header .seo-back-button:active { background: #deeee3; }
+.seo-header .seo-back-button:focus-visible {
+  outline: 2px solid #218360;
+  outline-offset: 3px;
+}
+.refined-checkout .donation-step > .back,
+.platform-overlay .form-actions .portal-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 0;
+  min-height: 40px;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  border: 1px solid #d1e3d7;
+  border-radius: 9px;
+  background: #f3faf5;
+  color: #216349;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+.refined-checkout .donation-step > .back .app-icon,
+.platform-overlay .form-actions .portal-back-button .app-icon {
+  width: 15px;
+  height: 15px;
+}
+.refined-checkout .donation-step > .back:hover,
+.platform-overlay .form-actions .portal-back-button:not(:disabled):hover {
+  background: #e7f4ec;
+  border-color: #a6cbb6;
+  color: #124d37;
+}
+.platform-overlay .form-actions .portal-back-button {
+  margin-bottom: 0;
+  min-height: 42px;
+}
+.platform-overlay .form-actions .portal-back-button:disabled {
+  border-color: #e6ede8;
+  background: #f5f7f5;
+  color: #839488;
+  cursor: not-allowed;
+}
+.refined-checkout .donation-step > .back:focus-visible,
+.platform-overlay .form-actions .portal-back-button:focus-visible {
+  outline: 2px solid #218360;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .seo-header .seo-back-button,
+  .refined-checkout .donation-step > .back,
+  .platform-overlay .form-actions .portal-back-button { transition: none; }
+}
