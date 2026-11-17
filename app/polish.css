@@ -4086,3 +4086,282 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .my-giving-v2 .my-giving-actions > button,
   .my-giving-v2 .my-giving-export { transition: none; }
 }
+
+/* Prepare your gift — compact, accessible donation-intention layout. */
+.overlay .donation-panel.refined-checkout {
+  width: min(810px, 100%);
+  max-height: calc(100dvh - 24px);
+  padding: 20px clamp(14px, 2.4vw, 24px) 20px;
+  border: 1px solid #d8e5dc;
+  border-radius: 20px;
+  background: linear-gradient(155deg, #fbfdfb 0%, #f6f9f5 100%);
+  box-shadow: 0 22px 75px #071c2035;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.overlay .donation-panel.refined-checkout > button.close {
+  top: 8px;
+  inset-inline-end: 9px;
+}
+.overlay .donation-panel.refined-checkout .checkout-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px 12px;
+  min-height: 34px;
+  margin: 0 0 11px;
+  padding: 0 48px 0 0;
+}
+.overlay .donation-panel.refined-checkout .checkout-heading > .eyebrow {
+  margin: 0;
+  color: #205d47;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .12em;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 25px;
+  padding: 4px 8px;
+  border: 1px solid #d6e5dc;
+  border-radius: 999px;
+  background: #eff6f0;
+  color: #376551;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance > span:nth-child(2) {
+  background: #faf7ef;
+  border-color: #e8ddc5;
+  color: #78603c;
+}
+.overlay .donation-panel.refined-checkout .checkout-assurance .app-icon {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  min-width: 0;
+  margin: 0 0 14px;
+  padding: 7px;
+  border: 1px solid #dce8de;
+  border-radius: 12px;
+  background: #f0f6f0;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 3px 4px;
+  border-radius: 8px;
+  color: #718176;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li.current {
+  background: #e3f0e6;
+  color: #165f44;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li.done {
+  color: #287956;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages li > span {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+.overlay .donation-panel.refined-checkout .checkout-stages b {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+.overlay .donation-panel.refined-checkout .intention-step h2 {
+  margin: 0 0 5px;
+  color: #102e26;
+  font-size: clamp(26px, 3.1vw, 33px);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+}
+.overlay .donation-panel.refined-checkout .intention-step > p {
+  margin: 0;
+  max-width: 650px;
+  color: #5e7669;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.overlay .donation-panel.refined-checkout .intention-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  margin: 13px 0 14px;
+}
+.overlay .donation-panel.refined-checkout .intention-option {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) 15px;
+  grid-template-rows: auto auto;
+  align-items: center;
+  align-content: center;
+  column-gap: 8px;
+  row-gap: 2px;
+  min-height: 72px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #dce7dd;
+  border-radius: 11px;
+  background: #fff;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.overlay .donation-panel.refined-checkout .intention-option:hover:not(.unavailable) {
+  border-color: #9bc3aa;
+  background: #f6faf6;
+}
+.overlay .donation-panel.refined-checkout .intention-option.selected {
+  border-color: #16805b;
+  background: #edf7ef;
+  box-shadow: inset 0 0 0 1px #16805b;
+}
+.overlay .donation-panel.refined-checkout .intention-option.unavailable {
+  opacity: .62;
+  cursor: not-allowed;
+}
+.overlay .donation-panel.refined-checkout .intention-icon {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  width: 27px;
+  height: 27px;
+  margin: 0;
+  border-radius: 8px;
+}
+.overlay .donation-panel.refined-checkout .intention-icon .app-icon { width: 16px; height: 16px; }
+.overlay .donation-panel.refined-checkout .intention-check {
+  display: grid;
+  grid-column: 3;
+  grid-row: 1 / 3;
+  position: static;
+  width: 15px;
+  height: 15px;
+}
+.overlay .donation-panel.refined-checkout .intention-option b {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .intention-option small {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  margin: 0;
+  color: #657a6d;
+  font-size: 10px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .intention-step > .button.full {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding: 9px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 750;
+}
+@media (max-width: 760px) {
+  .overlay .donation-panel.refined-checkout {
+    width: 100%;
+    max-height: calc(100dvh - 16px);
+    padding: 17px 13px max(18px, env(safe-area-inset-bottom));
+    border-radius: 16px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-heading {
+    justify-content: flex-start;
+    gap: 7px;
+    padding-inline-end: 42px;
+  }
+  .overlay .donation-panel.refined-checkout .intention-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin: 12px 0;
+  }
+  .overlay .donation-panel.refined-checkout .intention-option {
+    min-height: 72px;
+    padding: 9px;
+  }
+}
+@media (max-width: 480px) {
+  .overlay .donation-panel.refined-checkout {
+    padding: max(14px, env(safe-area-inset-top)) 11px max(18px, env(safe-area-inset-bottom));
+  }
+  .overlay .donation-panel.refined-checkout .checkout-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-assurance { gap: 5px; }
+  .overlay .donation-panel.refined-checkout .checkout-assurance > span {
+    padding: 3px 6px;
+    min-height: 23px;
+    font-size: 9px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages {
+    margin-bottom: 11px;
+    padding: 5px;
+    gap: 4px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages li {
+    gap: 5px;
+    padding: 3px 1px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages li > span {
+    flex-basis: 22px;
+    width: 22px;
+    height: 22px;
+  }
+  .overlay .donation-panel.refined-checkout .checkout-stages b { font-size: 10px; }
+  .overlay .donation-panel.refined-checkout .intention-step h2 { font-size: clamp(23px, 6.4vw, 29px); }
+  .overlay .donation-panel.refined-checkout .intention-step > p { font-size: 11px; line-height: 1.4; }
+  .overlay .donation-panel.refined-checkout .intention-option {
+    grid-template-columns: minmax(0, 1fr) 14px;
+    min-height: 69px;
+    padding: 9px;
+    column-gap: 5px;
+  }
+  .overlay .donation-panel.refined-checkout .intention-icon { display: none; }
+  .overlay .donation-panel.refined-checkout .intention-option b,
+  .overlay .donation-panel.refined-checkout .intention-option small { grid-column: 1; }
+  .overlay .donation-panel.refined-checkout .intention-check { grid-column: 2; }
+}
+@media (max-width: 360px) {
+  .overlay .donation-panel.refined-checkout .checkout-assurance > span { font-size: 8px; }
+  .overlay .donation-panel.refined-checkout .intention-option b { font-size: 11px; }
+  .overlay .donation-panel.refined-checkout .intention-option small { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay .donation-panel.refined-checkout .intention-option { transition: none; }
+}
