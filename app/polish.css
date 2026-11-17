@@ -3505,11 +3505,44 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   line-height: 1;
 }
 @media (max-width: 600px) {
-  /* Match the desktop timeline: same badge, label, dot, spacing and 5px tracks.
-     Only constrain the outer width to remain centered on small phones. */
+  /* A slim, centered two-stage timeline uses just 60% of phone viewport width.
+     Preserve the desktop sequence and state treatment, scaled for small screens. */
   .amanah-welcome .amanah-welcome-steps {
-    width: min(100%, 320px);
-    margin: 17px auto 0;
+    width: min(60vw, 100%);
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(6px, 2vw, 9px);
+    margin: 15px auto 0;
+    justify-content: center;
+  }
+  .amanah-welcome .amanah-welcome-step {
+    min-width: 0;
+    gap: 6px;
+  }
+  .amanah-welcome .amanah-welcome-step-heading {
+    min-width: 0;
+    justify-content: center;
+    gap: 3px;
+  }
+  .amanah-welcome .amanah-welcome-step-index {
+    width: 19px;
+    height: 19px;
+    border-radius: 6px;
+    font-size: 8px;
+  }
+  .amanah-welcome .amanah-welcome-step-label {
+    flex: 0 1 auto;
+    font-size: clamp(9px, 2.7vw, 10px);
+    letter-spacing: 0;
+  }
+  .amanah-welcome .amanah-welcome-step-state {
+    width: 11px;
+    height: 11px;
+    font-size: 9px;
+  }
+  .amanah-welcome .amanah-welcome-step-track {
+    height: 3px;
+    box-shadow: none;
   }
   .amanah-welcome-notice {
     bottom: max(22px, env(safe-area-inset-bottom));
