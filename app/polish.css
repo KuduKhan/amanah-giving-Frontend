@@ -7009,3 +7009,13 @@ main > .site-header.refined-header + .hero.refined-hero {
 @media (prefers-reduced-motion: reduce) {
   .hajj-programme :is(.button, .outline-button, .hajj-jump a) { transition: none; }
 }
+
+/* Keep six authentic social marks aligned and touch-friendly on narrow phones. */
+.refined-footer-bottom .footer-social-links .footer-brand-icon--x { color: #f1f5f5; }
+.refined-footer-bottom .footer-social-links .footer-brand-icon--linkedin { color: #6bb4f5; }
+@media (max-width: 390px) {
+  .refined-footer-bottom .footer-social-links { gap: 4px; }
+}
+@media (max-width: 305px) {
+  .refined-footer-bottom .footer-social-links { flex-wrap: wrap; }
+}
