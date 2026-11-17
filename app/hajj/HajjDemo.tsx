@@ -9,10 +9,10 @@ import HajjTools from './HajjTools';
 const nextActions = ['Approve sample application', 'Authorise sample funding', 'Confirm preparation', 'Confirm sample return', 'Reconcile sample expenses'];
 const sections = [
   ['journey', 'calendar', 'My journey'],
-  ['academy', 'book', 'Hajj Academy'],
-  ['circles', 'users', 'Circles and pledges'],
-  ['assistance', 'support', 'Assistance'],
-  ['future', 'wallet', 'Savings and Umrah'],
+  ['academy', 'book', 'Academy'],
+  ['circles', 'users', 'Family circles'],
+  ['assistance', 'support', 'Guidance'],
+  ['future', 'wallet', 'Savings & Umrah'],
 ] as const;
 
 export default function HajjDemo() {
@@ -122,7 +122,7 @@ export default function HajjDemo() {
   return (
     <>
       <div className="hajj-overview">
-        <p className="hajj-preview"><Icon name="shield"/><span><strong>Interactive demo</strong><span>Explore with sample records, simulated payments and bookings. {storageAvailable ? 'Progress is saved in this browser.' : 'Progress lasts for this visit because browser storage is unavailable.'}</span></span></p>
+        <p className="hajj-preview"><Icon name="shield"/><span><strong>Interactive demo</strong><span>All records, payments and bookings are simulated. No actual money or reservations change hands. {storageAvailable ? 'Your demo progress stays in this browser.' : 'Progress lasts for this visit because browser storage is unavailable.'}</span></span></p>
         <div className="hajj-actions">
           <a className="button" href="#hajj-sponsorship">Explore sponsorship <Icon name="arrow-right"/></a>
           <a className="outline-button" href={application ? '#hajj-journey' : '#hajj-application'}>{application ? 'Continue my journey' : 'Start a sample application'} <Icon name="arrow-right"/></a>
@@ -142,6 +142,7 @@ export default function HajjDemo() {
                 <div className="hajj-icon"><Icon name={fund.icon}/></div>
                 <small className="hajj-reference">{fund.reference} · Sample fund</small>
               </div>
+              <span className="hajj-fund-route" data-path={fund.id === 'family' ? 'family' : 'community'}>{fund.id === 'family' ? 'Private family sponsorship' : 'Community Sadaqah'}</span>
               <h3>{fund.name}</h3><p>{fund.description}</p>
               <div className="hajj-funding">
                 <div className="hajj-funding-summary"><div><strong>{formatKes(total)}</strong><small>of {formatKes(fund.target)}</small></div><span>{Math.floor(total / fund.target * 100)}% funded</span></div>
@@ -150,7 +151,7 @@ export default function HajjDemo() {
               <button id={`hajj-sponsor-${fund.id}`} className="outline-button" type="button" disabled={!ready || total >= fund.target} aria-pressed={activeFund === fund.id} onClick={() => {
                 setActiveFund(fund.id); setAmount(''); setAnonymous(true); setMethod('M-PESA'); setPaymentOutcome('success'); setReview(false); setNotice('');
                 requestAnimationFrame(() => giftForm.current?.querySelector('input')?.focus());
-              }}>{total >= fund.target ? 'Target reached' : 'Try a contribution'} <Icon name="arrow-right"/><span className="sr-only"> to {fund.name}</span></button>
+              }}>{total >= fund.target ? 'Target reached' : 'Simulate a gift'} <Icon name="arrow-right"/><span className="sr-only"> to {fund.name}</span></button>
             </article>;
           })}
         </div>
@@ -170,7 +171,7 @@ export default function HajjDemo() {
         <p id="hajj-gift-status" className="hajj-status" role="status" tabIndex={-1}>{notice}</p>
         {selected && <form className="hajj-path hajj-form" ref={giftForm} onSubmit={saveGift}>
           <h3 ref={giftHeading} tabIndex={-1}>{review ? 'Review demo contribution' : selected.name}</h3>
-          {review ? <><p><strong>{formatKes(giftAmount)}</strong> · {selected.name} · Sadaqah · {method} simulation{anonymous ? ' · Anonymous' : ''}</p><label>Simulated payment outcome<select value={paymentOutcome} onChange={event => setPaymentOutcome(event.target.value)}><option value="success">Successful</option><option value="declined">Declined</option></select></label></> : <>
+          {review ? <><p><strong>{formatKes(giftAmount)}</strong> · {selected.name} · {selected.id === 'family' ? 'Private family sponsorship' : 'Sadaqah'} · {method} simulation{anonymous ? ' · Anonymous' : ''}</p><label>Simulated payment outcome<select value={paymentOutcome} onChange={event => setPaymentOutcome(event.target.value)}><option value="success">Successful</option><option value="declined">Declined</option></select></label></> : <>
             <label>Amount in KSh<input type="number" name="amount" value={amount} onChange={event => setAmount(event.target.value)} required min={1} max={selected.target - selected.raised - paid(selected.id)} step={1} inputMode="numeric"/></label>
             <label>Sample payment method<select value={method} onChange={event => setMethod(paymentMethods.find(item => item === event.target.value) ?? 'M-PESA')}>{paymentMethods.map(item => <option key={item}>{item}</option>)}</select></label>
             <label className="hajj-check"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/>Keep my demo contribution anonymous</label>
@@ -186,7 +187,7 @@ export default function HajjDemo() {
           }}>{review ? 'Edit amount' : 'Cancel'}</button></div>
         </form>}
         {demo.gifts.length > 0 && <details className="hajj-ledger"><summary>My demo contributions ({demo.gifts.length})</summary><ul>
-          {demo.gifts.map(gift => <li key={gift.id}><span><strong>{funds.find(fund => fund.id === gift.fund)?.name}</strong><small>{gift.id} · Sadaqah{gift.method ? ` · ${gift.method} simulation` : ''}{gift.anonymous ? ' · Anonymous' : ''}</small></span><b>{formatKes(gift.amount)}</b></li>)}
+          {demo.gifts.map(gift => <li key={gift.id}><span><strong>{funds.find(fund => fund.id === gift.fund)?.name}</strong><small>{gift.id} · {gift.fund === 'family' ? 'Family sponsorship' : 'Sadaqah'}{gift.method ? ` · ${gift.method} simulation` : ''}{gift.anonymous ? ' · Anonymous' : ''}</small></span><b>{formatKes(gift.amount)}</b></li>)}
         </ul></details>}
       </section>
 
@@ -199,14 +200,14 @@ export default function HajjDemo() {
             <label>Sponsorship route<select name="path"><option value="community">Community sponsorship</option><option value="family">Family Hajj Circle</option></select></label>
             <label>Sample profile<select name="scenario"><option value="first-time">First-time pilgrim seeking support</option><option value="accessibility">First-time pilgrim with accessibility needs</option></select></label>
           </div>
-          <details className="hajj-eligibility"><summary>How applications are assessed</summary><p>Reviewers consider financial need, first-time Hajj status, travel readiness and accessibility support. Family sponsorship has a separate funding record. The demo uses fictional profiles and document checks.</p></details>
+          <details className="hajj-eligibility"><summary>How applications are assessed</summary><p>Community assistance is assessed privately for financial need, first-time Hajj status, travel readiness and accessibility. Family circles follow their own consent, invitation and funding rules. All profiles and reviews here are fictional.</p></details>
           <button className="button" type="submit" disabled={!ready}>Save sample application</button>
         </form>}
       </section>
 
       <section className="hajj-journey" id="hajj-journey" aria-labelledby="hajj-journey-title">
         <h2 id="hajj-journey-title">My journey</h2>
-        {application ? <p>{`${application.id} · ${application.path === 'family' ? 'Family Hajj Circle' : 'Community sponsorship'} · ${application.scenario === 'accessibility' ? 'Accessibility support' : 'First-time pilgrim'}`}</p> : <div className="hajj-journey-empty"><div className="hajj-icon"><Icon name="calendar"/></div><div><h3>No sample application yet</h3><p>Save one to follow your milestones and try programme review.</p><a className="text-link hajj-inline-link" href="#hajj-application">Go to application <Icon name="arrow-right"/></a></div></div>}
+        {application ? <p>{`${application.id} · ${application.path === 'family' ? 'Family Hajj Circle' : 'Community sponsorship'} · ${application.scenario === 'accessibility' ? 'Accessibility support' : 'First-time pilgrim'}`}</p> : <div className="hajj-journey-empty"><div className="hajj-icon"><Icon name="calendar"/></div><div><h3>No sample application yet</h3><p>Save a sample application to unlock the private journey timeline and reviewer simulation.</p><a className="text-link hajj-inline-link" href="#hajj-application">Go to application <Icon name="arrow-right"/></a></div></div>}
         {application && <>
           <ol className="hajj-milestones" aria-label="Sample journey milestones">
             {milestones.map((label, index) => <li key={label} aria-current={index === application.stage ? 'step' : undefined}>
