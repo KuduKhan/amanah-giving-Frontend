@@ -4503,3 +4503,94 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-footer .footer-app-link,
   .refined-footer-bottom .footer-social-links a { transition: none; }
 }
+
+/* Refined footer sign-off: copyright hierarchy and restrained security identifier. */
+.footer-bottom.refined-footer-bottom {
+  border-top-color: #30505a;
+  background: linear-gradient(100deg, #071923, #0a232b 55%, #071923);
+}
+.refined-footer-bottom .footer-legal {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  flex-wrap: wrap;
+  column-gap: 6px;
+  row-gap: 2px;
+  min-width: 0;
+  color: #aec6c6;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: .008em;
+  white-space: normal;
+}
+.refined-footer-bottom .footer-copyright { color: #a8bdc0; }
+.refined-footer-bottom .footer-legal-brand {
+  color: #e3eee9;
+  font-weight: 750;
+  letter-spacing: .015em;
+}
+.refined-footer-bottom .footer-legal-separator {
+  color: #d7b876;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: .75;
+}
+.refined-footer-bottom .footer-legal-region {
+  color: #c8dbd4;
+  font-weight: 600;
+}
+.refined-footer-bottom .footer-trust .footer-security {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid #376154;
+  border-radius: 999px;
+  background: #10362f;
+  box-shadow: inset 0 1px 0 #e4f9eb0b;
+  color: #d5eade;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: .012em;
+  white-space: nowrap;
+}
+.refined-footer-bottom .footer-security-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #1a5140;
+  color: #a6e5bf;
+}
+.refined-footer-bottom .footer-security-icon .app-icon {
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: inherit;
+}
+@media (max-width: 800px) {
+  .refined-footer-bottom .footer-legal {
+    justify-self: center;
+    justify-content: center;
+    column-gap: 5px;
+    font-size: 11px;
+    text-align: center;
+  }
+  .refined-footer-bottom .footer-trust .footer-security {
+    min-height: 33px;
+    padding-block: 4px;
+  }
+}
+@media (max-width: 350px) {
+  .refined-footer-bottom .footer-legal {
+    font-size: 10.5px;
+    column-gap: 4px;
+  }
+}
