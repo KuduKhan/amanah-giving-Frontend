@@ -3277,4 +3277,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .amanah-welcome-stage,
   .amanah-welcome-skip { transition: none; }
   .amanah-welcome-message-block { animation: none; }
+  /* Preserve a non-moving timed failsafe even when global motion rules shorten animations. */
+  .amanah-welcome { animation-duration: 6s !important; animation-iteration-count: 1 !important; }
 }
