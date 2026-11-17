@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Icon from '../Icon';
 import SeoPage from '../components/SeoPage';
 import HajjDemo from './HajjDemo';
+import './hajj-premium.css';
 
 export const metadata: Metadata = {
   title: 'Amanah Hajj | Pilgrim Sponsorship Demo',
@@ -16,10 +17,10 @@ export default function HajjPage() {
       <div className="hajj-programme">
         <HajjDemo/>
         <section className="hajj-safeguards" aria-labelledby="hajj-safeguards-title">
-          <h2 id="hajj-safeguards-title">How sponsorship would be safeguarded</h2>
+          <h2 id="hajj-safeguards-title">Built around trust, privacy and accountability</h2>
           <ul>
-            <li><Icon name="wallet"/><div><strong>Sadaqah funding</strong><p>Each sponsorship would have a separate funding record, with documented approvals and expense reconciliation. These gifts would remain separate from Zakat.</p></div></li>
-            <li><Icon name="evidence"/><div><strong>Authorised channels</strong><p>Live funding targets would use verified provider quotations. Travel and visas would go through the official channels applicable to each pilgrim. The demo simulates refunds and reassignment of restricted funds.</p></div></li>
+            <li><Icon name="wallet"/><div><strong>Sadaqah funding</strong><p>Needs-based community Sadaqah and private family sponsorship maintain separate eligibility, approvals and financial ledgers. All Hajj gifts remain distinct from Zakat.</p></div></li>
+            <li><Icon name="evidence"/><div><strong>Authorised channels</strong><p>Real funding targets require verified quotations, documented authorisations and the applicable official travel and visa channels. The demo only illustrates restricted-fund reconciliation, refunds and reassignment.</p></div></li>
             <li><Icon name="shield"/><div><strong>Privacy and dignity</strong><p>Reviewers would assess financial need and travel readiness privately. Public stories or photos would require informed consent.</p></div></li>
           </ul>
           <Link className="text-link" href="/#impact">See how Amanah tracks impact <Icon name="arrow-right"/></Link>
