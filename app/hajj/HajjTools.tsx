@@ -50,7 +50,7 @@ export default function HajjTools({ extras, ready, hasApplication, update }: Pro
         <article className="hajj-path">
           <div className="hajj-icon hajj-icon-violet"><Icon name="users"/></div>
           <h3>Family Hajj Circle</h3>
-          <p>Open a sample invite-only circle, follow its fund and try the member invitation view.</p>
+          <p>See how a consent-based, invitation-only family circle can fund a loved one without mixing gifts into the community pool.</p>
           {extras.circle ? <>
             <p><strong>Circle HAJ-FC</strong> · 2 sample members</p>
             <details><summary>View sample invitation</summary><p>Invitation code <strong>HAJ-FC-DEMO</strong>. Sample family sponsor and pilgrim. No invitations are sent.</p></details>
@@ -59,7 +59,7 @@ export default function HajjTools({ extras, ready, hasApplication, update }: Pro
         </article>
         <article className="hajj-path">
           <div className="hajj-icon hajj-icon-teal"><Icon name="↻"/></div>
-          <h3>Recurring pledge</h3><p>Save a weekly or monthly intention independently of the funds raised.</p>
+          <h3>Recurring pledge</h3><p>Set a weekly or monthly sample pledge. Nothing is charged or automatically collected.</p>
           <form className="hajj-form" onSubmit={savePledge}>
             <div className="hajj-fields hajj-pledge-fields">
               <label>Fund<select name="fund">{funds.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>
@@ -90,7 +90,7 @@ export default function HajjTools({ extras, ready, hasApplication, update }: Pro
         </article>
         <article className="hajj-path">
           <div className="hajj-icon hajj-icon-gold"><Icon name="✦"/></div>
-          <h3>AI assistance simulation</h3><p>Run a checklist-based scan of the sample documents and queue its findings for human review.</p>
+          <h3>AI assistance simulation</h3><p>Run a simulated document-check checklist. A human reviewer must assess every finding; no automated eligibility decision is made.</p>
           {extras.assistance && <div className="hajj-sample-document">
             <p role="status"><strong>{extras.assistance === 'reviewed' ? 'Reviewer acknowledged findings' : 'Findings queued for human review'}</strong></p>
             <ul className="hajj-tool-list">{documentItems.map((item, index) => <li key={item}><span>{item}</span><b>{extras.documents.includes(index) ? 'Reviewed' : extras.attached.includes(index) ? 'Awaiting review' : 'Sample missing'}</b></li>)}</ul>
