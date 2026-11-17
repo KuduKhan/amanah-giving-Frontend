@@ -589,32 +589,18 @@ export default function Home() {
         <div className="footer-links">
           <nav aria-label="Giving links">
             <h3><Icon name="giving"/>Give</h3>
-            <div className="footer-link-list">
-              <a href="#causes">Urgent appeals</a>
-              <a href="#zakat">Zakat Center</a>
-              <a href="#impact">Impact Center</a>
-              <a href="#knowledge">Knowledge projects</a>
-              <Link href="/sadaqah">Sadaqah giving</Link>
-            </div>
+            <a href="#causes">Urgent appeals</a><a href="#zakat">Zakat Center</a><a href="#impact">Impact Center</a><a href="#knowledge">Knowledge projects</a><a href="/sadaqah">Sadaqah giving</a>
           </nav>
           <nav aria-label="Platform links">
             <h3><Icon name="platform"/>Platform</h3>
-            <div className="footer-link-list">
-              <a href="#how">How it works</a>
-              <Link href="/about">About Amanah</Link>
-              <Link href="/verified-charities">Verified charities</Link>
-              <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('beneficiary'); setPlatformOpen(true); }}>Request assistance</button>
-              <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('organization'); setPlatformOpen(true); }}>For organizations</button>
-            </div>
+            <a href="#how">How it works</a><a href="/about">About Amanah</a><a href="/verified-charities">Verified charities</a>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('beneficiary'); setPlatformOpen(true); }}>Request assistance</button>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('organization'); setPlatformOpen(true); }}>For organizations</button>
           </nav>
           <nav aria-label="Trust and support links">
             <h3><Icon name="shield"/>Trust</h3>
-            <div className="footer-link-list">
-              <Link href="/faq">FAQ</Link>
-              <Link href="/contact">Contact</Link>
-              <Link href="/policies">Privacy and terms</Link>
-              <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('shariah'); setPlatformOpen(true); }}>Shariah governance</button>
-            </div>
+            <a href="/faq">FAQ</a><a href="/contact">Contact</a><a href="/policies">Privacy and terms</a>
+            <button type="button" aria-haspopup="dialog" onClick={() => { setPlatformPortal('shariah'); setPlatformOpen(true); }}>Shariah governance</button>
           </nav>
         </div>
         <div className="footer-cta">
