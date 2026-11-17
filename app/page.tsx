@@ -736,7 +736,76 @@ export default function Home() {
         </label>;
       })}</fieldset><button className="button full" type="submit">Continue to amount <Icon name="→"/></button></form>}
       {donationStep === 2 && <div className="donation-step"><button className="back" type="button" onClick={() => setDonationStep(1)} aria-label="Return to previous giving step"><Icon name="arrow-left"/> Back</button><h2>Shape your gift</h2>{donationCampaign && <div className="donation-campaign"><Image src={donationCampaign.image} alt="" width={100} height={80}/><span><small>Giving to</small><b>{donationCampaign.title}</b></span></div>}<div className="amount-grid">{['500','1000','2500','5000'].map(value => <button className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>)}</div><label className="custom-amount"><span>Custom amount</span><div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div></label><label className="check-row"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/><span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span></label><label className="check-row"><input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/><span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span></label>{onBehalf && <label className="dedication-field"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}<label className="check-row"><input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/><span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span></label>{recurring && <label className="schedule-field"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}<button className="button full" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button></div>}
-      {donationStep === 3 && <form className="donation-step" onSubmit={finishDonation} aria-busy={draftSaving}><button type="button" className="back" onClick={() => setDonationStep(2)} aria-label="Return to gift amount and options"><Icon name="arrow-left"/> Back</button><h2>Review your giving draft</h2><p className="preview-note">No money will move. Your choices are saved only in this browser.</p><div className="payment-tabs three-tabs"><button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button><button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button><button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button></div><div className="preview-note" role="note"><b>{payment} · Not connected</b><p>{payment === 'M-PESA' ? 'No M-PESA prompt will be sent. Save your preferred method for later.' : payment === 'Card' ? 'Card checkout is not connected. Do not enter card details in this preview.' : 'No bank transfer will be reserved. Bank details will be available when payments are connected.'}</p></div><label className="check-row"><input type="checkbox" checked={coverFees} onChange={event => setCoverFees(event.target.checked)}/><span><b>Include estimated payment costs</b><small>Add KSh {Math.ceil(numericAmount * 0.018).toLocaleString()} in this illustrative estimate. Actual provider costs may differ.</small></span></label><div className="tip-control"><div><span><b>Support the Amanah platform</b><small>Optional and always shown separately.</small></span><strong>{platformTip}%</strong></div><input aria-label="Optional platform support percentage" type="range" min="0" max="10" step="1" value={platformTip} onChange={event => setPlatformTip(Number(event.target.value))}/><div><button type="button" onClick={() => setPlatformTip(0)}>No tip</button><button type="button" onClick={() => setPlatformTip(5)}>5%</button><button type="button" onClick={() => setPlatformTip(10)}>10%</button></div></div><dl className="plan-review"><div><dt>Preferred cause</dt><dd>{donationCampaign?.title || planCause}</dd></div>{recurring && <><div><dt>Schedule</dt><dd>{schedule}</dd></div><div><dt>Reminders</dt><dd>{planReminders ? 'Requested · not activated' : 'Off'}</dd></div></>}<div><dt>Public identity</dt><dd>{anonymous ? 'Anonymous' : 'Not anonymous'}</dd></div>{onBehalf && dedication && <div><dt>Dedication</dt><dd>{dedication}</dd></div>}</dl><div className="payment-summary"><span>Your {intention}{recurring ? ` · ${schedule}` : ''}</span><b>KSh {(numericAmount + fee + tip).toLocaleString()}</b><small>Gift {numericAmount.toLocaleString()} + costs {fee.toLocaleString()} + optional support {tip.toLocaleString()}</small></div>{draftError && <p className="form-error" role="alert">{draftError}</p>}<button className="button full" type="submit" disabled={draftSaving}>{draftSaving ? 'Saving draft…' : 'Save giving draft'} <Icon name="→"/></button><p className="secure-note"><Icon name="▣"/> This saves a plan, not a payment receipt. No recurring charges are enabled.</p></form>}
+      {donationStep === 3 && (
+        <form className="donation-step giving-review-step" onSubmit={finishDonation} aria-busy={draftSaving}>
+          <header className="giving-review-heading">
+            <button type="button" className="back" onClick={() => setDonationStep(2)} aria-label="Return to gift amount and options"><Icon name="arrow-left"/> Back</button>
+            <div className="giving-review-title">
+              <h2>Review your giving draft</h2>
+              <p className="giving-review-intro">No money will move. Your choices are saved only in this browser.</p>
+            </div>
+          </header>
+          <div className="giving-review-layout">
+            <section className="giving-review-options" aria-label="Giving draft preferences">
+              <div className="giving-review-card giving-review-payment">
+                <div className="giving-review-card-heading">
+                  <h3>Preferred method</h3>
+                  <span className="giving-review-unconnected">Not connected</span>
+                </div>
+                <div className="payment-tabs three-tabs" role="group" aria-label="Preferred payment method for this draft">
+                  <button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button>
+                  <button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button>
+                  <button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button>
+                </div>
+                <div className="preview-note giving-review-method-note" role="note">
+                  <b>{payment} · Not connected</b>
+                  <p>{payment === 'M-PESA' ? 'No M-PESA prompt will be sent. Save your preferred method for later.' : payment === 'Card' ? 'Card checkout is not connected. Do not enter card details in this preview.' : 'No bank transfer will be reserved. Bank details will be available when payments are connected.'}</p>
+                </div>
+              </div>
+              <div className="giving-review-card giving-review-fees">
+                <label className="check-row giving-review-costs">
+                  <input type="checkbox" checked={coverFees} onChange={event => setCoverFees(event.target.checked)}/>
+                  <span>
+                    <b>Include estimated payment costs</b>
+                    <small>Add KSh {Math.ceil(numericAmount * 0.018).toLocaleString()} in this illustrative estimate. Actual provider costs may differ.</small>
+                  </span>
+                </label>
+                <div className="tip-control giving-review-tip">
+                  <div className="giving-review-tip-heading">
+                    <span><b>Support the Amanah platform</b><small>Optional and always shown separately.</small></span>
+                    <strong>{platformTip}%</strong>
+                  </div>
+                  <input aria-label="Optional platform support percentage" type="range" min="0" max="10" step="1" value={platformTip} onChange={event => setPlatformTip(Number(event.target.value))}/>
+                  <div className="giving-review-tip-presets" role="group" aria-label="Optional support percentage presets">
+                    <button type="button" aria-pressed={platformTip === 0} onClick={() => setPlatformTip(0)}>No tip</button>
+                    <button type="button" aria-pressed={platformTip === 5} onClick={() => setPlatformTip(5)}>5%</button>
+                    <button type="button" aria-pressed={platformTip === 10} onClick={() => setPlatformTip(10)}>10%</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section className="giving-review-confirmation" aria-label="Giving draft summary">
+              <div className="giving-review-card giving-review-detail-card">
+                <h3>Draft details</h3>
+                <dl className="plan-review giving-review-details">
+                  <div><dt>Preferred cause</dt><dd>{donationCampaign?.title || planCause}</dd></div>
+                  {recurring && <><div><dt>Schedule</dt><dd>{schedule}</dd></div><div><dt>Reminders</dt><dd>{planReminders ? 'Requested · not activated' : 'Off'}</dd></div></>}
+                  <div><dt>Public identity</dt><dd>{anonymous ? 'Anonymous' : 'Not anonymous'}</dd></div>
+                  {onBehalf && dedication && <div><dt>Dedication</dt><dd>{dedication}</dd></div>}
+                </dl>
+              </div>
+              <div className="payment-summary giving-review-total" role="group" aria-label="Estimated giving draft total">
+                <span>Your {intention}{recurring ? ` · ${schedule}` : ''}</span>
+                <b>KSh {(numericAmount + fee + tip).toLocaleString()}</b>
+                <small>Gift {numericAmount.toLocaleString()} + costs {fee.toLocaleString()} + optional support {tip.toLocaleString()}</small>
+              </div>
+              {draftError && <p className="form-error" role="alert">{draftError}</p>}
+              <button className="button full giving-review-save" type="submit" disabled={draftSaving}>{draftSaving ? 'Saving draft…' : 'Save giving draft'} <Icon name="→"/></button>
+              <p className="secure-note giving-review-disclaimer"><Icon name="▣"/> This saves a plan, not a payment receipt. No recurring charges are enabled.</p>
+            </section>
+          </div>
+        </form>
+      )}
       {donationStep === 4 && draft && <div className="receipt"><span className="receipt-check"><Icon name="check"/></span><p className="eyebrow">Giving draft saved</p><h2>Your intention, ready for later.</h2><p>Saved on this device. No payment was made and no recurring schedule was activated.</p><div className="receipt-card"><span>GIFT<b>KSh {draft.amount.toLocaleString()}</b></span><span>TYPE<b>{draft.intention}</b></span><span>CAUSE<b>{draft.campaign}</b></span><span>DRAFT REFERENCE<b>{draft.id}</b></span></div><button className="button full" onClick={() => { setDonationStep(0); setDashboardOpen(true); }}>Open My Giving <Icon name="arrow-right"/></button><button className="download-receipt" onClick={() => downloadText(`${draft.id}.txt`, draftText([draft]))}>Download giving draft <Icon name="download"/></button></div>}</div></div>;
   }
 }
