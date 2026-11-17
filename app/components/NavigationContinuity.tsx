@@ -59,7 +59,7 @@ export default function NavigationContinuity() {
     catch { /* Restoration can still work in the current render. */ }
 
     // Wait for the destination route to paint before restoring its previous position.
-    const restore = () => window.scrollTo({ top: saved.top, behavior: 'auto' });
+    const restore = () => window.scrollTo({ top: saved.top, behavior: 'instant' });
     let secondFrame = 0;
     const firstFrame = requestAnimationFrame(() => { secondFrame = requestAnimationFrame(restore); });
     const settle = window.setTimeout(restore, 160);
