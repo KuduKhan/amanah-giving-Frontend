@@ -3505,43 +3505,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   line-height: 1;
 }
 @media (max-width: 600px) {
-  /* Restore the original narrow centered footprint without losing the timed fills. */
+  /* Match the desktop timeline: same badge, label, dot, spacing and 5px tracks.
+     Only constrain the outer width to remain centered on small phones. */
   .amanah-welcome .amanah-welcome-steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: min(100%, 246px);
-    gap: 10px;
+    width: min(100%, 320px);
     margin: 17px auto 0;
-    align-items: center;
-    justify-content: center;
-  }
-  .amanah-welcome .amanah-welcome-step {
-    min-width: 0;
-    gap: 7px;
-  }
-  .amanah-welcome .amanah-welcome-step-heading {
-    justify-content: center;
-    gap: 5px;
-  }
-  .amanah-welcome .amanah-welcome-step-index {
-    width: 21px;
-    height: 21px;
-    border-radius: 6px;
-    font-size: 9px;
-  }
-  .amanah-welcome .amanah-welcome-step-label {
-    flex: 0 1 auto;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0;
-  }
-  .amanah-welcome .amanah-welcome-step-state {
-    width: 13px;
-    height: 13px;
-    font-size: 9px;
-  }
-  .amanah-welcome .amanah-welcome-step-track {
-    height: 3px;
-    box-shadow: none;
   }
   .amanah-welcome-notice {
     bottom: max(22px, env(safe-area-inset-bottom));
@@ -3549,14 +3517,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     padding: 9px 17px;
     font-size: 12px;
   }
-}
-@media (max-width: 360px) {
-  .amanah-welcome .amanah-welcome-steps {
-    width: min(100%, 226px);
-    gap: 8px;
-  }
-  .amanah-welcome .amanah-welcome-step-heading { gap: 4px; }
-  .amanah-welcome .amanah-welcome-step-label { font-size: 9.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .amanah-welcome-notice { animation: none; }
