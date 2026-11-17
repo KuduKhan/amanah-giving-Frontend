@@ -2434,3 +2434,308 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .site-header.refined-header .desktop-links a[aria-current="location"] { transition: none; }
 }
+
+/* Donor dashboard: compact Gift Journey and Giving Plans, including narrow screens. */
+.platform-overlay .portal-grid.donor-grid {
+  align-items: stretch;
+  gap: 12px;
+  margin-block: 10px;
+}
+.platform-overlay .donor-grid > .portal-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(11px, 1vw, 15px);
+  border: 1px solid #dce9df;
+  border-radius: 14px;
+  background: linear-gradient(155deg, #ffffff, #fbfdfb);
+  box-shadow: 0 3px 13px #142f2210;
+}
+.platform-overlay .donor-grid .card-head {
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 7px;
+}
+.platform-overlay .donor-grid .card-head > div { min-width: 0; }
+.platform-overlay .donor-grid .card-head p {
+  margin: 0 0 2px;
+  color: #25745b;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .1em;
+}
+.platform-overlay .donor-grid .card-head h4 {
+  margin: 0;
+  font-size: clamp(17px, 1.65vw, 20px);
+  line-height: 1.2;
+  font-weight: 550;
+}
+.platform-overlay .donor-grid .card-head > button {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid #dce9df;
+  border-radius: 8px;
+  background: #f3f8f3;
+  color: #19684d;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.platform-overlay .donor-grid .card-head > button:hover {
+  border-color: #a5cdb4;
+  background: #eaf5ed;
+}
+.platform-overlay .donor-grid .card-head > button:focus-visible,
+.platform-overlay .donor-grid .trace-detail button:focus-visible,
+.platform-overlay .donor-grid .schedule-list button:focus-visible,
+.platform-overlay .donor-grid .add-plan:focus-visible {
+  outline: 2px solid #288564;
+  outline-offset: 2px;
+}
+
+/* A horizontal five-stage progress strip avoids 5 tall stacked rows on phones. */
+.platform-overlay .donor-grid .trace-route {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+  gap: 0;
+  min-width: 0;
+  width: 100%;
+  padding: 4px 0 9px;
+}
+.platform-overlay .donor-grid .trace-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  gap: 2px;
+  margin: 0;
+  text-align: center;
+}
+.platform-overlay .donor-grid .trace-node i {
+  display: grid;
+  place-items: center;
+  flex: none;
+  grid-row: auto;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 3px;
+  border: 1px solid #0c7455;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #188966, #0c624b);
+  color: #fff;
+  box-shadow: inset 0 1px 0 #ffffff34;
+}
+.platform-overlay .donor-grid .trace-node i .app-icon {
+  width: 13px;
+  height: 13px;
+  color: #fff;
+}
+.platform-overlay .donor-grid .trace-node > span {
+  position: absolute;
+  top: 13px;
+  left: calc(50% + 13px);
+  width: calc(100% - 26px);
+  height: 1px;
+  background: #a9d4be;
+  pointer-events: none;
+}
+.platform-overlay .donor-grid .trace-node b {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.platform-overlay .donor-grid .trace-node small {
+  margin: 0;
+  color: #64776b;
+  font-size: 10px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* Keep evidence readable with a compact photo and an aligned action. */
+.platform-overlay .donor-grid .trace-detail {
+  display: grid;
+  grid-template-columns: clamp(105px, 29%, 150px) minmax(0, 1fr);
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #d9e9de;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #eef7f0, #f6faf5);
+}
+.platform-overlay .donor-grid .trace-detail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 112px;
+  max-height: none;
+  object-fit: cover;
+}
+.platform-overlay .donor-grid .trace-detail > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 11px;
+}
+.platform-overlay .donor-grid .trace-detail span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  line-height: 1.3;
+}
+.platform-overlay .donor-grid .trace-detail b {
+  margin: 0;
+  color: #13382c;
+  font-size: 17px;
+  line-height: 1.2;
+}
+.platform-overlay .donor-grid .trace-detail p {
+  margin: 0;
+  color: #4a6656;
+  font-size: 11px;
+  line-height: 1.36;
+}
+.platform-overlay .donor-grid .trace-detail button {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  min-height: 32px;
+  margin-top: auto;
+  padding: 4px 0 0;
+  border: 0;
+  background: transparent;
+  color: #136e50;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+}
+.platform-overlay .donor-grid .trace-detail button:hover {
+  color: #07573e;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Dense, readable giving-plan rows with the amount aligned consistently. */
+.platform-overlay .donor-grid .schedule-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  min-width: 0;
+}
+.platform-overlay .donor-grid .schedule-list > button {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid #e0eae3;
+  border-radius: 9px;
+  background: #f8fbf8;
+}
+.platform-overlay .donor-grid .schedule-list > button:hover {
+  border-color: #a9d3b8;
+  background: #edf7ef;
+}
+.platform-overlay .donor-grid .schedule-list i {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+  background: #e3f1e7;
+  color: #1b7957;
+}
+.platform-overlay .donor-grid .schedule-list i .app-icon {
+  width: 14px;
+  height: 14px;
+}
+.platform-overlay .donor-grid .schedule-list > button > span {
+  min-width: 0;
+}
+.platform-overlay .donor-grid .schedule-list b {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.platform-overlay .donor-grid .schedule-list small {
+  margin-top: 1px;
+  color: #64766b;
+  font-size: 10px;
+  line-height: 1.2;
+}
+.platform-overlay .donor-grid .schedule-list strong {
+  color: #145b43;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.platform-overlay .donor-grid .add-plan {
+  min-height: 39px;
+  margin-top: 7px;
+  padding: 7px 10px;
+  border: 1px dashed #a4cdb1;
+  border-radius: 9px;
+  background: #f0f8f1;
+  color: #176c4c;
+  font-size: 11px;
+  font-weight: 750;
+}
+.platform-overlay .donor-grid .add-plan:hover {
+  border-color: #6da786;
+  background: #e4f3e8;
+}
+@media (max-width: 780px) {
+  .platform-overlay .portal-grid.donor-grid { gap: 10px; }
+  .platform-overlay .donor-grid > .portal-card { padding: 11px; }
+}
+@media (max-width: 480px) {
+  .platform-overlay .donor-grid .trace-route { grid-template-columns: repeat(5, minmax(0, 1fr)); padding-block: 4px 9px; }
+  .platform-overlay .donor-grid .trace-node { display: flex; gap: 2px; }
+  .platform-overlay .donor-grid .trace-node i { width: 24px; height: 24px; }
+  .platform-overlay .donor-grid .trace-node > span {
+    top: 12px;
+    left: calc(50% + 12px);
+    width: calc(100% - 24px);
+    height: 1px;
+  }
+  .platform-overlay .donor-grid .trace-node b { font-size: 9px; }
+  .platform-overlay .donor-grid .trace-node small { font-size: 9px; }
+  .platform-overlay .donor-grid .trace-detail {
+    grid-template-columns: clamp(82px, 28%, 112px) minmax(0, 1fr);
+  }
+  .platform-overlay .donor-grid .trace-detail img {
+    height: 100%;
+    min-height: 110px;
+  }
+  .platform-overlay .donor-grid .trace-detail > div { padding: 8px; gap: 3px; }
+  .platform-overlay .donor-grid .trace-detail b { font-size: 15px; }
+  .platform-overlay .donor-grid .trace-detail p { font-size: 10px; line-height: 1.32; }
+  .platform-overlay .donor-grid .trace-detail button { min-height: 31px; font-size: 10px; }
+  .platform-overlay .donor-grid .schedule-list > button {
+    grid-template-columns: 25px minmax(0, 1fr) auto;
+    gap: 7px;
+    min-height: 43px;
+    padding: 5px 7px;
+  }
+  .platform-overlay .donor-grid .schedule-list i { width: 25px; height: 25px; }
+  .platform-overlay .donor-grid .schedule-list b { font-size: 11px; }
+  .platform-overlay .donor-grid .schedule-list small { font-size: 10px; }
+  .platform-overlay .donor-grid .schedule-list strong { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .platform-overlay .donor-grid :is(button, .portal-card) { transition: none; }
+}
