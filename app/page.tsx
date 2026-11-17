@@ -621,7 +621,12 @@ export default function Home() {
         </div>
       </footer>
       <div className="footer-bottom refined-footer-bottom">
-        <span className="footer-legal">© 2026 Amanah Giving · Kenya</span>
+        <span className="footer-legal">
+          <span className="footer-copyright">© 2026</span>
+          <span className="footer-legal-brand">Amanah Giving</span>
+          <span className="footer-legal-separator" aria-hidden="true">·</span>
+          <span className="footer-legal-region">Kenya</span>
+        </span>
         <nav className="footer-social-links" aria-label="Find Amanah Giving on social media">
           <a href="https://www.youtube.com/results?search_query=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on YouTube" title="Search Amanah Giving on YouTube">
             <FooterBrandIcon brand="youtube"/>
@@ -636,7 +641,12 @@ export default function Home() {
             <FooterBrandIcon brand="tiktok"/>
           </a>
         </nav>
-        <div className="footer-trust"><span className="footer-security"><Icon name="shield"/>Secure giving</span></div>
+        <div className="footer-trust">
+          <span className="footer-security">
+            <span className="footer-security-icon" aria-hidden="true"><Icon name="shield"/></span>
+            <span className="footer-security-copy">Secure giving</span>
+          </span>
+        </div>
       </div>
 
       <MobileNavigation onGive={() => startDonation()} onAccount={() => setDashboardOpen(true)} accountOpen={dashboardOpen}/>
