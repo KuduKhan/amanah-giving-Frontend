@@ -3261,53 +3261,120 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   line-height: 1.4;
   letter-spacing: .01em;
 }
+/* Each phase advances for its own five-second greeting, not network activity. */
+@keyframes amanah-welcome-timeline-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
 .amanah-welcome-steps {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 114px));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   justify-content: center;
-  gap: 12px;
-  width: min(100%, 240px);
+  gap: 16px;
+  width: min(100%, 350px);
   margin-top: clamp(18px, 3vh, 26px);
 }
 .amanah-welcome-step {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 7px 5px;
-  color: #7ca596;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 9px;
+  min-width: 0;
+  color: #92ac9e;
+  opacity: .76;
   text-align: start;
+  transition: color .2s ease, opacity .2s ease;
+}
+.amanah-welcome-step-heading {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 8px;
 }
 .amanah-welcome-step-index {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #97bba63b;
+  border-radius: 8px;
+  background: #b6ddc90c;
   font-size: 10px;
   font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
+.amanah-welcome-step-label {
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .025em;
+  white-space: nowrap;
+}
+.amanah-welcome-step-state {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  color: inherit;
+  font-size: 10px;
+  line-height: 1;
+}
 .amanah-welcome-step-track {
+  position: relative;
   display: block;
   width: 100%;
-  height: 3px;
+  height: 5px;
+  overflow: hidden;
   border-radius: 999px;
-  background: #96b9a753;
+  background: #9dc9b446;
+  box-shadow: inset 0 1px 1px #021d1c36;
 }
-.amanah-welcome-step-label {
-  grid-column: 1 / -1;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: .035em;
+.amanah-welcome-step-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #79c59e, #e7cb91);
+  transform: scaleX(0);
+  transform-origin: left center;
 }
 .amanah-welcome-step.is-current {
-  color: #e6ce9e;
+  color: #e9d2a7;
+  opacity: 1;
 }
-.amanah-welcome-step.is-current .amanah-welcome-step-track {
-  background: linear-gradient(90deg, #cba263, #efd7a7);
+.amanah-welcome-step.is-current .amanah-welcome-step-index {
+  border-color: #e6c8887a;
+  background: #bc934f18;
+  color: #f4dfb5;
+}
+.amanah-welcome-step.is-current .amanah-welcome-step-state { color: #f1d49d; }
+.amanah-welcome-steps.is-running .amanah-welcome-step.is-current .amanah-welcome-step-fill {
+  animation: amanah-welcome-timeline-fill var(--welcome-step-duration, 5400ms) linear both;
 }
 .amanah-welcome-step.is-complete {
-  color: #a6dbbd;
+  color: #b7e2c8;
+  opacity: 1;
 }
-.amanah-welcome-step.is-complete .amanah-welcome-step-track {
-  background: #85c5a4;
+.amanah-welcome-step.is-complete .amanah-welcome-step-index {
+  border-color: #78b99b66;
+  background: #30806135;
+  color: #c5ead5;
+}
+.amanah-welcome-step.is-complete .amanah-welcome-step-state {
+  background: #245c4a;
+  color: #c8f2d9;
+}
+.amanah-welcome-step.is-complete .amanah-welcome-step-fill {
+  background: #80c4a0;
+  transform: scaleX(1);
 }
 .amanah-welcome-skip {
   position: absolute;
@@ -3391,6 +3458,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .amanah-welcome,
   .amanah-welcome-skip { transition: none; }
   .amanah-welcome-message-block { animation: none; }
+  .amanah-welcome-step { transition: none; }
+  /* Reduced-motion users see a static filled active step rather than a moving bar. */
+  .amanah-welcome-steps.is-running .amanah-welcome-step.is-current .amanah-welcome-step-fill {
+    animation: none !important;
+    transform: scaleX(1);
+  }
   /* Keep the static failsafe usable; global motion rules shorten other animations. */
   .amanah-welcome { animation-duration: 30s !important; animation-iteration-count: 1 !important; }
 }
