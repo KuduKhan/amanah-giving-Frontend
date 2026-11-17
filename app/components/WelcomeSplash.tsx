@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import AmanahLogo from '../AmanahLogo';
 
 type WelcomeStage = 'salaam' | 'bismillah' | 'leaving' | 'done';
@@ -10,12 +11,14 @@ const SECOND_MESSAGE_MS = 5400;
 const EXIT_FADE_MS = 400;
 
 /**
- * Two intentional greetings at document startup, not a simulated loading bar.
+ * Two intentional greetings at document startup, with a timeline that reflects
+ * the presentation time of each message (not network-loading progress).
  * The root layout persists during internal Next.js navigation, so this plays
  * only once for the current document. The user can skip at any time.
  */
 export default function WelcomeSplash() {
   const [stage, setStage] = useState<WelcomeStage>('salaam');
+  const [timelineStarted, setTimelineStarted] = useState(false);
   const timeouts = useRef<number[]>([]);
   const skipButton = useRef<HTMLButtonElement>(null);
   const originalOverflow = useRef('');
@@ -36,6 +39,8 @@ export default function WelcomeSplash() {
 
     // Keep keyboard focus on the welcome dialog, not on the obscured page.
     skipButton.current?.focus({ preventScroll: true });
+    // Start progress with the same post-hydration clock as the greeting timers.
+    setTimelineStarted(true);
 
     timeouts.current = [
       window.setTimeout(() => setStage('bismillah'), FIRST_MESSAGE_MS),
@@ -132,16 +137,27 @@ export default function WelcomeSplash() {
           </div>
         </div>
 
-        <div className="amanah-welcome-steps" aria-label={second ? 'Second of two welcome messages' : 'First of two welcome messages'}>
+        <div
+          className={`amanah-welcome-steps${timelineStarted ? ' is-running' : ''}`}
+          role="group"
+          aria-label={second ? 'Bismillah — second welcome stage' : 'Salaam — first welcome stage'}
+          style={{ '--welcome-step-duration': `${FIRST_MESSAGE_MS}ms` } as CSSProperties}
+        >
           <div className={'amanah-welcome-step ' + (second ? 'is-complete' : 'is-current')} aria-hidden="true">
-            <span className="amanah-welcome-step-index">01</span>
-            <span className="amanah-welcome-step-track" />
-            <span className="amanah-welcome-step-label">Salaam</span>
+            <div className="amanah-welcome-step-heading">
+              <span className="amanah-welcome-step-index">01</span>
+              <span className="amanah-welcome-step-label">Salaam</span>
+              <span className="amanah-welcome-step-state">{second ? '✓' : '●'}</span>
+            </div>
+            <span className="amanah-welcome-step-track"><span className="amanah-welcome-step-fill" /></span>
           </div>
           <div className={'amanah-welcome-step ' + (second ? 'is-current' : 'is-upcoming')} aria-hidden="true">
-            <span className="amanah-welcome-step-index">02</span>
-            <span className="amanah-welcome-step-track" />
-            <span className="amanah-welcome-step-label">Bismillah</span>
+            <div className="amanah-welcome-step-heading">
+              <span className="amanah-welcome-step-index">02</span>
+              <span className="amanah-welcome-step-label">Bismillah</span>
+              <span className="amanah-welcome-step-state">{second ? '●' : '○'}</span>
+            </div>
+            <span className="amanah-welcome-step-track"><span className="amanah-welcome-step-fill" /></span>
           </div>
         </div>
       </div>
