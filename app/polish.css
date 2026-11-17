@@ -4627,3 +4627,45 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     height: 18px;
   }
 }
+
+/* Compact Skip intro pill on desktop and phone — preserve 44px hit region. */
+.amanah-welcome .amanah-welcome-skip {
+  box-sizing: border-box;
+  top: max(15px, env(safe-area-inset-top));
+  inset-inline-end: clamp(16px, 3vw, 28px);
+  min-width: 91px;
+  min-height: 36px;
+  gap: 5px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 680;
+  line-height: 1.2;
+}
+.amanah-welcome .amanah-welcome-skip svg {
+  width: 13px;
+  height: 13px;
+}
+.amanah-welcome .amanah-welcome-skip::before {
+  position: absolute;
+  inset: -4px;
+  content: '';
+}
+@media (max-width: 600px) {
+  .amanah-welcome .amanah-welcome-skip {
+    top: max(13px, env(safe-area-inset-top));
+    inset-inline-end: max(14px, env(safe-area-inset-right));
+    min-width: 85px;
+    min-height: 32px;
+    gap: 4px;
+    padding: 5px 9px;
+    font-size: 10px;
+  }
+  .amanah-welcome .amanah-welcome-skip svg {
+    width: 12px;
+    height: 12px;
+  }
+  .amanah-welcome .amanah-welcome-skip::before {
+    inset: -6px;
+  }
+}
