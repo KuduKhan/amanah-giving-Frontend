@@ -4112,7 +4112,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   gap: 7px 12px;
   min-height: 34px;
   margin: 0 0 11px;
-  padding: 0 48px 0 0;
+  padding: 0;
+  padding-inline-end: 48px;
 }
 .overlay .donation-panel.refined-checkout .checkout-heading > .eyebrow {
   margin: 0;
