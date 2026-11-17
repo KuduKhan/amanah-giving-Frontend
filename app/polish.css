@@ -5449,6 +5449,3 @@ main > .site-header.refined-header + .hero.refined-hero {
     padding-block-start: clamp(24px, 4vw, 30px);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  main > .site-header.refined-header { scroll-behavior: auto; }
-}
