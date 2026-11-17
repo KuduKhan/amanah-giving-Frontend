@@ -15,10 +15,12 @@ export default function WelcomeSplash() {
   const timeouts = useRef<number[]>([]);
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const greetingDuration = reducedMotion ? 480 : 1120;
-    const secondDuration = reducedMotion ? 1000 : 2130;
-    const finishDuration = reducedMotion ? 1080 : 2480;
+    // Each message remains visible for at least five full seconds,
+    // even after its short entrance transition. Reduced-motion visitors
+    // keep the same reading time, with the animation handled by CSS.
+    const greetingDuration = 5400;
+    const secondDuration = 10800;
+    const finishDuration = 11200;
 
     timeouts.current = [
       window.setTimeout(() => setStage('bismillah'), greetingDuration),
