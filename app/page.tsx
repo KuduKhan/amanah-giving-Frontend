@@ -521,11 +521,15 @@ export default function Home() {
           ].map(update => <article className="update-card" key={update.campaign.id} aria-labelledby={`update-${update.campaign.id}`}>
             <div className="update-image">
               <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
-              <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
+              <div className="update-image-toolbar">
+                <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
+                <button type="button" className="update-evidence-pill" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>
+                  <Icon name="evidence"/><span>View evidence</span>
+                </button>
+              </div>
               <div className="update-image-content"><p className="update-meta"><time dateTime={update.isoDate}>{update.date}</time><span>{update.campaign.id}</span></p><h3 id={`update-${update.campaign.id}`}>{update.title}</h3></div>
-              <button className="update-photo-action" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View ${update.title}`} />
             </div>
-            <div className="update-summary"><p>{update.body}</p><button aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="arrow-right"/></span></button></div>
+            <div className="update-summary"><p>{update.body}</p></div>
           </article>)}
         </div>
       </section>
