@@ -6467,3 +6467,113 @@ main > .site-header.refined-header + .hero.refined-hero {
     font-size: 10px;
   }
 }
+
+/* Consolidated channel picker and compact evidence pill — no repeated controls. */
+/* Keep the badge separate, with the actual evidence action engraved at top-right. */
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 0;
+  min-height: 32px;
+  gap: 4px;
+  margin: 0 0 0 auto;
+  padding: 5px 9px;
+  border: 1px solid #d5f1dc9c;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #164936ee, #0b3327f2);
+  color: #f7fff7;
+  box-shadow: inset 0 1px 0 #ffffff36, inset 0 -1px 0 #061a124a, 0 2px 5px #061b153d;
+  font-size: 10px;
+  font-weight: 760;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: visible;
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill::before {
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  content: '';
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill .app-icon {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+}
+@media (max-width: 380px) {
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+    min-width: 0;
+    min-height: 30px;
+    gap: 3px;
+    padding: 4px 7px;
+    font-size: 9.5px;
+  }
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill::before { inset: -7px; }
+}
+/* Each choice reads left to right: channel icon, text, right-aligned checkbox. */
+.notification-center-compact .notice-channels .notification-channel-choice {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+.notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-mark {
+  grid-column: 1;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-label {
+  grid-column: 2;
+  min-width: 0;
+  text-align: start;
+}
+.notification-center-compact .notice-channels .notification-channel-choice > input[type="checkbox"] {
+  grid-column: 3;
+  justify-self: end;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #168259;
+}
+.notification-center-compact .notification-preferences-panel:not([hidden]) { padding: 11px; }
+.notification-center-compact .notification-preferences-panel legend { margin: 0; }
+.notification-center-compact .notification-preferences-panel p { margin: 4px 0 8px; }
+.notification-center-compact .notification-preferences-actions { margin-top: 8px; }
+@media (max-width: 660px) {
+  .notification-center-compact .notice-channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice {
+    grid-template-columns: 17px minmax(0, 1fr) 17px;
+    gap: 5px;
+    padding-inline: 7px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-mark {
+    width: 17px;
+    height: 17px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice > input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+  }
+}
+@media (max-width: 350px) {
+  .notification-center-compact .notice-channels .notification-channel-choice {
+    gap: 4px;
+    padding-inline: 6px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-label { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+    transition: none;
+  }
+}
