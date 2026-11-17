@@ -6324,3 +6324,146 @@ main > .site-header.refined-header + .hero.refined-hero {
   .refined-updates .update-image-toolbar .update-evidence-pill { transition: none; }
   .refined-updates .update-image-toolbar .update-evidence-pill:hover { transform: none; }
 }
+
+/* Screenshot QA: unclipped image actions and separated notification channel chips. */
+/* The evidence button must size to its own label, never to the adjacent badge. */
+.refined-updates .update-card .update-image-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+  column-gap: 8px;
+  row-gap: 6px;
+  box-sizing: border-box;
+  min-width: 0;
+  width: auto;
+  inset-inline: 11px;
+}
+.refined-updates .update-card .update-image-toolbar .update-photo-badge {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 116px;
+  max-width: 100%;
+  min-height: 44px;
+  margin-inline-start: auto;
+  padding-inline: 10px;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+  color: #f7fff7;
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill .app-icon {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 380px) {
+  .refined-updates .update-card .update-image-toolbar {
+    inset-inline: 8px;
+    column-gap: 5px;
+  }
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+    min-width: 108px;
+    padding-inline: 8px;
+    font-size: 10px;
+  }
+}
+/* Use a dedicated second row; wrapping chips are not squeezed by the Manage button. */
+.notification-center-compact .notification-settings {
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 9px;
+}
+.notification-center-compact .notification-settings > .app-icon { grid-column: 1; grid-row: 1; }
+.notification-center-compact .notification-settings > .notification-settings-copy {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+.notification-center-compact .notification-settings > button {
+  grid-column: 3;
+  grid-row: 1;
+}
+.notification-center-compact .notification-settings > .notification-saved-channels {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  align-content: start;
+  flex-wrap: wrap;
+  gap: 5px 6px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.notification-center-compact .notification-settings .notification-saved-channel {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 26px;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid #d3e6da;
+  border-radius: 999px;
+  background: #fff;
+  color: #365e49;
+  font-size: 10.5px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.notification-center-compact .notification-settings .notification-saved-channel .notification-channel-mark {
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.notification-center-compact .notification-settings .notification-saved-channel-label {
+  display: inline;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 720;
+  line-height: inherit;
+}
+.notification-center-compact .notification-settings .notification-no-channels {
+  color: #648073;
+  font-size: 11px;
+  line-height: 1.4;
+}
+@media (max-width: 520px) {
+  .notification-center-compact .notification-settings {
+    grid-template-columns: 19px minmax(0, 1fr) auto;
+    column-gap: 7px;
+  }
+  .notification-center-compact .notification-settings > .notification-saved-channels {
+    gap: 5px;
+  }
+  .notification-center-compact .notification-settings .notification-saved-channel {
+    min-height: 26px;
+    padding-inline: 7px;
+    font-size: 10px;
+  }
+}
