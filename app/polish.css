@@ -2385,3 +2385,52 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .refined-footer .footer-apps .footer-app-link strong { font-size: 9px; }
   .refined-footer .footer-apps .footer-app-link .app-icon { width: 13px; height: 13px; }
 }
+
+/* Elevated emerald selected navigation capsule — no bottom-edge underline.
+   Keep the active destination legible, compact, and visually distinct. */
+.site-header.refined-header .desktop-links a[aria-current="location"] {
+  position: relative;
+  border: 1px solid #0e7358;
+  border-radius: 12px;
+  padding: 9px 10px;
+  background: linear-gradient(145deg, #208265 0%, #11674f 55%, #09543f 100%);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff46, 0 3px 9px #155c4430;
+  font-weight: 750;
+  letter-spacing: -.015em;
+  text-decoration: none;
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease;
+}
+.site-header.refined-header .desktop-links a[aria-current="location"] .app-icon {
+  color: #c7f7de;
+  stroke-width: 2.1;
+}
+.site-header.refined-header .desktop-links a[aria-current="location"]:hover {
+  border-color: #095a45;
+  background: linear-gradient(145deg, #19775a 0%, #0a523f 100%);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff3b, 0 4px 12px #155c4435;
+}
+.site-header.refined-header .desktop-links a[aria-current="location"]:focus-visible {
+  outline: 2px solid #0b7558;
+  outline-offset: 3px;
+}
+/* The compact navigation drawer uses the same selected green language,
+   without relying on a bottom border for its active state. */
+.site-header.refined-header .navigation-menu nav a[aria-current="location"] {
+  border: 1px solid #176f57;
+  background: linear-gradient(145deg, #1d795d, #0f5a45);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff32, 0 2px 7px #155c441e;
+}
+.site-header.refined-header .navigation-menu nav a[aria-current="location"] .app-icon {
+  color: #d1f9e2;
+}
+.site-header.refined-header .navigation-menu nav a[aria-current="location"]:hover {
+  background: #105b46;
+  border-color: #09543f;
+  color: #ffffff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header.refined-header .desktop-links a[aria-current="location"] { transition: none; }
+}
