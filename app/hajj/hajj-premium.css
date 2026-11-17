@@ -1,0 +1,90 @@
+/*
+ * Integrated Amanah Hajj polish.
+ * Deliberately extends PR #8's existing responsive design instead of replacing
+ * the compact donation, notification, language and original Hajj work.
+ */
+.seo-page:has(.hajj-programme) .seo-hero {
+  box-shadow: 0 8px 24px #183b2d0d;
+}
+.hajj-programme .hajj-funds .hajj-path {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(155deg, #fff 35%, #f7fbf8);
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.hajj-programme .hajj-funds .hajj-path:has(button[aria-pressed='true']) {
+  border-color: #79ac8c;
+  background: #f3fbf5;
+  box-shadow: inset 0 0 0 1px #c0dfc9;
+}
+.hajj-programme .hajj-fund-route {
+  display: inline-flex;
+  align-items: center;
+  align-self: start;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border: 1px solid #c9e2d3;
+  border-radius: 999px;
+  background: #eaf5ed;
+  color: #255e43;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+.hajj-programme .hajj-fund-route[data-path='family'] {
+  border-color: #dcd2ef;
+  background: #f3eefb;
+  color: #674a8a;
+}
+.hajj-programme .hajj-funds .hajj-path > h3 {
+  margin-top: 7px;
+}
+.hajj-programme .hajj-funds .hajj-funding-summary > span {
+  font-variant-numeric: tabular-nums;
+}
+.hajj-programme .hajj-overview .hajj-preview > span {
+  display: block;
+}
+.hajj-programme .hajj-overview .hajj-preview > span > span {
+  display: inline;
+}
+.hajj-programme .hajj-journey-empty {
+  border-color: #c3dccc;
+  background: linear-gradient(140deg, #f1f8f2, #fafff9);
+}
+.hajj-programme .hajj-academy > [data-complete='true'] {
+  border-color: #acccba;
+  background: #edf7ef;
+}
+.hajj-programme .hajj-safeguards li {
+  box-shadow: 0 2px 9px #173c2808;
+}
+.hajj-programme .hajj-funds .outline-button:focus-visible,
+.hajj-programme .hajj-jump a:focus-visible {
+  outline: 2px solid #16835b;
+  outline-offset: 3px;
+}
+@media (max-width: 700px) {
+  .hajj-programme .hajj-funds .hajj-path {
+    min-height: auto;
+    padding: 13px;
+  }
+  .hajj-programme .hajj-fund-route { margin-top: 7px; }
+  .hajj-programme .hajj-jump a {
+    overflow-wrap: normal;
+    hyphens: none;
+  }
+  .hajj-programme .hajj-academy .hajj-check {
+    min-height: 44px;
+  }
+}
+@media (max-width: 390px) {
+  .hajj-programme .hajj-overview .hajj-actions { grid-template-columns: minmax(0, 1fr); }
+  .hajj-programme .hajj-funding-summary { align-items: flex-start; }
+  .hajj-programme .hajj-fund-route { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hajj-programme .hajj-funds .hajj-path { transition: none; }
+}
