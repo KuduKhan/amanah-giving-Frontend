@@ -2297,3 +2297,773 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .platform-overlay button.platform-close,
   .platform-overlay button.workflow-close { transition: none; }
 }
+
+/* Footer inline app links and compact guide control */
+/* Keep the label and both stores in a single compact row at every viewport width. */
+.refined-footer .footer-apps {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 0;
+  min-width: 0;
+  padding-top: 8px;
+}
+.refined-footer .footer-apps > p {
+  grid-column: auto;
+  align-self: center;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.refined-footer .footer-apps .footer-app-link {
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 6px;
+  gap: 5px;
+  justify-content: center;
+  border-radius: 8px;
+}
+.refined-footer .footer-apps .footer-app-link .app-icon {
+  width: 14px;
+  height: 14px;
+}
+.refined-footer .footer-apps .footer-app-link strong {
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+/* Feedback text occupies the entire brand row and is centrally aligned. */
+.refined-footer .footer-brand .footer-feedback-copy {
+  justify-self: stretch;
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+}
+/* The Giving guide matches the 34px Close control without affecting the guide action. */
+.platform-overlay .platform-topbar button.platform-ai {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: auto;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  gap: 5px;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+.platform-overlay .platform-topbar button.platform-ai .app-icon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+.platform-overlay .platform-topbar button.platform-ai:focus-visible {
+  outline: 2px solid #218360;
+  outline-offset: 3px;
+}
+@media (max-width: 480px) {
+  .platform-overlay .platform-topbar button.platform-ai {
+    width: 34px;
+    padding: 0;
+  }
+}
+@media (max-width: 360px) {
+  .refined-footer .footer-apps { column-gap: 4px; }
+  .refined-footer .footer-apps > p { font-size: 10px; }
+  .refined-footer .footer-apps .footer-app-link { gap: 3px; padding-inline: 4px; }
+  .refined-footer .footer-apps .footer-app-link strong { font-size: 9px; }
+  .refined-footer .footer-apps .footer-app-link .app-icon { width: 13px; height: 13px; }
+}
+
+/* Elevated emerald selected navigation capsule — no bottom-edge underline.
+   Keep the active destination legible, compact, and visually distinct. */
+.site-header.refined-header .desktop-links a[aria-current="location"] {
+  position: relative;
+  border: 1px solid #0e7358;
+  border-radius: 12px;
+  padding: 9px 10px;
+  background: linear-gradient(145deg, #208265 0%, #11674f 55%, #09543f 100%);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff46, 0 3px 9px #155c4430;
+  font-weight: 750;
+  letter-spacing: -.015em;
+  text-decoration: none;
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease;
+}
+.site-header.refined-header .desktop-links a[aria-current="location"] .app-icon {
+  color: #c7f7de;
+  stroke-width: 2.1;
+}
+.site-header.refined-header .desktop-links a[aria-current="location"]:hover {
+  border-color: #095a45;
+  background: linear-gradient(145deg, #19775a 0%, #0a523f 100%);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff3b, 0 4px 12px #155c4435;
+}
+.site-header.refined-header .desktop-links a[aria-current="location"]:focus-visible {
+  outline: 2px solid #0b7558;
+  outline-offset: 3px;
+}
+/* The compact navigation drawer uses the same selected green language,
+   without relying on a bottom border for its active state. */
+.site-header.refined-header .navigation-menu nav a[aria-current="location"] {
+  border: 1px solid #176f57;
+  background: linear-gradient(145deg, #1d795d, #0f5a45);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 #ffffff32, 0 2px 7px #155c441e;
+}
+.site-header.refined-header .navigation-menu nav a[aria-current="location"] .app-icon {
+  color: #d1f9e2;
+}
+.site-header.refined-header .navigation-menu nav a[aria-current="location"]:hover {
+  background: #105b46;
+  border-color: #09543f;
+  color: #ffffff;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header.refined-header .desktop-links a[aria-current="location"] { transition: none; }
+}
+
+/* Donor dashboard: compact Gift Journey and Giving Plans, including narrow screens. */
+.platform-overlay .portal-grid.donor-grid {
+  align-items: stretch;
+  gap: 12px;
+  margin-block: 10px;
+}
+.platform-overlay .donor-grid > .portal-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(11px, 1vw, 15px);
+  border: 1px solid #dce9df;
+  border-radius: 14px;
+  background: linear-gradient(155deg, #ffffff, #fbfdfb);
+  box-shadow: 0 3px 13px #142f2210;
+}
+.platform-overlay .donor-grid .card-head {
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 7px;
+}
+.platform-overlay .donor-grid .card-head > div { min-width: 0; }
+.platform-overlay .donor-grid .card-head p {
+  margin: 0 0 2px;
+  color: #25745b;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .1em;
+}
+.platform-overlay .donor-grid .card-head h4 {
+  margin: 0;
+  font-size: clamp(17px, 1.65vw, 20px);
+  line-height: 1.2;
+  font-weight: 550;
+}
+.platform-overlay .donor-grid .card-head > button {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid #dce9df;
+  border-radius: 8px;
+  background: #f3f8f3;
+  color: #19684d;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.platform-overlay .donor-grid .card-head > button:hover {
+  border-color: #a5cdb4;
+  background: #eaf5ed;
+}
+.platform-overlay .donor-grid .card-head > button:focus-visible,
+.platform-overlay .donor-grid .trace-detail button:focus-visible,
+.platform-overlay .donor-grid .schedule-list button:focus-visible,
+.platform-overlay .donor-grid .add-plan:focus-visible {
+  outline: 2px solid #288564;
+  outline-offset: 2px;
+}
+
+/* A horizontal five-stage progress strip avoids 5 tall stacked rows on phones. */
+.platform-overlay .donor-grid .trace-route {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+  gap: 0;
+  min-width: 0;
+  width: 100%;
+  padding: 4px 0 9px;
+}
+.platform-overlay .donor-grid .trace-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  gap: 2px;
+  margin: 0;
+  text-align: center;
+}
+.platform-overlay .donor-grid .trace-node i {
+  display: grid;
+  place-items: center;
+  flex: none;
+  grid-row: auto;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 3px;
+  border: 1px solid #0c7455;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #188966, #0c624b);
+  color: #fff;
+  box-shadow: inset 0 1px 0 #ffffff34;
+}
+.platform-overlay .donor-grid .trace-node i .app-icon {
+  width: 13px;
+  height: 13px;
+  color: #fff;
+}
+.platform-overlay .donor-grid .trace-node > span {
+  position: absolute;
+  top: 13px;
+  left: calc(50% + 13px);
+  width: calc(100% - 26px);
+  height: 1px;
+  background: #a9d4be;
+  pointer-events: none;
+}
+.platform-overlay .donor-grid .trace-node b {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.platform-overlay .donor-grid .trace-node small {
+  margin: 0;
+  color: #64776b;
+  font-size: 10px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* Keep evidence readable with a compact photo and an aligned action. */
+.platform-overlay .donor-grid .trace-detail {
+  display: grid;
+  grid-template-columns: clamp(105px, 29%, 150px) minmax(0, 1fr);
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #d9e9de;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #eef7f0, #f6faf5);
+}
+.platform-overlay .donor-grid .trace-detail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 112px;
+  max-height: none;
+  object-fit: cover;
+}
+.platform-overlay .donor-grid .trace-detail > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 11px;
+}
+.platform-overlay .donor-grid .trace-detail span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  line-height: 1.3;
+}
+.platform-overlay .donor-grid .trace-detail b {
+  margin: 0;
+  color: #13382c;
+  font-size: 17px;
+  line-height: 1.2;
+}
+.platform-overlay .donor-grid .trace-detail p {
+  margin: 0;
+  color: #4a6656;
+  font-size: 11px;
+  line-height: 1.36;
+}
+.platform-overlay .donor-grid .trace-detail button {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  min-height: 32px;
+  margin-top: auto;
+  padding: 4px 0 0;
+  border: 0;
+  background: transparent;
+  color: #136e50;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: none;
+}
+.platform-overlay .donor-grid .trace-detail button:hover {
+  color: #07573e;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Dense, readable giving-plan rows with the amount aligned consistently. */
+.platform-overlay .donor-grid .schedule-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  min-width: 0;
+}
+.platform-overlay .donor-grid .schedule-list > button {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid #e0eae3;
+  border-radius: 9px;
+  background: #f8fbf8;
+}
+.platform-overlay .donor-grid .schedule-list > button:hover {
+  border-color: #a9d3b8;
+  background: #edf7ef;
+}
+.platform-overlay .donor-grid .schedule-list i {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+  background: #e3f1e7;
+  color: #1b7957;
+}
+.platform-overlay .donor-grid .schedule-list i .app-icon {
+  width: 14px;
+  height: 14px;
+}
+.platform-overlay .donor-grid .schedule-list > button > span {
+  min-width: 0;
+}
+.platform-overlay .donor-grid .schedule-list b {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.platform-overlay .donor-grid .schedule-list small {
+  margin-top: 1px;
+  color: #64766b;
+  font-size: 10px;
+  line-height: 1.2;
+}
+.platform-overlay .donor-grid .schedule-list strong {
+  color: #145b43;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.platform-overlay .donor-grid .add-plan {
+  min-height: 39px;
+  margin-top: 7px;
+  padding: 7px 10px;
+  border: 1px dashed #a4cdb1;
+  border-radius: 9px;
+  background: #f0f8f1;
+  color: #176c4c;
+  font-size: 11px;
+  font-weight: 750;
+}
+.platform-overlay .donor-grid .add-plan:hover {
+  border-color: #6da786;
+  background: #e4f3e8;
+}
+@media (max-width: 780px) {
+  .platform-overlay .portal-grid.donor-grid { gap: 10px; }
+  .platform-overlay .donor-grid > .portal-card { padding: 11px; }
+}
+@media (max-width: 480px) {
+  .platform-overlay .donor-grid .trace-route { grid-template-columns: repeat(5, minmax(0, 1fr)); padding-block: 4px 9px; }
+  .platform-overlay .donor-grid .trace-node { display: flex; gap: 2px; }
+  .platform-overlay .donor-grid .trace-node i { width: 24px; height: 24px; }
+  .platform-overlay .donor-grid .trace-node > span {
+    top: 12px;
+    left: calc(50% + 12px);
+    width: calc(100% - 24px);
+    height: 1px;
+  }
+  .platform-overlay .donor-grid .trace-node b { font-size: 9px; }
+  .platform-overlay .donor-grid .trace-node small { font-size: 9px; }
+  .platform-overlay .donor-grid .trace-detail {
+    grid-template-columns: clamp(82px, 28%, 112px) minmax(0, 1fr);
+  }
+  .platform-overlay .donor-grid .trace-detail img {
+    height: 100%;
+    min-height: 110px;
+  }
+  .platform-overlay .donor-grid .trace-detail > div { padding: 8px; gap: 3px; }
+  .platform-overlay .donor-grid .trace-detail b { font-size: 15px; }
+  .platform-overlay .donor-grid .trace-detail p { font-size: 10px; line-height: 1.32; }
+  .platform-overlay .donor-grid .trace-detail button { min-height: 31px; font-size: 10px; }
+  .platform-overlay .donor-grid .schedule-list > button {
+    grid-template-columns: 25px minmax(0, 1fr) auto;
+    gap: 7px;
+    min-height: 43px;
+    padding: 5px 7px;
+  }
+  .platform-overlay .donor-grid .schedule-list i { width: 25px; height: 25px; }
+  .platform-overlay .donor-grid .schedule-list b { font-size: 11px; }
+  .platform-overlay .donor-grid .schedule-list small { font-size: 10px; }
+  .platform-overlay .donor-grid .schedule-list strong { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .platform-overlay .donor-grid :is(button, .portal-card) { transition: none; }
+}
+
+/* Admin workspace: compact priority queue and verification ladder. */
+.platform-overlay .admin-review-grid {
+  align-items: stretch;
+  gap: 10px;
+  margin-block: 10px;
+}
+@media (min-width: 1201px) {
+  .platform-overlay .portal-grid.admin-review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.platform-overlay .admin-review-grid > .portal-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: clamp(11px, 1vw, 15px);
+  border: 1px solid #dce9df;
+  border-radius: 14px;
+  background: linear-gradient(155deg, #ffffff, #fbfdfb);
+  box-shadow: 0 3px 13px #142f2210;
+}
+.platform-overlay .admin-review-grid .card-head {
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 9px;
+}
+.platform-overlay .admin-review-grid .card-head > div { min-width: 0; }
+.platform-overlay .admin-review-grid .card-head p {
+  margin: 0 0 2px;
+  color: #25745b;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: .1em;
+}
+.platform-overlay .admin-review-grid .card-head h4 {
+  margin: 0;
+  font-size: clamp(17px, 1.65vw, 20px);
+  line-height: 1.2;
+  font-weight: 550;
+}
+.platform-overlay .admin-queue-card .data-rows {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.platform-overlay .admin-queue-card .data-rows > button {
+  display: grid;
+  grid-template-columns: minmax(60px, .7fr) minmax(0, 1.5fr) auto auto;
+  align-items: center;
+  gap: 6px 9px;
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  margin: 0;
+  padding: 7px 9px;
+  border: 1px solid #e0eae3;
+  border-radius: 9px;
+  background: #f8fbf8;
+  color: #254a38;
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: start;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.platform-overlay .admin-queue-card .data-rows > button:hover {
+  border-color: #a9d3b8;
+  background: #edf7ef;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span { min-width: 0; }
+.platform-overlay .admin-queue-card .data-rows > button > span:first-child {
+  color: #155a43;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span:nth-child(2) {
+  overflow-wrap: break-word;
+  font-size: 11px;
+  font-weight: 600;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span:nth-child(3) {
+  justify-self: start;
+  padding: 4px 6px;
+  border: 1px solid #ecd4a6;
+  border-radius: 6px;
+  background: #fff4e4;
+  color: #84541b;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.platform-overlay .admin-queue-card .data-rows > button:first-child > span:nth-child(3) {
+  border-color: #edc0c1;
+  background: #fff0ef;
+  color: #aa3538;
+}
+.platform-overlay .admin-queue-card .data-rows > button:nth-child(3) > span:nth-child(3) {
+  border-color: #c0ddc8;
+  background: #eaf7ee;
+  color: #216d46;
+}
+.platform-overlay .admin-queue-card .data-rows > button > span.row-action {
+  justify-self: end;
+  color: #17694e;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.platform-overlay .admin-queue-card .data-rows > button:first-child > span.row-action { color: #a63838; }
+.platform-overlay .admin-queue-card .data-rows > button:nth-child(2) > span.row-action { color: #936019; }
+.platform-overlay .admin-queue-card .add-plan {
+  min-height: 37px;
+  margin-top: 7px;
+  padding: 7px 10px;
+  border: 1px dashed #a4cdb1;
+  border-radius: 9px;
+  background: #f0f8f1;
+  color: #176c4c;
+  font-size: 11px;
+  font-weight: 750;
+}
+.platform-overlay .admin-queue-card .add-plan:hover {
+  border-color: #6da786;
+  background: #e4f3e8;
+}
+/* Five evenly sized ladder rows: retain the whole audit sequence in a smaller footprint. */
+.platform-overlay .admin-verification-card .level-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  min-width: 0;
+}
+.platform-overlay .admin-verification-card .level-list > div,
+.platform-overlay .admin-verification-card .level-list > div:last-child {
+  display: grid;
+  grid-column: auto;
+  grid-template-columns: 27px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 38px;
+  padding: 5px 8px;
+  border: 1px solid #e0eae3;
+  border-radius: 9px;
+  background: #f8fbf8;
+}
+.platform-overlay .admin-verification-card .level-list i {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border: 1px solid #dce7df;
+  border-radius: 8px;
+  background: #edf2ee;
+  color: #406d59;
+  font-size: 11px;
+  font-weight: 800;
+}
+.platform-overlay .admin-verification-card .level-list span { min-width: 0; }
+.platform-overlay .admin-verification-card .level-list b {
+  display: block;
+  color: #244e3a;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.22;
+}
+.platform-overlay .admin-verification-card .level-list small {
+  display: block;
+  margin-top: 1px;
+  color: #61756a;
+  font-size: 10px;
+  line-height: 1.22;
+}
+.platform-overlay .admin-verification-card .level-list > div.active {
+  border-color: #9ecab0;
+  background: #eaf7ef;
+}
+.platform-overlay .admin-verification-card .level-list > div.active i {
+  border-color: #176e50;
+  background: #176e50;
+  color: #fff;
+}
+.platform-overlay .admin-review-grid :is(button):focus-visible {
+  outline: 2px solid #288564;
+  outline-offset: 2px;
+}
+@container (max-width: 570px) {
+  .platform-overlay .admin-queue-card .data-rows > button {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    min-height: 50px;
+    padding: 6px 8px;
+  }
+  .platform-overlay .admin-queue-card .data-rows > button > span:first-child { grid-area: 1 / 1; }
+  .platform-overlay .admin-queue-card .data-rows > button > span:nth-child(2) { grid-area: 2 / 1; }
+  .platform-overlay .admin-queue-card .data-rows > button > span:nth-child(3) {
+    grid-area: 1 / 2;
+    justify-self: end;
+  }
+  .platform-overlay .admin-queue-card .data-rows > button > span.row-action { grid-area: 2 / 2; }
+}
+@media (max-width: 780px) {
+  .platform-overlay .admin-review-grid > .portal-card { padding: 11px; }
+  .platform-overlay .admin-review-grid { gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .platform-overlay .admin-queue-card .data-rows > button { transition: none; }
+}
+
+/* Compact phone KPI panels across donor, organization, admin and finance workspaces. */
+@media (max-width: 600px) {
+  .platform-overlay .portal-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+    margin: 9px 0 10px;
+  }
+  .platform-overlay .portal-metrics > div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-width: 0;
+    min-height: 100px;
+    margin: 0;
+    padding: 12px 11px 10px;
+    border: 1px solid #d8e8dd;
+    border-radius: 12px;
+    background: linear-gradient(155deg, #ffffff 5%, #f3f9f4 100%);
+    box-shadow: inset 0 1px 0 #ffffff, 0 2px 9px #142f2209;
+    overflow: hidden;
+  }
+  .platform-overlay .portal-metrics > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline-start: 11px;
+    width: 29px;
+    height: 3px;
+    border-radius: 0 0 5px 5px;
+    background: #268768;
+  }
+  .platform-overlay .portal-metrics > div > span {
+    display: block;
+    flex: 0 0 auto;
+    min-height: 27px;
+    margin: 0;
+    color: #526d5d;
+    font: 700 10px/1.3 var(--font-geist-sans), Arial, sans-serif;
+    letter-spacing: .015em;
+    text-transform: none;
+    overflow-wrap: break-word;
+  }
+  .platform-overlay .portal-metrics > div > b {
+    display: block;
+    flex: 0 0 auto;
+    max-width: 100%;
+    margin: 2px 0 4px;
+    color: #123d2f;
+    font-family: var(--font-geist-sans), Arial, sans-serif;
+    font-size: clamp(18px, 4.5vw, 24px);
+    font-weight: 760;
+    line-height: 1.12;
+    letter-spacing: -.045em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .platform-overlay .portal-metrics > div > small {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 14px;
+    margin: auto 0 0;
+    color: #477861;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+  .platform-overlay .portal-metrics > div > small .app-icon {
+    display: inline-block;
+    flex: none;
+    width: 12px;
+    height: 12px;
+    color: #218462;
+    stroke-width: 2;
+  }
+}
+@media (max-width: 360px) {
+  .platform-overlay .portal-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .platform-overlay .portal-metrics > div {
+    min-height: 95px;
+    padding: 11px 9px 9px;
+    border-radius: 10px;
+  }
+  .platform-overlay .portal-metrics > div::before { inset-inline-start: 9px; }
+  .platform-overlay .portal-metrics > div > span {
+    min-height: 27px;
+    font-size: 9.5px;
+  }
+  .platform-overlay .portal-metrics > div > b {
+    font-size: clamp(17px, 5.2vw, 19px);
+    letter-spacing: -.05em;
+  }
+  .platform-overlay .portal-metrics > div > small {
+    font-size: 9px;
+    gap: 3px;
+  }
+  .platform-overlay .portal-metrics > div > small .app-icon {
+    width: 11px;
+    height: 11px;
+  }
+}
