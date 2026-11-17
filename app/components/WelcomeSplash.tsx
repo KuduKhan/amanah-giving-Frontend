@@ -6,8 +6,8 @@ import AmanahLogo from '../AmanahLogo';
 
 type WelcomeStage = 'salaam' | 'bismillah' | 'leaving' | 'done';
 
-const FIRST_MESSAGE_MS = 5400;
-const SECOND_MESSAGE_MS = 5400;
+const FIRST_MESSAGE_MS = 5000;
+const SECOND_MESSAGE_MS = 5000;
 const EXIT_FADE_MS = 400;
 
 /**
@@ -44,8 +44,9 @@ export default function WelcomeSplash() {
 
     timeouts.current = [
       window.setTimeout(() => setStage('bismillah'), FIRST_MESSAGE_MS),
-      window.setTimeout(() => setStage('leaving'), FIRST_MESSAGE_MS + SECOND_MESSAGE_MS),
-      window.setTimeout(() => setStage('done'), FIRST_MESSAGE_MS + SECOND_MESSAGE_MS + EXIT_FADE_MS),
+      // Fade during the final 400ms of Bismillah, not after it.
+      window.setTimeout(() => setStage('leaving'), FIRST_MESSAGE_MS + SECOND_MESSAGE_MS - EXIT_FADE_MS),
+      window.setTimeout(() => setStage('done'), FIRST_MESSAGE_MS + SECOND_MESSAGE_MS),
     ];
 
     return () => {
