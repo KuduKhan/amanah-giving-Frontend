@@ -3467,3 +3467,97 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   /* Keep the static failsafe usable; global motion rules shorten other animations. */
   .amanah-welcome { animation-duration: 30s !important; animation-iteration-count: 1 !important; }
 }
+
+/* Slim, centered phone welcome timeline and non-blocking Welcome notice. */
+@keyframes amanah-welcome-notice-appear {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.amanah-welcome-notice {
+  position: fixed;
+  z-index: 200;
+  left: 50%;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 19px;
+  border: 1px solid #b7d7c4;
+  border-radius: 999px;
+  background: #f5fbf6;
+  box-shadow: 0 6px 22px #052d2030;
+  color: #145b43;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: .01em;
+  line-height: 1.25;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: amanah-welcome-notice-appear .26s ease-out both;
+}
+.amanah-welcome-notice-symbol {
+  color: #b38b45;
+  font-size: 15px;
+  line-height: 1;
+}
+@media (max-width: 600px) {
+  /* Restore the original narrow centered footprint without losing the timed fills. */
+  .amanah-welcome .amanah-welcome-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 246px);
+    gap: 10px;
+    margin: 17px auto 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .amanah-welcome .amanah-welcome-step {
+    min-width: 0;
+    gap: 7px;
+  }
+  .amanah-welcome .amanah-welcome-step-heading {
+    justify-content: center;
+    gap: 5px;
+  }
+  .amanah-welcome .amanah-welcome-step-index {
+    width: 21px;
+    height: 21px;
+    border-radius: 6px;
+    font-size: 9px;
+  }
+  .amanah-welcome .amanah-welcome-step-label {
+    flex: 0 1 auto;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .amanah-welcome .amanah-welcome-step-state {
+    width: 13px;
+    height: 13px;
+    font-size: 9px;
+  }
+  .amanah-welcome .amanah-welcome-step-track {
+    height: 3px;
+    box-shadow: none;
+  }
+  .amanah-welcome-notice {
+    bottom: max(22px, env(safe-area-inset-bottom));
+    min-height: 40px;
+    padding: 9px 17px;
+    font-size: 12px;
+  }
+}
+@media (max-width: 360px) {
+  .amanah-welcome .amanah-welcome-steps {
+    width: min(100%, 226px);
+    gap: 8px;
+  }
+  .amanah-welcome .amanah-welcome-step-heading { gap: 4px; }
+  .amanah-welcome .amanah-welcome-step-label { font-size: 9.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .amanah-welcome-notice { animation: none; }
+}
