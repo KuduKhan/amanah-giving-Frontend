@@ -872,7 +872,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-impact .timeline-item:last-child .timeline-dot { color: #fff; background: #15624c; box-shadow: none; }
 .refined-impact .timeline-item:last-child .timeline-dot .app-icon { color: inherit; }
 .refined-impact .timeline-item:last-child > div { border-radius: 9px; background: #edf7ef; padding: 5px 8px; }
-/* A single source of timing: the connector finishes precisely when the next icon lights up. */
+/* One shared timeline: each node glows only at the moment the preceding segment arrives.
+   Each pulse settles before the trace travels onward; the full sequence restarts indefinitely. */
 .refined-impact .impact-stages { position: relative; isolation: isolate; }
 .refined-impact .impact-stages::before {
   position: absolute;
@@ -897,32 +898,41 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   border-radius: 999px;
   background: linear-gradient(#76cfa3, #16855b);
   box-shadow: 0 0 7px #20976588;
+  opacity: 0;
+  transform: scaleY(0);
   transform-origin: top;
   content: '';
   pointer-events: none;
 }
 .refined-impact .timeline-item:last-child::after { display: none; }
-.refined-impact .timeline-dot { position: relative; z-index: 2; }
-@keyframes impact-trace-line-arrival {
-  from { opacity: .7; transform: scaleY(0); }
-  to { opacity: 1; transform: scaleY(1); }
+.refined-impact .timeline-dot { position: relative; z-index: 2; transform: scale(1); filter: none; }
+
+/* 0.78 second traversal per segment on a 4.65 second repeating clock.
+   The last segment's end matches the next icon's arrival delay exactly. */
+@keyframes impact-trace-line-travel {
+  0% { opacity: 0; transform: scaleY(0); }
+  16.7742% { opacity: 1; transform: scaleY(1); }
+  20.6452% { opacity: .72; transform: scaleY(1); }
+  22.7957% { opacity: 0; transform: scaleY(1); }
+  22.796%, 100% { opacity: 0; transform: scaleY(0); }
 }
-@keyframes impact-trace-icon-arrival {
-  0% { transform: scale(1.13); filter: drop-shadow(0 0 8px #27996dbb); }
-  32% { transform: scale(1.04); filter: drop-shadow(0 0 5px #27996d88); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 2px #27996d55); }
+@keyframes impact-trace-icon-contact {
+  0% { transform: scale(1.13); filter: drop-shadow(0 0 8px #219668b8); }
+  3% { transform: scale(1.08); filter: drop-shadow(0 0 7px #2196689c); }
+  9% { transform: scale(1); filter: none; }
+  100% { transform: scale(1); filter: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .refined-impact .timeline-item:nth-child(1) { --trace-arrival: .12s; }
-  .refined-impact .timeline-item:nth-child(2) { --trace-arrival: 1s; }
-  .refined-impact .timeline-item:nth-child(3) { --trace-arrival: 1.88s; }
-  .refined-impact .timeline-item:nth-child(4) { --trace-arrival: 2.76s; }
-  .refined-impact .timeline-item:nth-child(5) { --trace-arrival: 3.64s; }
+  .refined-impact .timeline-item:nth-child(2) { --trace-arrival: .90s; }
+  .refined-impact .timeline-item:nth-child(3) { --trace-arrival: 1.68s; }
+  .refined-impact .timeline-item:nth-child(4) { --trace-arrival: 2.46s; }
+  .refined-impact .timeline-item:nth-child(5) { --trace-arrival: 3.24s; }
   .refined-impact .impact-timeline.is-active .timeline-item:not(:last-child)::after {
-    animation: impact-trace-line-arrival .88s linear var(--trace-arrival) both;
+    animation: impact-trace-line-travel 4.65s linear var(--trace-arrival) infinite;
   }
   .refined-impact .impact-timeline.is-active .timeline-dot {
-    animation: impact-trace-icon-arrival .7s ease-out var(--trace-arrival) both;
+    animation: impact-trace-icon-contact 4.65s ease-out var(--trace-arrival) infinite;
   }
 }
 .refined-impact .evidence-row { margin-top: 10px; padding-top: 10px; gap: 8px; }
