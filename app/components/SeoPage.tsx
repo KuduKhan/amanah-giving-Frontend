@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import AmanahLogo from '../AmanahLogo';
 import Icon from '../Icon';
+import { BackToPrevious } from './NavigationContinuity';
 
 export type SeoSection = { heading: string; body: string; links?: { href: string; label: string }[] };
 export default function SeoPage({ eyebrow, title, intro, sections = [], headerAside, children }: { eyebrow: string; title: string; intro: string; sections?: SeoSection[]; headerAside?: ReactNode; children?: ReactNode }) {
@@ -9,7 +10,7 @@ export default function SeoPage({ eyebrow, title, intro, sections = [], headerAs
     <main className="seo-page">
       <header className="seo-header">
         <Link href="/" aria-label="Amanah Giving home"><AmanahLogo /></Link>
-        <Link className="text-link" href="/">Back to Amanah <Icon name="arrow-left" /></Link>
+        <BackToPrevious />
       </header>
       <article className="seo-content">
         <header className={`seo-hero${headerAside ? ' seo-lead-layout' : ''}`}>
