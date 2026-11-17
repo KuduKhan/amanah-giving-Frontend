@@ -753,9 +753,9 @@ export default function Home() {
                   <span className="giving-review-unconnected">Not connected</span>
                 </div>
                 <div className="payment-tabs three-tabs" role="group" aria-label="Preferred payment method for this draft">
-                  <button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}>M-PESA</button>
-                  <button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}>Card</button>
-                  <button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}>Bank</button>
+                  <button type="button" aria-pressed={payment === 'M-PESA'} className={payment === 'M-PESA' ? 'active' : ''} onClick={() => setPayment('M-PESA')}><Icon name="phone" className="giving-review-method-icon"/><span>M-PESA</span></button>
+                  <button type="button" aria-pressed={payment === 'Card'} className={payment === 'Card' ? 'active' : ''} onClick={() => setPayment('Card')}><Icon name="card" className="giving-review-method-icon"/><span>Card</span></button>
+                  <button type="button" aria-pressed={payment === 'Bank'} className={payment === 'Bank' ? 'active' : ''} onClick={() => setPayment('Bank')}><Icon name="bank" className="giving-review-method-icon"/><span>Bank</span></button>
                 </div>
                 <div className="preview-note giving-review-method-note" role="note">
                   <b>{payment} · Not connected</b>
