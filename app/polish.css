@@ -3357,7 +3357,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .amanah-welcome-step.is-current .amanah-welcome-step-state { color: #f1d49d; }
 .amanah-welcome-steps.is-running .amanah-welcome-step.is-current .amanah-welcome-step-fill {
-  animation: amanah-welcome-timeline-fill var(--welcome-step-duration, 5400ms) linear both;
+  animation: amanah-welcome-timeline-fill var(--welcome-step-duration, 5000ms) linear both;
 }
 .amanah-welcome-step.is-complete {
   color: #b7e2c8;
