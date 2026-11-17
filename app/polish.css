@@ -4594,3 +4594,36 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     column-gap: 4px;
   }
 }
+
+/* Phone-only: compact Secure giving trust indicator, unchanged on desktop. */
+@media (max-width: 600px) {
+  .refined-footer-bottom .footer-trust .footer-security {
+    gap: 5px;
+    min-height: 29px;
+    padding: 3px 9px 3px 4px;
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    box-shadow: none;
+  }
+  .refined-footer-bottom .footer-security-icon {
+    width: 19px;
+    height: 19px;
+  }
+  .refined-footer-bottom .footer-security-icon .app-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+@media (max-width: 350px) {
+  .refined-footer-bottom .footer-trust .footer-security {
+    gap: 4px;
+    min-height: 27px;
+    padding: 3px 8px 3px 4px;
+    font-size: 9.5px;
+  }
+  .refined-footer-bottom .footer-security-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
