@@ -2953,3 +2953,117 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   .platform-overlay .admin-queue-card .data-rows > button { transition: none; }
 }
+
+/* Compact phone KPI panels across donor, organization, admin and finance workspaces. */
+@media (max-width: 600px) {
+  .platform-overlay .portal-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+    margin: 9px 0 10px;
+  }
+  .platform-overlay .portal-metrics > div {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    min-width: 0;
+    min-height: 100px;
+    margin: 0;
+    padding: 12px 11px 10px;
+    border: 1px solid #d8e8dd;
+    border-radius: 12px;
+    background: linear-gradient(155deg, #ffffff 5%, #f3f9f4 100%);
+    box-shadow: inset 0 1px 0 #ffffff, 0 2px 9px #142f2209;
+    overflow: hidden;
+  }
+  .platform-overlay .portal-metrics > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    inset-inline-start: 11px;
+    width: 29px;
+    height: 3px;
+    border-radius: 0 0 5px 5px;
+    background: #268768;
+  }
+  .platform-overlay .portal-metrics > div > span {
+    display: block;
+    flex: 0 0 auto;
+    min-height: 27px;
+    margin: 0;
+    color: #526d5d;
+    font: 700 10px/1.3 var(--font-geist-sans), Arial, sans-serif;
+    letter-spacing: .015em;
+    text-transform: none;
+    overflow-wrap: break-word;
+  }
+  .platform-overlay .portal-metrics > div > b {
+    display: block;
+    flex: 0 0 auto;
+    max-width: 100%;
+    margin: 2px 0 4px;
+    color: #123d2f;
+    font-family: var(--font-geist-sans), Arial, sans-serif;
+    font-size: clamp(18px, 4.5vw, 24px);
+    font-weight: 760;
+    line-height: 1.12;
+    letter-spacing: -.045em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .platform-overlay .portal-metrics > div > small {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 14px;
+    margin: auto 0 0;
+    color: #477861;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+  .platform-overlay .portal-metrics > div > small .app-icon {
+    display: inline-block;
+    flex: none;
+    width: 12px;
+    height: 12px;
+    color: #218462;
+    stroke-width: 2;
+  }
+}
+@media (max-width: 360px) {
+  .platform-overlay .portal-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .platform-overlay .portal-metrics > div {
+    min-height: 95px;
+    padding: 11px 9px 9px;
+    border-radius: 10px;
+  }
+  .platform-overlay .portal-metrics > div::before { inset-inline-start: 9px; }
+  .platform-overlay .portal-metrics > div > span {
+    min-height: 27px;
+    font-size: 9.5px;
+  }
+  .platform-overlay .portal-metrics > div > b {
+    font-size: clamp(17px, 5.2vw, 19px);
+    letter-spacing: -.05em;
+  }
+  .platform-overlay .portal-metrics > div > small {
+    font-size: 9px;
+    gap: 3px;
+  }
+  .platform-overlay .portal-metrics > div > small .app-icon {
+    width: 11px;
+    height: 11px;
+  }
+}
