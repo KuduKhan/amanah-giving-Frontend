@@ -154,7 +154,7 @@ function BeneficiaryPortal({ act }: ActionProps) {
           <p>{contact.trim() ? `Sample contact provided · ${contactTime}` : 'No sample contact added.'}</p>
         </div>}
         <div className="form-actions">
-          <button type="button" disabled={step === 1} onClick={() => setStep(step - 1)}><Icon name="arrow-left"/> Back</button>
+          <button className="portal-back-button" type="button" disabled={step === 1} onClick={() => setStep(step - 1)} aria-label="Return to previous request step"><Icon name="arrow-left"/> Back</button>
           <button type="button" className="button" disabled={!requestType} onClick={() => {
             if (step < 4) setStep(step + 1);
             else act(`${requestType} request review`);
