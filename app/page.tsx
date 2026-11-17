@@ -322,13 +322,6 @@ export default function Home() {
     <main id="main-content">
       <a className="skip-link" href="#top">Skip to main content</a>
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
-      <div className="trustbar refined-trustbar" role="note" aria-label="Giving safeguards">
-        <ul className="trustbar-inner">
-          <li className="trustbar-item"><i><Icon name="shield"/></i><span>Sample campaigns</span></li>
-          <li className="trustbar-item"><i><Icon name="wallet"/></i><span>No live payments</span></li>
-          <li className="trustbar-item"><i><Icon name="receipt"/></i><span>Local draft only</span></li>
-        </ul>
-      </div>
       <SiteHeader labels={t} language={language} unreadCount={notificationIds.filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
