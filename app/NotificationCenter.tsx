@@ -76,11 +76,13 @@ export default function NotificationCenter({ read, onRead, readError, onClose }:
           if (!preferencesOpen) { setDraftChannels(preferences); setSavedMessage(''); }
           setPreferencesOpen(!preferencesOpen);
         }}>{preferencesOpen ? 'Close' : 'Manage'}<Icon name={preferencesOpen ? 'close' : 'chevron'}/></button>
-        <div className="notification-saved-channels" aria-label="Saved delivery preferences">
-          {preferences.length ? preferences.map(channel => (
-            <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/><span className="notification-saved-channel-label">{channel}</span></span>
-          )) : <span className="notification-no-channels">No channels selected</span>}
-        </div>
+        {!preferencesOpen && (
+          <div className="notification-saved-channels" aria-label="Saved delivery preferences">
+            {preferences.length ? preferences.map(channel => (
+              <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/><span className="notification-saved-channel-label">{channel}</span></span>
+            )) : <span className="notification-no-channels">No channels selected</span>}
+          </div>
+        )}
       </div>
       <form id="notification-preferences" className="notice-preferences notification-preferences-panel" aria-label="Notification delivery preferences" hidden={!preferencesOpen} onSubmit={event => {
         event.preventDefault();
@@ -95,11 +97,11 @@ export default function NotificationCenter({ read, onRead, readError, onClose }:
           <legend>Choose your channels</legend>
           <p id="notification-delivery-note">Saved on this device. Email, SMS and WhatsApp delivery isn’t connected yet.</p>
           <div className="notice-channels">
-            {channels.map(channel => <label className="notification-channel-choice" key={channel}><input type="checkbox" checked={draftChannels.includes(channel)} onChange={event => {
+            {channels.map(channel => <label className="notification-channel-choice" key={channel}><NotificationChannelIcon channel={channel}/><span className="notification-channel-label">{channel}</span><input type="checkbox" aria-label={`Enable ${channel} notifications`} checked={draftChannels.includes(channel)} onChange={event => {
               const checked = event.target.checked;
               setSavedMessage('');
               setDraftChannels(current => channels.filter(value => value === channel ? checked : current.includes(value)));
-            }}/><NotificationChannelIcon channel={channel}/><span className="notification-channel-label">{channel}</span></label>)}
+            }}/></label>)}
           </div>
         </fieldset>
         <div className="notice-preferences-footer notification-preferences-actions"><button className="button" type="submit">Save preferences</button><p role="status">{savedMessage}</p></div>
