@@ -705,7 +705,35 @@ export default function Home() {
 
       {notificationsOpen && <NotificationCenter read={readNotifications} onRead={updateReadNotifications} readError={notificationReadError} onClose={() => setNotificationsOpen(false)}/>}
 
-      {languagesOpen && <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="language-title"><div className="search-panel language-panel"><button className="close" aria-label="Close languages" onClick={() => setLanguagesOpen(false)}><Icon name="close"/></button><p className="eyebrow">Language</p><h2 id="language-title">Read with clarity.</h2><p>English is available throughout this preview. Other languages will be offered after every page and giving step has been translated.</p><div className="language-options"><button aria-pressed="true" onClick={() => setLanguagesOpen(false)}><b>English</b><span>Current language <Icon name="check"/></span></button><div><b>Kiswahili</b><span>Translation in preparation</span></div><div lang="ar"><b>العربية</b><span lang="en">Translation in preparation</span></div></div></div></div>}
+      {languagesOpen && (
+        <div className="overlay language-overlay" role="dialog" aria-modal="true" aria-labelledby="language-title" aria-describedby="language-description">
+          <div className="search-panel language-panel language-panel-premium">
+            <button className="close" type="button" aria-label="Close languages" onClick={() => setLanguagesOpen(false)}><Icon name="close"/></button>
+            <header className="language-panel-heading">
+              <p className="eyebrow"><Icon name="globe"/>Language</p>
+              <h2 id="language-title">Read with clarity.</h2>
+              <p id="language-description">English is available throughout this preview. Other languages will be offered after every page and giving step has been translated.</p>
+            </header>
+            <div className="language-options language-choice-list" role="group" aria-label="Choose a language">
+              <button type="button" className="language-choice language-choice-active" aria-pressed="true" onClick={() => setLanguagesOpen(false)}>
+                <span className="language-choice-symbol" aria-hidden="true">EN</span>
+                <span className="language-choice-copy"><b>English</b><small>Current language</small></span>
+                <span className="language-choice-status" aria-hidden="true"><Icon name="check"/></span>
+              </button>
+              <div className="language-choice language-choice-pending" aria-disabled="true">
+                <span className="language-choice-symbol" aria-hidden="true">SW</span>
+                <span className="language-choice-copy"><b lang="sw">Kiswahili</b><small>Translation in preparation</small></span>
+                <span className="language-choice-coming">Coming soon</span>
+              </div>
+              <div className="language-choice language-choice-pending" aria-disabled="true">
+                <span className="language-choice-symbol language-choice-symbol-ar" aria-hidden="true" lang="ar">ع</span>
+                <span className="language-choice-copy"><b lang="ar" dir="rtl">العربية</b><small>Translation in preparation</small></span>
+                <span className="language-choice-coming">Coming soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {toast && <div className="toast" role="status" aria-live="polite"><span><Icon name="✓"/></span>{toast}</div>}
       <a className="back-to-top" href="#top" aria-label="Back to top"><Icon name="↑"/></a>
     </main>
