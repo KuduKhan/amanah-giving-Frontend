@@ -524,7 +524,7 @@ export default function Home() {
               <div className="update-image-toolbar">
                 <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
                 <button type="button" className="update-evidence-pill" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>
-                  <Icon name="evidence"/><span>View evidence</span>
+                  <Icon name="evidence"/>View evidence
                 </button>
               </div>
               <div className="update-image-content"><p className="update-meta"><time dateTime={update.isoDate}>{update.date}</time><span>{update.campaign.id}</span></p><h3 id={`update-${update.campaign.id}`}>{update.title}</h3></div>
