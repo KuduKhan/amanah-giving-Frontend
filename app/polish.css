@@ -3067,3 +3067,214 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     height: 11px;
   }
 }
+
+/* Amanah startup welcome: peaceful two-part greeting, not a simulated loading progress bar. */
+@keyframes amanah-welcome-enter {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes amanah-welcome-failsafe {
+  0%, 99% { visibility: visible; }
+  100% { visibility: hidden; }
+}
+.amanah-welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 100dvh;
+  padding: max(36px, env(safe-area-inset-top)) clamp(18px, 5vw, 52px) max(38px, env(safe-area-inset-bottom));
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 65% 52% at 50% 32%, #15584460 0%, transparent 74%),
+    radial-gradient(ellipse 64% 42% at 50% 100%, #133c4272 0%, transparent 76%),
+    linear-gradient(155deg, #071b2b 0%, #071f2c 48%, #071a27 100%);
+  color: #f5faf7;
+  text-align: center;
+  opacity: 1;
+  transition: opacity .32s ease;
+  animation: amanah-welcome-failsafe 6s steps(1, end) forwards;
+}
+.amanah-welcome[data-stage="leaving"] {
+  opacity: 0;
+  pointer-events: none;
+}
+.amanah-welcome-ornament {
+  position: absolute;
+  z-index: -1;
+  inset: 10% 9%;
+  border: 1px solid #a6d2bd12;
+  border-radius: min(25vw, 220px);
+  transform: rotate(45deg) scale(.78);
+  pointer-events: none;
+}
+.amanah-welcome-ornament::after {
+  position: absolute;
+  inset: 12%;
+  content: '';
+  border: 1px solid #e4c98f12;
+  border-radius: inherit;
+}
+.amanah-welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: min(100%, 700px);
+  margin: 0 auto;
+}
+.amanah-welcome-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70px;
+  margin-bottom: clamp(23px, 4vh, 38px);
+}
+.amanah-welcome-brand .amanah-logo { gap: 12px; }
+.amanah-welcome-brand .amanah-logo-mark {
+  width: clamp(52px, 9vw, 70px);
+  height: clamp(52px, 9vw, 70px);
+  flex: none;
+  object-fit: contain;
+}
+.amanah-welcome-brand .amanah-logo-wordmark { text-align: start; }
+.amanah-welcome-brand .amanah-logo-wordmark b {
+  color: #f4fbf7;
+  font-size: clamp(17px, 2.8vw, 23px);
+  letter-spacing: .18em;
+}
+.amanah-welcome-brand .amanah-logo-wordmark small {
+  color: #9ed5bd;
+  font-size: clamp(9px, 1.5vw, 11px);
+  letter-spacing: .4em;
+}
+.amanah-welcome-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 1px;
+  margin-bottom: clamp(26px, 5vh, 44px);
+  background: linear-gradient(90deg, transparent, #a4c5b542, transparent);
+}
+.amanah-welcome-rule span {
+  display: block;
+  width: 32px;
+  height: 3px;
+  border-radius: 999px;
+  background: #c7a36d;
+}
+.amanah-welcome-message-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 202px;
+  animation: amanah-welcome-enter .34s ease both;
+}
+.amanah-welcome-eyebrow {
+  margin: 0 0 13px;
+  color: #a5d6bd;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: .21em;
+}
+.amanah-welcome-arabic {
+  margin: 0 0 8px;
+  color: #dfbe82;
+  font: 400 clamp(23px, 4.8vw, 35px)/1.4 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Amiri', 'Traditional Arabic', serif;
+}
+.amanah-welcome-message {
+  margin: 0;
+  color: #fcfdfa;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(36px, 7vw, 64px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.amanah-welcome-translation {
+  margin: 13px 0 0;
+  color: #c4d9d2;
+  font-size: clamp(12px, 1.7vw, 15px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .015em;
+}
+.amanah-welcome-stages {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: clamp(10px, 2.4vh, 20px);
+}
+.amanah-welcome-stage {
+  display: block;
+  width: 35px;
+  height: 3px;
+  border-radius: 999px;
+  background: #7ba99756;
+  transition: background-color .18s ease;
+}
+.amanah-welcome-stage.is-current { background: #cfae76; }
+.amanah-welcome-skip {
+  position: absolute;
+  top: max(15px, env(safe-area-inset-top));
+  inset-inline-end: clamp(16px, 3.5vw, 44px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 7px 11px;
+  border: 1px solid #a3cdb42d;
+  border-radius: 999px;
+  background: #ffffff0b;
+  color: #d5e9de;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.amanah-welcome-skip:hover {
+  border-color: #b8d5c57b;
+  background: #ffffff18;
+}
+.amanah-welcome-skip:focus-visible {
+  outline: 2px solid #dfbe82;
+  outline-offset: 3px;
+}
+.amanah-welcome-footer {
+  position: absolute;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  inset-inline: 16px;
+  color: #a0c4b4;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1.5;
+  letter-spacing: .18em;
+  text-align: center;
+}
+.amanah-welcome-footer span { padding-inline: 5px; color: #d2ac74; }
+@media (max-width: 480px) {
+  .amanah-welcome-ornament { inset: 19% -16%; opacity: .65; }
+  .amanah-welcome-brand { margin-bottom: 27px; }
+  .amanah-welcome-message-block { min-height: 180px; }
+  .amanah-welcome-rule { margin-bottom: 30px; }
+  .amanah-welcome-eyebrow { font-size: 9px; letter-spacing: .13em; }
+  .amanah-welcome-message { font-size: clamp(34px, 10vw, 46px); }
+  .amanah-welcome-arabic { font-size: 25px; }
+  .amanah-welcome-footer { font-size: 9px; letter-spacing: .12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .amanah-welcome,
+  .amanah-welcome-stage,
+  .amanah-welcome-skip { transition: none; }
+  .amanah-welcome-message-block { animation: none; }
+}
