@@ -4669,3 +4669,392 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     inset: -6px;
   }
 }
+
+/* Giving review step — compact two-track draft preferences and confirmation. */
+.overlay .donation-panel.refined-checkout .giving-review-step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-heading > .back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 5px;
+  min-height: 38px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid #cfdfd4;
+  border-radius: 9px;
+  background: #f1f8f3;
+  color: #22644a;
+  font-size: 11px;
+  font-weight: 740;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.overlay .donation-panel.refined-checkout .giving-review-heading > .back .app-icon {
+  width: 14px;
+  height: 14px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-heading > .back:hover {
+  border-color: #a3c8b1;
+  background: #e8f4ec;
+}
+.overlay .donation-panel.refined-checkout .giving-review-title { min-width: 0; flex: 1; }
+.overlay .donation-panel.refined-checkout .giving-review-title h2 {
+  margin: 0 0 4px;
+  color: #12392d;
+  font-size: clamp(24px, 2.8vw, 30px);
+  line-height: 1.16;
+  letter-spacing: -.028em;
+}
+.overlay .donation-panel.refined-checkout .giving-review-intro {
+  margin: 0;
+  color: #5b7568;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.overlay .donation-panel.refined-checkout .giving-review-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.07fr) minmax(0, .93fr);
+  align-items: start;
+  gap: 11px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-options,
+.overlay .donation-panel.refined-checkout .giving-review-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-card {
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #dce8de;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 2px 10px #072b1d09;
+}
+.overlay .donation-panel.refined-checkout .giving-review-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-card-heading h3,
+.overlay .donation-panel.refined-checkout .giving-review-detail-card > h3 {
+  margin: 0;
+  color: #244c3b;
+  font-size: 12px;
+  font-weight: 780;
+  line-height: 1.35;
+}
+.overlay .donation-panel.refined-checkout .giving-review-unconnected {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 3px 7px;
+  border: 1px solid #e9dcc0;
+  border-radius: 999px;
+  background: #fbf7ed;
+  color: #796137;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.overlay .donation-panel.refined-checkout .giving-review-payment .payment-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  margin: 9px 0 8px;
+  padding: 3px;
+  border: 1px solid #e0e8df;
+  border-radius: 10px;
+  background: #f1f5f1;
+}
+.overlay .donation-panel.refined-checkout .giving-review-payment .payment-tabs button {
+  min-width: 0;
+  min-height: 40px;
+  padding: 7px 5px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #527062;
+  font-size: 12px;
+  font-weight: 720;
+  line-height: 1.3;
+}
+.overlay .donation-panel.refined-checkout .giving-review-payment .payment-tabs button.active {
+  border-color: #c8ded0;
+  background: #fff;
+  color: #17664d;
+  box-shadow: 0 1px 5px #0a3e2310;
+}
+.overlay .donation-panel.refined-checkout .giving-review-method-note {
+  margin: 0;
+  padding: 9px 10px;
+  border: 1px solid #deeadf;
+  border-radius: 10px;
+  background: #f3f8f3;
+  color: #4e6a5b;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.overlay .donation-panel.refined-checkout .giving-review-method-note b {
+  display: block;
+  color: #2e6149;
+  font-size: 11px;
+  font-weight: 790;
+}
+.overlay .donation-panel.refined-checkout .giving-review-method-note p {
+  margin: 3px 0 0;
+  color: inherit;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.overlay .donation-panel.refined-checkout .giving-review-costs {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 9px;
+  min-height: 55px;
+  margin: 0;
+  padding: 0 0 10px;
+  border-top: 0;
+  border-bottom: 1px solid #e6eee6;
+  cursor: pointer;
+}
+.overlay .donation-panel.refined-checkout .giving-review-costs input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: #177b58;
+}
+.overlay .donation-panel.refined-checkout .giving-review-costs b {
+  color: #294938;
+  font-size: 12px;
+  font-weight: 760;
+  line-height: 1.4;
+}
+.overlay .donation-panel.refined-checkout .giving-review-costs small {
+  margin-top: 3px;
+  color: #6a7e70;
+  font-size: 11px;
+  line-height: 1.42;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip {
+  margin: 0;
+  padding: 10px 0 0;
+  border: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-heading span { min-width: 0; }
+.overlay .donation-panel.refined-checkout .giving-review-tip-heading b {
+  color: #294938;
+  font-size: 12px;
+  font-weight: 760;
+  line-height: 1.4;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-heading small {
+  margin-top: 3px;
+  color: #6a7e70;
+  font-size: 11px;
+  line-height: 1.42;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-heading strong {
+  flex: none;
+  color: #16714f;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip input[type="range"] {
+  display: block;
+  width: 100%;
+  height: 26px;
+  margin: 7px 0 5px;
+  accent-color: #177a58;
+  cursor: pointer;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-presets button {
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 7px;
+  border: 1px solid #d5e4d8;
+  border-radius: 9px;
+  background: #f8faf7;
+  color: #4a6758;
+  font-size: 11px;
+  font-weight: 730;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip-presets button[aria-pressed="true"] {
+  border-color: #94bda4;
+  background: #e6f3e9;
+  color: #145c42;
+  box-shadow: inset 0 0 0 1px #94bda4;
+}
+.overlay .donation-panel.refined-checkout .giving-review-detail-card > h3 { margin: 0 0 6px; }
+.overlay .donation-panel.refined-checkout .giving-review-details {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-details > div {
+  display: grid;
+  grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr);
+  align-items: start;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9efe8;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.overlay .donation-panel.refined-checkout .giving-review-details > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-review-details dt {
+  color: #667c6e;
+  font-size: 11px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-details dd {
+  margin: 0;
+  color: #274b38;
+  font-size: 11px;
+  font-weight: 740;
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .giving-review-total {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 3px 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 12px 13px;
+  border: 1px solid #e6dbc4;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #f9f3e6, #fffaf0);
+}
+.overlay .donation-panel.refined-checkout .giving-review-total span {
+  min-width: 0;
+  color: #5d523a;
+  font-size: 11px;
+  font-weight: 740;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .giving-review-total b {
+  color: #193c30;
+  font-family: inherit;
+  font-size: clamp(18px, 2.3vw, 23px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.025em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.overlay .donation-panel.refined-checkout .giving-review-total small {
+  grid-column: 1 / -1;
+  margin: 4px 0 0;
+  color: #746c5d;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.overlay .donation-panel.refined-checkout .giving-review-confirmation .form-error {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-save {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 780;
+}
+.overlay .donation-panel.refined-checkout .giving-review-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+  margin: 0 !important;
+  padding: 0 3px;
+  color: #64776c;
+  font-size: 10px !important;
+  line-height: 1.45;
+  text-align: start;
+}
+.overlay .donation-panel.refined-checkout .giving-review-disclaimer .app-icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 720px) {
+  .overlay .donation-panel.refined-checkout .giving-review-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-review-options,
+  .overlay .donation-panel.refined-checkout .giving-review-confirmation { gap: 9px; }
+}
+@media (max-width: 480px) {
+  .overlay .donation-panel.refined-checkout .giving-review-step { gap: 10px; }
+  .overlay .donation-panel.refined-checkout .giving-review-heading {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-review-heading > .back {
+    min-height: 36px;
+    padding: 5px 10px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-review-title h2 {
+    font-size: clamp(23px, 6vw, 27px);
+  }
+  .overlay .donation-panel.refined-checkout .giving-review-intro { font-size: 11px; }
+  .overlay .donation-panel.refined-checkout .giving-review-card { padding: 10px; }
+  .overlay .donation-panel.refined-checkout .giving-review-card-heading h3 { font-size: 12px; }
+  .overlay .donation-panel.refined-checkout .giving-review-total b { font-size: clamp(18px, 5.4vw, 22px); }
+}
+@media (max-width: 350px) {
+  .overlay .donation-panel.refined-checkout .giving-review-total {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .overlay .donation-panel.refined-checkout .giving-review-total b { white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay .donation-panel.refined-checkout .giving-review-tip-presets button,
+  .overlay .donation-panel.refined-checkout .giving-review-payment .payment-tabs button { transition: none; }
+}
