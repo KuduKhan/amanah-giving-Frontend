@@ -5093,3 +5093,1919 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .overlay .donation-panel.refined-checkout .giving-review-tip-presets button,
   .overlay .donation-panel.refined-checkout .giving-review-payment .payment-tabs button { transition: none; }
 }
+
+/* Gift amount + review — compact, space-efficient checkout layout. */
+/* Amount stage uses both horizontal tracks instead of a tall, single-column form. */
+.overlay .donation-panel.refined-checkout .giving-amount-step {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-heading .back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 6px;
+  min-height: 38px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid #d3e4d6;
+  border-radius: 9px;
+  background: #f1f8f3;
+  color: #21684c;
+  font-size: 11px;
+  font-weight: 760;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-heading .back:hover {
+  border-color: #a1c8b1;
+  background: #e9f5ec;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-heading .back:focus-visible {
+  outline: 2px solid #1d8460;
+  outline-offset: 2px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-heading .back .app-icon {
+  width: 14px;
+  height: 14px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-heading h2 {
+  min-width: 0;
+  margin: 0;
+  color: #16392b;
+  font-size: clamp(24px, 2.8vw, 31px);
+  line-height: 1.16;
+  letter-spacing: -.025em;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr);
+  align-items: start;
+  gap: 11px;
+  min-width: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-panel,
+.overlay .donation-panel.refined-checkout .giving-amount-preferences {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid #dce9de;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 2px 10px #072b1d09;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-campaign {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 9px;
+  margin: 0;
+  padding: 7px;
+  border-color: #e2ebe3;
+  background: #f8faf7;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-campaign img {
+  flex: none;
+  width: 46px;
+  height: 40px;
+  border-radius: 7px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-campaign > span { min-width: 0; }
+.overlay .donation-panel.refined-checkout .giving-amount-campaign small {
+  color: #718473;
+  font-size: 9px;
+  line-height: 1.2;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-campaign b {
+  margin: 3px 0 0;
+  color: #294838;
+  font-size: 11px;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-presets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-presets button {
+  min-width: 0;
+  min-height: 48px;
+  padding: 9px 5px;
+  border: 1px solid #d5e4d9;
+  border-radius: 10px;
+  background: #f9fbf9;
+  color: #365b44;
+  font-size: 13px;
+  font-weight: 770;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-presets button:hover:not(.selected) {
+  border-color: #9fc8ab;
+  background: #edf5ee;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-presets button.selected,
+.overlay .donation-panel.refined-checkout .giving-amount-presets button[aria-pressed="true"] {
+  border-color: #1a7c58;
+  background: #eaf6ee;
+  color: #126648;
+  box-shadow: inset 0 0 0 1px #1a7c58;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-presets button:focus-visible {
+  outline: 2px solid #1d8460;
+  outline-offset: 2px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-custom {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-custom > span {
+  color: #395b48;
+  font-size: 11px;
+  font-weight: 760;
+  line-height: 1.3;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-custom > div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  overflow: hidden;
+  border: 1px solid #d3e3d7;
+  border-radius: 10px;
+  background: #f9fbf9;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-custom small {
+  flex: none;
+  padding: 0 11px;
+  color: #216749;
+  font-size: 12px;
+  font-weight: 760;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-custom input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  min-height: 46px;
+  padding: 9px 10px;
+  border: 0;
+  border-inline-start: 1px solid #d5e4d9;
+  background: #fff;
+  color: #1d4531;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-preferences {
+  display: grid;
+  gap: 0;
+  padding-block: 3px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-option {
+  display: grid;
+  grid-template-columns: 20px minmax(0,1fr);
+  align-items: start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 66px;
+  margin: 0;
+  padding: 11px 10px;
+  border-top: 0;
+  border-bottom: 1px solid #edf2ec;
+  cursor: pointer;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-option:last-of-type { border-bottom: 0; }
+.overlay .donation-panel.refined-checkout .giving-amount-option input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: #187952;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-option > span { min-width: 0; }
+.overlay .donation-panel.refined-checkout .giving-amount-option b {
+  color: #294b37;
+  font-size: 12px;
+  font-weight: 770;
+  line-height: 1.35;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-option small {
+  margin-top: 3px;
+  color: #688071;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-extra {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 3px 9px 8px;
+  padding: 9px 10px;
+  border: 1px solid #dde9e0;
+  border-radius: 9px;
+  background: #f6faf6;
+  color: #365b44;
+  font-size: 11px;
+  font-weight: 750;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-extra input,
+.overlay .donation-panel.refined-checkout .giving-amount-extra select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid #d1e1d5;
+  border-radius: 8px;
+  background: #fff;
+  color: #284d39;
+  font-size: 16px;
+}
+.overlay .donation-panel.refined-checkout .giving-amount-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  margin: 0;
+  padding: 10px 15px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 780;
+}
+/* Review uses matched tracks and compact, fully readable accounting details. */
+.overlay .donation-panel.refined-checkout .giving-review-heading {
+  align-items: center;
+  gap: 11px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-step { gap: 11px; }
+.overlay .donation-panel.refined-checkout .giving-review-title h2 { font-size: clamp(24px, 2.7vw, 30px); }
+.overlay .donation-panel.refined-checkout .giving-review-layout {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-options,
+.overlay .donation-panel.refined-checkout .giving-review-confirmation { gap: 8px; }
+.overlay .donation-panel.refined-checkout .giving-review-card { padding: 11px; }
+.overlay .donation-panel.refined-checkout .giving-review-payment .payment-tabs {
+  margin: 8px 0 7px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-method-note {
+  padding: 8px 10px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-costs {
+  min-height: 0;
+  padding-bottom: 9px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip {
+  padding-top: 9px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-tip input[type="range"] {
+  margin: 5px 0 4px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-details > div {
+  gap: 7px;
+  padding-block: 7px;
+}
+.overlay .donation-panel.refined-checkout .giving-review-total { padding: 11px 12px; }
+.overlay .donation-panel.refined-checkout .giving-review-save { min-height: 48px; }
+.overlay .donation-panel.refined-checkout .giving-review-disclaimer {
+  max-width: 100%;
+  line-height: 1.4;
+}
+@media (max-width: 720px) {
+  .overlay .donation-panel.refined-checkout .giving-amount-layout,
+  .overlay .donation-panel.refined-checkout .giving-review-layout {
+    grid-template-columns: minmax(0,1fr);
+    gap: 9px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-amount-step { gap: 10px; }
+  .overlay .donation-panel.refined-checkout .giving-amount-panel { gap: 9px; }
+  .overlay .donation-panel.refined-checkout .giving-amount-presets {
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 6px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-amount-presets button { font-size: 11px; }
+  .overlay .donation-panel.refined-checkout .giving-amount-option { min-height: 58px; padding-block: 9px; }
+}
+@media (max-width: 480px) {
+  .overlay .donation-panel.refined-checkout .giving-amount-heading { gap: 8px; }
+  .overlay .donation-panel.refined-checkout .giving-amount-heading h2 { font-size: clamp(23px, 6vw, 27px); }
+  .overlay .donation-panel.refined-checkout .giving-amount-panel { padding: 10px; }
+  .overlay .donation-panel.refined-checkout .giving-amount-preferences { padding-block: 2px; }
+  .overlay .donation-panel.refined-checkout .giving-amount-presets {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 7px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-amount-presets button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .overlay .donation-panel.refined-checkout .giving-amount-option { padding-inline: 10px; }
+  .overlay .donation-panel.refined-checkout .giving-review-heading { align-items: flex-start; }
+}
+@media (max-width: 350px) {
+  .overlay .donation-panel.refined-checkout .giving-amount-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .overlay .donation-panel.refined-checkout .giving-amount-option small { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay .donation-panel.refined-checkout .giving-amount-presets button { transition: none; }
+}
+
+/* Direct hero entry after removing the obsolete homepage assurance ribbon. */
+/* The sticky header now meets the hero directly, without an intervening notice bar. */
+main > .site-header.refined-header {
+  box-shadow: 0 3px 14px #071a2c0d;
+}
+main > .site-header.refined-header + .hero.refined-hero {
+  margin-block-start: 0;
+  border-block-start: 0;
+}
+@media (min-width: 781px) {
+  main > .site-header.refined-header + .hero.refined-hero .hero-copy {
+    padding-block-start: clamp(26px, 2.5vw, 34px);
+  }
+}
+@media (max-width: 780px) {
+  main > .site-header.refined-header + .hero.refined-hero .hero-copy {
+    padding-block-start: clamp(24px, 4vw, 30px);
+  }
+}
+
+/* Notification center — dense editorial layout, accessible controls and adaptive preferences. */
+.overlay .notification-panel.refined-notifications.notification-center-compact {
+  width: min(680px, 100%);
+  max-height: calc(100dvh - 24px);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  border: 1px solid #d8e6da;
+  border-radius: 18px;
+  background: #fafcf9;
+  box-shadow: 0 24px 70px #071c2033;
+}
+.notification-center-compact .notification-head {
+  padding: 14px clamp(12px, 2.4vw, 20px) 10px;
+  border-bottom: 1px solid #e2ece4;
+  background: linear-gradient(135deg, #eaf4eb, #fafcf9 76%);
+}
+.notification-center-compact .notification-head > .eyebrow {
+  margin: 0 0 3px;
+  color: #277052;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .105em;
+  line-height: 1.3;
+}
+.notification-center-compact .notification-head h2 {
+  margin: 0;
+  color: #183b2d;
+  font-size: clamp(23px, 3vw, 29px);
+  font-weight: 750;
+  line-height: 1.13;
+  letter-spacing: -.025em;
+}
+.notification-center-compact .notification-disclosure {
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 4px);
+  margin: 5px 0 0;
+  color: #617b68;
+  font-size: 11px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.notification-center-compact .notification-head > .close {
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  width: 42px;
+  height: 42px;
+}
+.notification-center-compact .notification-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin: 10px 0 0;
+}
+.notification-center-compact .notification-toolbar > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border: 1px solid #d4e7d8;
+  border-radius: 999px;
+  background: #e4f1e6;
+  color: #1c694d;
+  font-size: 11px;
+  font-weight: 740;
+  line-height: 1.25;
+}
+.notification-center-compact .notification-toolbar > span[data-unread='false'] {
+  border-color: #dfe8df;
+  background: #f1f6f0;
+  color: #607668;
+}
+.notification-center-compact .notification-toolbar > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid #cbdfd0;
+  border-radius: 9px;
+  background: #fff;
+  color: #1c694b;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+.notification-center-compact .notification-toolbar > button:disabled { opacity: .55; }
+.notification-center-compact .notification-toolbar > button .app-icon { width: 14px; height: 14px; }
+.notification-center-compact .notification-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  margin: 8px clamp(12px, 2.4vw, 20px);
+  padding: 3px;
+  border: 1px solid #e0e9e0;
+  border-radius: 11px;
+  background: #f0f5f0;
+}
+.notification-center-compact .notification-filters button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 7px 5px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #647b6a;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+.notification-center-compact .notification-filters button.active {
+  border-color: #bad9c3;
+  background: #fff;
+  color: #196547;
+  box-shadow: 0 1px 4px #072e1b0d;
+}
+.notification-center-compact .notification-filters button:focus-visible,
+.notification-center-compact .notification-toolbar > button:focus-visible,
+.notification-center-compact .notice-read:focus-visible,
+.notification-center-compact .notification-settings > button:focus-visible {
+  outline: 2px solid #197b55;
+  outline-offset: 2px;
+}
+.notification-center-compact .notification-filters span {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 17px;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 999px;
+  background: #dceee2;
+  color: #15573f;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.notification-center-compact .notification-scroll {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1px clamp(12px, 2.4vw, 20px) 14px;
+}
+.notification-center-compact .notification-list { display: grid; gap: 6px; }
+.notification-center-compact .notification-item {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 7px 10px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #e0e9e1;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: none;
+}
+.notification-center-compact .notification-item.unread {
+  border-color: #c1dec9;
+  background: #f4f9f5;
+  box-shadow: inset 3px 0 0 #2f9870;
+}
+.notification-center-compact .notification-item .notice-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+}
+.notification-center-compact .notification-item .notice-icon .app-icon { width: 18px; height: 18px; }
+.notification-center-compact .notice-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.notification-center-compact .notice-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  min-width: 0;
+}
+.notification-center-compact .notice-meta b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: #27694b;
+  font-size: 10px;
+  font-weight: 790;
+  line-height: 1.35;
+}
+.notification-center-compact .notice-dot { flex: none; position: static; inset: auto; width: 6px; height: 6px; }
+.notification-center-compact .notice-meta time {
+  margin-inline-start: auto;
+  color: #6d8374;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+.notification-center-compact .notice-content h3 {
+  margin: 3px 0;
+  color: #183a2c;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 760;
+  line-height: 1.35;
+}
+.notification-center-compact .notice-content p {
+  margin: 0;
+  color: #667c6f;
+  font-size: 11px;
+  line-height: 1.42;
+}
+.notification-center-compact .notice-read {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  justify-self: end;
+  align-self: center;
+  min-height: 38px;
+  margin: 0;
+  padding: 5px 8px;
+  border: 1px solid #cde2d3;
+  border-radius: 8px;
+  background: #fff;
+  color: #256b4b;
+  font-size: 10px;
+  font-weight: 760;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.notification-center-compact .notice-read::before { content: ''; position: absolute; inset: -3px; }
+.notification-center-compact .notice-read .app-icon { width: 13px; height: 13px; }
+.notification-center-compact .notice-read:hover { border-color: #9ecbb0; background: #edf7ef; }
+.notification-center-compact .notification-settings {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  margin-top: 9px;
+  padding: 9px 11px;
+  border: 1px solid #dce8df;
+  border-radius: 11px;
+  background: #eef5ef;
+}
+.notification-center-compact .notification-settings > .app-icon { width: 19px; height: 19px; color: #287453; }
+.notification-center-compact .notification-settings-copy { min-width: 0; }
+.notification-center-compact .notification-settings-copy b {
+  display: block;
+  color: #2b4c3b;
+  font-size: 12px;
+  font-weight: 760;
+  line-height: 1.3;
+}
+.notification-center-compact .notification-settings-copy small {
+  display: block;
+  margin-top: 2px;
+  color: #698073;
+  font-size: 10px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.notification-center-compact .notification-settings > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  min-height: 44px;
+  padding: 5px 7px;
+  border: 1px solid #d3e4d7;
+  border-radius: 8px;
+  background: #fff;
+  color: #24694b;
+  font-size: 11px;
+  font-weight: 750;
+}
+.notification-center-compact .notification-settings > button .app-icon { width: 13px; height: 13px; }
+.notification-center-compact .notification-preferences-panel:not([hidden]) {
+  margin: 8px 0 0;
+  padding: 12px;
+  border: 1px solid #dce8df;
+  border-radius: 11px;
+  background: #fff;
+}
+.notification-center-compact .notification-preferences-panel legend {
+  margin: 0;
+  color: #234d39;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+.notification-center-compact .notification-preferences-panel p {
+  margin: 4px 0 9px;
+  color: #6a8070;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.notification-center-compact .notice-channels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 6px;
+}
+.notification-center-compact .notice-channels label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 7px;
+  border: 1px solid #dce8de;
+  border-radius: 8px;
+  background: #f8faf7;
+  color: #3f6250;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.notification-center-compact .notice-channels label:has(input:checked) {
+  border-color: #a5d0b3;
+  background: #e9f6ec;
+  color: #236747;
+}
+.notification-center-compact .notice-channels input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #197c57;
+}
+.notification-center-compact .notification-preferences-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px 10px;
+  margin-top: 9px;
+}
+.notification-center-compact .notification-preferences-actions .button {
+  min-height: 44px;
+  margin: 0;
+  padding: 9px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+.notification-center-compact .notification-preferences-actions p {
+  margin: 0;
+  color: #267451;
+  font-size: 11px;
+}
+@media (max-width: 660px) {
+  .overlay .notification-panel.refined-notifications.notification-center-compact {
+    width: 100%;
+    max-height: 96dvh;
+    border-radius: 18px 18px 0 0;
+    border-bottom: 0;
+  }
+  .notification-center-compact .notification-head {
+    padding: 13px 13px 9px;
+  }
+  .notification-center-compact .notification-head h2 { font-size: clamp(23px, 5vw, 27px); }
+  .notification-center-compact .notification-filters { margin: 7px 12px; }
+  .notification-center-compact .notification-scroll {
+    padding: 1px 12px calc(15px + env(safe-area-inset-bottom));
+  }
+  .notification-center-compact .notification-item {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 5px 9px;
+    padding: 10px;
+  }
+  .notification-center-compact .notification-item .notice-icon { width: 30px; height: 30px; }
+  .notification-center-compact .notice-read {
+    grid-column: 2;
+    justify-self: end;
+    min-height: 36px;
+    margin-top: 1px;
+  }
+  .notification-center-compact .notice-read::before { inset: -4px; }
+  .notification-center-compact .notification-settings { gap: 7px; padding: 8px; }
+  .notification-center-compact .notice-channels { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 390px) {
+  .notification-center-compact .notification-head h2 { font-size: 23px; }
+  .notification-center-compact .notification-toolbar {
+    gap: 4px 7px;
+  }
+  .notification-center-compact .notification-toolbar > button {
+    padding-inline: 7px;
+    font-size: 10px;
+  }
+  .notification-center-compact .notification-filters button {
+    gap: 3px;
+    padding-inline: 2px;
+    font-size: 11px;
+  }
+  .notification-center-compact .notification-item { padding: 9px; }
+  .notification-center-compact .notification-settings-copy small { font-size: 9.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .notification-center-compact .notification-item,
+  .notification-center-compact .notification-filters button { transition: none; }
+}
+
+/* Delivery channel identities and compact language selection — responsive refinement. */
+/* Delivery channels: real WhatsApp logo and familiar native notification glyphs. */
+.notification-center-compact .notification-saved-channels {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px 9px;
+  min-width: 0;
+  margin-top: 3px;
+  color: #557363;
+}
+.notification-center-compact .notification-saved-channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  color: #577261;
+  font-size: 10px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.notification-center-compact .notification-channel-mark {
+  display: block;
+  flex: 0 0 17px;
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.9;
+  color: #247554;
+}
+.notification-center-compact .notification-saved-channel .notification-channel-mark {
+  flex-basis: 14px;
+  width: 14px;
+  height: 14px;
+}
+.notification-center-compact .notification-channel-whatsapp { color: #1b9b64; }
+.notification-center-compact .notification-channel-mail { color: #316da2; }
+.notification-center-compact .notification-channel-sms { color: #6d61aa; }
+.notification-center-compact .notification-channel-bell { color: #277756; }
+.notification-center-compact .notification-channel-choice {
+  display: grid;
+  grid-template-columns: 17px 19px minmax(0, 1fr);
+  align-items: center;
+  justify-content: start;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 7px 9px;
+  border: 1px solid #dae8df;
+  border-radius: 9px;
+  background: #f8faf8;
+  cursor: pointer;
+}
+.notification-center-compact .notification-channel-choice:has(input:checked) {
+  border-color: #8fc4a6;
+  background: #eaf6ee;
+  box-shadow: inset 0 0 0 1px #d1e7d9;
+}
+.notification-center-compact .notification-channel-choice:focus-within {
+  outline: 2px solid #268561;
+  outline-offset: 2px;
+}
+.notification-center-compact .notification-channel-choice input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: #17835c;
+}
+.notification-center-compact .notification-channel-label {
+  min-width: 0;
+  color: #345b43;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: normal;
+}
+@media (max-width: 660px) {
+  .notification-center-compact .notice-channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .notification-center-compact .notification-channel-choice {
+    grid-template-columns: 17px 18px minmax(0, 1fr);
+    gap: 5px;
+    min-height: 44px;
+    padding: 7px 8px;
+  }
+  .notification-center-compact .notification-saved-channels { gap: 3px 8px; }
+  .notification-center-compact .notification-saved-channel { font-size: 9.5px; }
+}
+@media (max-width: 360px) {
+  .notification-center-compact .notification-channel-choice {
+    grid-template-columns: 16px 17px minmax(0, 1fr);
+    gap: 4px;
+    padding-inline: 6px;
+  }
+  .notification-center-compact .notification-channel-choice .notification-channel-mark {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+  }
+  .notification-center-compact .notification-channel-label { font-size: 10.5px; }
+}
+
+/* Language panel: tight editorial hierarchy, obvious selection, honest availability. */
+.overlay .search-panel.language-panel.language-panel-premium {
+  position: relative;
+  width: min(500px, 100%);
+  max-height: calc(100dvh - 24px);
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid #d8e6dc;
+  border-radius: 19px;
+  background: linear-gradient(145deg, #fbfdf9, #f5f9f5);
+  box-shadow: 0 24px 68px #071d2733;
+  overscroll-behavior: contain;
+}
+.language-panel-premium > .close {
+  top: 9px;
+  inset-inline-end: 9px;
+  width: 42px;
+  height: 42px;
+}
+.language-panel-premium .language-panel-heading {
+  min-width: 0;
+  margin: 0 0 13px;
+  padding-inline-end: 43px;
+}
+.language-panel-premium .language-panel-heading > .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 5px;
+  color: #267554;
+  font-size: 10px;
+  font-weight: 830;
+  line-height: 1.3;
+  letter-spacing: .115em;
+  text-transform: uppercase;
+}
+.language-panel-premium .language-panel-heading .eyebrow .app-icon {
+  width: 15px;
+  height: 15px;
+  color: #208261;
+}
+.language-panel-premium .language-panel-heading h2 {
+  margin: 0;
+  color: #163c2d;
+  font-family: inherit;
+  font-size: clamp(25px, 3vw, 30px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -.025em;
+}
+.language-panel-premium .language-panel-heading > p:last-child {
+  margin: 8px 0 0;
+  color: #65786c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.language-panel-premium .language-choice-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+.language-panel-premium .language-choice-list > .language-choice {
+  display: grid;
+  grid-template-columns: 39px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 61px;
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid #e0e9e1;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: none;
+  text-align: start;
+}
+.language-panel-premium .language-choice-list > button.language-choice { cursor: pointer; }
+.language-panel-premium .language-choice-list > button.language-choice:hover {
+  border-color: #77b496;
+  background: #eff9f1;
+}
+.language-panel-premium .language-choice-list > button.language-choice:focus-visible {
+  outline: 2px solid #1c7c57;
+  outline-offset: 2px;
+}
+.language-panel-premium .language-choice-list > .language-choice-active {
+  border-color: #8dbfa2;
+  background: #edf7ef;
+  box-shadow: inset 0 0 0 1px #cde8d5;
+}
+.language-panel-premium .language-choice-symbol {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 39px;
+  height: 39px;
+  border-radius: 10px;
+  background: #eff4f0;
+  color: #567762;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: .035em;
+}
+.language-panel-premium .language-choice-active .language-choice-symbol {
+  background: #cfe9d8;
+  color: #145e41;
+}
+.language-panel-premium .language-choice-symbol-ar {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.language-panel-premium .language-choice-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  line-height: 1.3;
+}
+.language-panel-premium .language-choice-copy b {
+  color: #264735;
+  font-size: 13px;
+  font-weight: 770;
+  line-height: 1.3;
+}
+.language-panel-premium .language-choice-copy small {
+  display: block;
+  color: #718277;
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.3;
+}
+.language-panel-premium .language-choice-active .language-choice-copy small {
+  color: #277553;
+  font-weight: 680;
+}
+.language-panel-premium .language-choice-status {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #b9ddc5;
+  border-radius: 999px;
+  background: #d9f0e0;
+  color: #176443;
+}
+.language-panel-premium .language-choice-status .app-icon {
+  width: 16px;
+  height: 16px;
+}
+.language-panel-premium .language-choice-coming {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 24px;
+  max-width: 90px;
+  padding: 4px 7px;
+  border: 1px solid #e5e9e0;
+  border-radius: 999px;
+  background: #f4f5f0;
+  color: #748071;
+  font-size: 10px;
+  font-weight: 710;
+  line-height: 1.2;
+  text-align: center;
+}
+.language-panel-premium .language-choice-pending {
+  opacity: .87;
+  cursor: not-allowed;
+}
+@media (max-width: 780px) {
+  .overlay.language-overlay { padding: 0; place-items: end center; }
+  .overlay .search-panel.language-panel.language-panel-premium {
+    width: 100%;
+    max-height: 95dvh;
+    padding: 17px 15px max(19px, env(safe-area-inset-bottom));
+    border-radius: 19px 19px 0 0;
+    border-bottom: 0;
+  }
+  .language-panel-premium .language-panel-heading { margin-bottom: 11px; }
+  .language-panel-premium .language-choice-list > .language-choice {
+    min-height: 58px;
+    padding: 8px 10px;
+  }
+}
+@media (max-width: 390px) {
+  .overlay .search-panel.language-panel.language-panel-premium {
+    padding: 15px 11px max(17px, env(safe-area-inset-bottom));
+  }
+  .language-panel-premium .language-panel-heading h2 { font-size: 24px; }
+  .language-panel-premium .language-panel-heading > p:last-child { font-size: 11px; }
+  .language-panel-premium .language-choice-list { gap: 6px; }
+  .language-panel-premium .language-choice-list > .language-choice {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    min-height: 56px;
+    gap: 7px;
+    padding: 8px;
+  }
+  .language-panel-premium .language-choice-symbol { width: 34px; height: 34px; font-size: 11px; }
+  .language-panel-premium .language-choice-symbol-ar { font-size: 17px; }
+  .language-panel-premium .language-choice-coming { max-width: 72px; padding-inline: 5px; font-size: 9px; }
+  .language-panel-premium .language-choice-copy b { font-size: 12px; }
+  .language-panel-premium .language-choice-copy small { font-size: 9.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .language-panel-premium .language-choice-list > button.language-choice { transition: none; }
+}
+
+/* Evidence CTA integrated into update image: single action, minimal card height. */
+.refined-updates .update-card {
+  grid-template-rows: minmax(0, 1fr) auto;
+  aspect-ratio: 1.05;
+  min-block-size: 18rem;
+}
+.refined-updates .update-card > .update-image {
+  position: relative;
+  isolation: isolate;
+}
+.refined-updates .update-image-toolbar {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 11px;
+  inset-inline: 11px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 7px;
+  pointer-events: none;
+}
+.refined-updates .update-image-toolbar .update-photo-badge {
+  position: static;
+  inset: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 5px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 30px;
+  margin: 0;
+  padding: 6px 9px;
+  border: 1px solid #ffffffaa;
+  border-radius: 999px;
+  background: #fafff5f0;
+  color: #1b684e;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+  box-shadow: 0 1px 4px #06192320;
+  pointer-events: none;
+}
+.refined-updates .update-image-toolbar .update-photo-badge .app-icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.refined-updates .update-image-toolbar .update-evidence-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  justify-self: end;
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 7px 10px;
+  border: 1px solid #ffffff9a;
+  border-radius: 999px;
+  background: linear-gradient(155deg, #153a2fe8, #0b2c23ec);
+  color: #f7fff7;
+  box-shadow: inset 0 1px 0 #ffffff30, inset 0 -1px 0 #020e0b44, 0 2px 7px #04170f3b;
+  font-size: 10.5px;
+  font-weight: 780;
+  letter-spacing: .005em;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color .15s ease, border-color .15s ease, transform .15s ease;
+}
+.refined-updates .update-image-toolbar .update-evidence-pill .app-icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: #c5f0d4;
+}
+.refined-updates .update-image-toolbar .update-evidence-pill:hover {
+  background: #16543e;
+  border-color: #d6efd8;
+  transform: translateY(-1px);
+}
+.refined-updates .update-image-toolbar .update-evidence-pill:focus-visible {
+  outline: 3px solid #ffdf8a;
+  outline-offset: 3px;
+}
+.refined-updates .update-card > .update-summary {
+  display: block;
+  padding: 10px 12px 11px;
+  background: #fff;
+}
+.refined-updates .update-card > .update-summary > p {
+  min-height: 0;
+  margin: 0;
+  color: #5a6f62;
+  font-size: 12px;
+  line-height: 1.45;
+}
+@media (max-width: 700px) {
+  .refined-updates .update-card {
+    aspect-ratio: auto;
+    min-block-size: 0;
+  }
+  .refined-updates .update-card > .update-image {
+    min-height: 235px;
+  }
+  .refined-updates .update-image-toolbar {
+    inset-block-start: 9px;
+    inset-inline: 9px;
+    gap: 5px;
+  }
+  .refined-updates .update-image-toolbar .update-photo-badge {
+    padding-inline: 7px;
+    font-size: 9.5px;
+  }
+  .refined-updates .update-card > .update-summary { padding: 9px 11px 10px; }
+}
+@media (max-width: 360px) {
+  .refined-updates .update-image-toolbar {
+    inset-block-start: 8px;
+    inset-inline: 8px;
+    gap: 4px;
+  }
+  .refined-updates .update-image-toolbar .update-photo-badge {
+    gap: 3px;
+    padding: 5px 6px;
+    font-size: 9px;
+  }
+  .refined-updates .update-image-toolbar .update-photo-badge .app-icon {
+    width: 12px;
+    height: 12px;
+  }
+  .refined-updates .update-image-toolbar .update-evidence-pill {
+    padding-inline: 8px;
+    gap: 4px;
+    font-size: 9.5px;
+  }
+  .refined-updates .update-image-toolbar .update-evidence-pill .app-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-updates .update-image-toolbar .update-evidence-pill { transition: none; }
+  .refined-updates .update-image-toolbar .update-evidence-pill:hover { transform: none; }
+}
+
+/* Screenshot QA: unclipped image actions and separated notification channel chips. */
+/* The evidence button must size to its own label, never to the adjacent badge. */
+.refined-updates .update-card .update-image-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+  align-items: flex-start;
+  column-gap: 8px;
+  row-gap: 6px;
+  box-sizing: border-box;
+  min-width: 0;
+  width: auto;
+  inset-inline: 11px;
+}
+.refined-updates .update-card .update-image-toolbar .update-photo-badge {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 116px;
+  max-width: 100%;
+  min-height: 44px;
+  margin-inline-start: auto;
+  padding-inline: 10px;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+  color: #f7fff7;
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill .app-icon {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 380px) {
+  .refined-updates .update-card .update-image-toolbar {
+    inset-inline: 8px;
+    column-gap: 5px;
+  }
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+    min-width: 108px;
+    padding-inline: 8px;
+    font-size: 10px;
+  }
+}
+/* Use a dedicated second row; wrapping chips are not squeezed by the Manage button. */
+.notification-center-compact .notification-settings {
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 9px;
+}
+.notification-center-compact .notification-settings > .app-icon { grid-column: 1; grid-row: 1; }
+.notification-center-compact .notification-settings > .notification-settings-copy {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+.notification-center-compact .notification-settings > button {
+  grid-column: 3;
+  grid-row: 1;
+}
+.notification-center-compact .notification-settings > .notification-saved-channels {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  align-content: start;
+  flex-wrap: wrap;
+  gap: 5px 6px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.notification-center-compact .notification-settings .notification-saved-channel {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 26px;
+  margin: 0;
+  padding: 4px 8px;
+  border: 1px solid #d3e6da;
+  border-radius: 999px;
+  background: #fff;
+  color: #365e49;
+  font-size: 10.5px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.notification-center-compact .notification-settings .notification-saved-channel .notification-channel-mark {
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.notification-center-compact .notification-settings .notification-saved-channel-label {
+  display: inline;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-weight: 720;
+  line-height: inherit;
+}
+.notification-center-compact .notification-settings .notification-no-channels {
+  color: #648073;
+  font-size: 11px;
+  line-height: 1.4;
+}
+@media (max-width: 520px) {
+  .notification-center-compact .notification-settings {
+    grid-template-columns: 19px minmax(0, 1fr) auto;
+    column-gap: 7px;
+  }
+  .notification-center-compact .notification-settings > .notification-saved-channels {
+    gap: 5px;
+  }
+  .notification-center-compact .notification-settings .notification-saved-channel {
+    min-height: 26px;
+    padding-inline: 7px;
+    font-size: 10px;
+  }
+}
+
+/* Consolidated channel picker and compact evidence pill — no repeated controls. */
+/* Keep the badge separate, with the actual evidence action engraved at top-right. */
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 0;
+  min-height: 32px;
+  gap: 4px;
+  margin: 0 0 0 auto;
+  padding: 5px 9px;
+  border: 1px solid #d5f1dc9c;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #164936ee, #0b3327f2);
+  color: #f7fff7;
+  box-shadow: inset 0 1px 0 #ffffff36, inset 0 -1px 0 #061a124a, 0 2px 5px #061b153d;
+  font-size: 10px;
+  font-weight: 760;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: visible;
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill::before {
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  content: '';
+}
+.refined-updates .update-card .update-image-toolbar .update-evidence-pill .app-icon {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+}
+@media (max-width: 380px) {
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+    min-width: 0;
+    min-height: 30px;
+    gap: 3px;
+    padding: 4px 7px;
+    font-size: 9.5px;
+  }
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill::before { inset: -7px; }
+}
+/* Each choice reads left to right: channel icon, text, right-aligned checkbox. */
+.notification-center-compact .notice-channels .notification-channel-choice {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+.notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-mark {
+  grid-column: 1;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-label {
+  grid-column: 2;
+  min-width: 0;
+  text-align: start;
+}
+.notification-center-compact .notice-channels .notification-channel-choice > input[type="checkbox"] {
+  grid-column: 3;
+  justify-self: end;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #168259;
+}
+.notification-center-compact .notification-preferences-panel:not([hidden]) { padding: 11px; }
+.notification-center-compact .notification-preferences-panel legend { margin: 0; }
+.notification-center-compact .notification-preferences-panel p { margin: 4px 0 8px; }
+.notification-center-compact .notification-preferences-actions { margin-top: 8px; }
+@media (max-width: 660px) {
+  .notification-center-compact .notice-channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice {
+    grid-template-columns: 17px minmax(0, 1fr) 17px;
+    gap: 5px;
+    padding-inline: 7px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-mark {
+    width: 17px;
+    height: 17px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice > input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+  }
+}
+@media (max-width: 350px) {
+  .notification-center-compact .notice-channels .notification-channel-choice {
+    gap: 4px;
+    padding-inline: 6px;
+  }
+  .notification-center-compact .notice-channels .notification-channel-choice > .notification-channel-label { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+    transition: none;
+  }
+}
+
+/* Amanah Hajj — cohesive compact premium presentation and responsive layout. */
+/* A dedicated, consistent spatial rhythm throughout the Hajj demo. */
+.seo-page:has(.hajj-programme) .seo-header {
+  min-height: 58px;
+  padding-block: 7px;
+}
+.seo-content:has(.hajj-programme) {
+  width: min(calc(100% - 2 * clamp(15px, 3vw, 48px)), 1280px);
+  padding-block: clamp(16px, 2.1vw, 27px) clamp(25px, 3vw, 42px);
+}
+.seo-content:has(.hajj-programme) .seo-hero {
+  margin-bottom: clamp(11px, 1.6vw, 18px);
+  padding: clamp(18px, 2.3vw, 30px);
+  border: 1px solid #d8e7dd;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px #123b2610;
+}
+.seo-content:has(.hajj-programme) .seo-hero .eyebrow {
+  padding: 5px 9px;
+  font-size: 10px;
+  letter-spacing: .095em;
+}
+.seo-content:has(.hajj-programme) .seo-hero h1 {
+  max-width: 26ch;
+  margin: 9px 0 9px;
+  font-size: clamp(31px, 4vw, 51px);
+  line-height: 1.08;
+  letter-spacing: -.042em;
+}
+.seo-content:has(.hajj-programme) .seo-hero .seo-intro {
+  max-width: 76ch;
+  font-size: clamp(13px, 1.35vw, 16px);
+  line-height: 1.5;
+}
+.hajj-programme {
+  gap: clamp(14px, 1.6vw, 21px);
+  min-width: 0;
+  color: #173a2b;
+}
+.hajj-programme section { scroll-margin-top: 82px; }
+.hajj-programme h2 {
+  margin: 0 0 10px;
+  color: #12382c;
+  font-size: clamp(21px, 2.25vw, 28px);
+  line-height: 1.19;
+  letter-spacing: -.025em;
+}
+.hajj-programme h3 {
+  margin: 0;
+  color: #1b4332;
+  font-size: 15px;
+  font-weight: 770;
+  line-height: 1.3;
+}
+.hajj-programme :is(.hajj-path, .hajj-journey) p {
+  margin: 5px 0 0;
+  color: #617769;
+  font-size: 12.5px;
+  line-height: 1.47;
+}
+.hajj-programme :is(.button, .outline-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+.hajj-programme :is(button, a):focus-visible,
+.hajj-programme :is(input, select, summary):focus-visible {
+  outline: 2px solid #1c7c58;
+  outline-offset: 3px;
+}
+.hajj-programme .app-icon { flex: 0 0 auto; }
+.hajj-programme .hajj-overview {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  gap: 10px 14px;
+  padding: clamp(10px, 1.3vw, 15px);
+  border-radius: 13px;
+  background: #f8fcf8;
+}
+.hajj-programme .hajj-preview {
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.hajj-programme .hajj-preview > .app-icon { width: 17px; height: 17px; margin: 0; color: #247452; }
+.hajj-programme .hajj-preview strong { display: inline; margin: 0 6px 0 0; color: #1a694a; }
+.hajj-programme .hajj-preview > span { min-width: 0; }
+.hajj-programme .hajj-overview .hajj-actions {
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 6px;
+}
+.hajj-programme .hajj-overview .hajj-actions a {
+  min-width: 0;
+  justify-content: space-between;
+  font-size: 11px;
+  padding-inline: 9px;
+}
+.hajj-programme .hajj-jump {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: -4px;
+}
+.hajj-programme .hajj-jump a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 43px;
+  padding: 7px 8px;
+  border: 1px solid #d7e5dc;
+  border-radius: 9px;
+  background: #fcfdfa;
+  color: #2b5944;
+  font-size: 11.5px;
+  font-weight: 750;
+  line-height: 1.24;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.hajj-programme .hajj-jump a:hover,
+.hajj-programme .hajj-jump a:focus-visible {
+  border-color: #9cc7ad;
+  background: #edf7ef;
+}
+.hajj-programme .hajj-jump .app-icon { width: 15px; height: 15px; }
+/* Sponsorship cards retain individual funds and distinct accounting. */
+.hajj-programme .hajj-funds {
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+  align-items: stretch;
+}
+.hajj-programme .hajj-funds .hajj-path {
+  align-items: stretch;
+  padding: clamp(12px, 1.35vw, 17px);
+  border-color: #d6e6db;
+  border-radius: 14px;
+  background: linear-gradient(150deg, #ffffff, #fbfdfb);
+  box-shadow: 0 4px 14px #113a250b;
+}
+.hajj-programme .hajj-fund-header { gap: 7px; }
+.hajj-programme .hajj-icon {
+  width: 33px;
+  height: 33px;
+  border-radius: 9px;
+}
+.hajj-programme .hajj-icon .app-icon { width: 18px; height: 18px; }
+.hajj-programme .hajj-reference {
+  padding: 4px 6px;
+  border-radius: 7px;
+  font-size: 10px;
+  line-height: 1.25;
+}
+.hajj-programme .hajj-funds .hajj-path > h3 { margin-top: 9px; font-size: 16px; }
+.hajj-programme .hajj-funds .hajj-path > p {
+  margin: 5px 0 9px;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+.hajj-programme .hajj-funding {
+  margin-top: 5px;
+  padding: 6px 0 9px;
+}
+.hajj-programme .hajj-funding-summary { gap: 5px 8px; align-items: center; }
+.hajj-programme .hajj-funding-summary strong {
+  font-size: clamp(17px, 1.65vw, 21px);
+  font-weight: 780;
+  line-height: 1.2;
+}
+.hajj-programme .hajj-funding-summary small { font-size: 10px; }
+.hajj-programme .hajj-funding-summary > span {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #e8f5eb;
+  color: #226649;
+  font-size: 10px;
+}
+.hajj-programme progress { height: 6px; margin-top: 7px; }
+.hajj-programme .hajj-funds .outline-button {
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+  background: #f0f8f2;
+}
+.hajj-programme .hajj-funds .outline-button .app-icon { width: 15px; height: 15px; }
+/* Dense, readable application and journey panels. */
+.hajj-programme .hajj-applicant-grid { gap: 10px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+.hajj-programme :is(.hajj-journey, .hajj-path, .hajj-safeguards) {
+  min-width: 0;
+  border-radius: 14px;
+}
+.hajj-programme .hajj-journey { padding: clamp(12px, 1.55vw, 20px); }
+.hajj-programme .hajj-path:not(.hajj-funds .hajj-path) { padding: 12px 15px; }
+.hajj-programme .hajj-form {
+  gap: 9px;
+  margin-top: 10px;
+}
+.hajj-programme .hajj-fields { gap: 8px; }
+.hajj-programme .hajj-applicant-grid .hajj-fields { grid-template-columns: minmax(0,1fr); }
+.hajj-programme .hajj-form label {
+  font-size: 12px;
+  line-height: 1.3;
+  color: #365a45;
+}
+.hajj-programme .hajj-form :is(input[type='number'], select),
+.hajj-programme .hajj-language select {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 44px;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid #cbded0;
+  border-radius: 8px;
+  background: #fcfefa;
+  color: #234536;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.hajj-programme .hajj-form select { text-overflow: ellipsis; }
+.hajj-programme .hajj-eligibility {
+  margin: 0;
+  padding-inline: 10px;
+  border-radius: 9px;
+}
+.hajj-programme summary { padding: 7px 0; font-size: 12px; line-height: 1.4; }
+.hajj-programme .hajj-journey-empty {
+  padding: 10px;
+  border-radius: 10px;
+  gap: 9px;
+}
+.hajj-programme .hajj-journey-empty h3 { font-size: 14px; }
+.hajj-programme .hajj-inline-link {
+  min-height: 42px;
+  gap: 5px;
+  font-size: 12px;
+}
+.hajj-programme .hajj-milestones { gap: 8px; margin-block: 10px; }
+.hajj-programme .hajj-milestones li { gap: 8px; }
+.hajj-programme .hajj-milestones h3 { font-size: 12.5px; }
+.hajj-programme .hajj-milestones p { font-size: 11px; }
+.hajj-programme .hajj-review { margin-block: 8px; }
+.hajj-programme .hajj-review [id='hajj-oversight'] { padding: 10px; }
+/* Academy checklist: one clean track per step instead of large vertically stacked cards. */
+.hajj-programme .hajj-academy-head {
+  align-items: end;
+  gap: 8px 18px;
+}
+.hajj-programme .hajj-academy-head h2 { margin-bottom: 4px; }
+.hajj-programme .hajj-academy-progress progress { max-width: 100%; width: 240px; }
+.hajj-programme .hajj-language {
+  width: min(100%, 205px);
+  font-size: 12px;
+}
+.hajj-programme .hajj-academy {
+  display: grid;
+  gap: 7px;
+  margin-top: 9px;
+}
+.hajj-programme .hajj-academy > div {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: center;
+  gap: 8px 14px;
+  min-width: 0;
+  padding: 8px 11px;
+  border-color: #dce9df;
+  border-radius: 10px;
+  background: #fbfdfa;
+}
+.hajj-programme .hajj-academy details { min-width: 0; }
+.hajj-programme .hajj-academy summary {
+  padding: 5px 0;
+  font-size: 12.5px;
+}
+.hajj-programme .hajj-academy details p { color: #5a7767; font-size: 12px; line-height: 1.5; }
+.hajj-programme .hajj-academy .hajj-check {
+  min-height: 44px;
+  margin: 0;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.hajj-programme .hajj-academy .hajj-check input { margin: 0; }
+/* Dual-column tools — compact forms but remain fully actionable. */
+.hajj-programme .hajj-tools-grid { gap: 10px; align-items: stretch; }
+.hajj-programme .hajj-tools-grid > .hajj-path {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(12px, 1.35vw, 17px);
+  border-color: #dce8df;
+  border-radius: 13px;
+  background: #fcfefb;
+}
+.hajj-programme .hajj-tools-grid .hajj-path > .hajj-icon {
+  margin-bottom: 7px;
+}
+.hajj-programme .hajj-tools-grid .hajj-path > h3 { margin: 0; font-size: 15px; }
+.hajj-programme .hajj-tools-grid .hajj-path > p { margin: 5px 0 0; }
+.hajj-programme .hajj-tools-grid .hajj-form { gap: 7px; margin-top: 9px; }
+.hajj-programme .hajj-tools-grid .hajj-path > button { margin-top: 10px; align-self: flex-start; }
+.hajj-programme .hajj-tools-grid .hajj-path > .hajj-inline-link { margin-top: 6px; }
+.hajj-programme .hajj-tools-grid .hajj-pledge-fields {
+  grid-template-columns: minmax(0,1.4fr) repeat(2,minmax(0,1fr));
+}
+.hajj-programme .hajj-tools-grid .hajj-guide-fields {
+  grid-template-columns: minmax(0,1.5fr) minmax(0,.75fr);
+}
+.hajj-programme .hajj-tool-list { margin-top: 7px; gap: 5px; }
+.hajj-programme .hajj-sample-document { padding: 8px; margin-block: 6px; }
+.hajj-programme .hajj-status:not(:empty) {
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+/* Safeguards stay distinct and readable, without sprawling blank space. */
+.hajj-programme .hajj-safeguards {
+  padding: clamp(12px,1.55vw,20px);
+  background: #f4f8f2;
+}
+.hajj-programme .hajj-safeguards ul { gap: 9px; }
+.hajj-programme .hajj-safeguards li {
+  gap: 7px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fcfefb;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.hajj-programme .hajj-safeguards li > .app-icon {
+  width: 18px;
+  height: 18px;
+  color: #217857;
+}
+.hajj-programme .hajj-safeguards li strong { font-size: 12.5px; }
+.hajj-programme .hajj-safeguards li p { margin-top: 4px; }
+.hajj-programme .hajj-safeguards > a { margin-top: 8px; font-size: 12px; }
+.seo-page:has(.hajj-programme) .seo-footer {
+  padding-block: 13px calc(14px + env(safe-area-inset-bottom));
+  font-size: 11px;
+}
+/* Balanced intermediate width: maintain legible controls before column collapse. */
+@media (min-width: 701px) and (max-width: 1090px) {
+  .hajj-programme .hajj-funds { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .hajj-programme .hajj-funds .hajj-path:last-child { grid-column: 1 / -1; }
+  .hajj-programme .hajj-funds .hajj-path:last-child > p { max-width: 70ch; }
+  .hajj-programme .hajj-overview { grid-template-columns: minmax(0,1fr); }
+  .hajj-programme .hajj-overview .hajj-actions { max-width: 610px; }
+  .hajj-programme .hajj-tools-grid .hajj-pledge-fields { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .hajj-programme .hajj-tools-grid .hajj-pledge-fields > :first-child { grid-column: 1 / -1; }
+}
+@media (max-width: 750px) {
+  .hajj-programme .hajj-applicant-grid,
+  .hajj-programme .hajj-safeguards ul,
+  .hajj-programme .hajj-overview {
+    grid-template-columns: minmax(0,1fr);
+  }
+  .hajj-programme .hajj-overview .hajj-actions { max-width: none; }
+}
+@media (max-width: 700px) {
+  .seo-content:has(.hajj-programme) {
+    width: calc(100% - 26px);
+    padding-block: 14px 30px;
+  }
+  .seo-content:has(.hajj-programme) .seo-hero {
+    padding: 17px 15px;
+    margin-bottom: 12px;
+    border-radius: 15px;
+  }
+  .seo-content:has(.hajj-programme) .seo-hero h1 {
+    max-width: none;
+    margin: 7px 0;
+    font-size: clamp(29px, 7.9vw, 41px);
+    line-height: 1.08;
+  }
+  .seo-content:has(.hajj-programme) .seo-hero .seo-intro {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .hajj-programme { gap: 13px; }
+  .hajj-programme .hajj-jump {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 6px;
+    margin-top: -3px;
+  }
+  .hajj-programme .hajj-jump a {
+    justify-content: flex-start;
+    min-height: 44px;
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+  .hajj-programme .hajj-jump a:last-child {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  .hajj-programme .hajj-funds,
+  .hajj-programme .hajj-tools-grid {
+    grid-template-columns: minmax(0,1fr);
+    gap: 9px;
+  }
+  .hajj-programme .hajj-funds .hajj-path:last-child { grid-column: auto; }
+  .hajj-programme .hajj-overview .hajj-actions {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+  .hajj-programme .hajj-funds .hajj-path > p { min-height: 0; }
+  .hajj-programme .hajj-applicant-grid { gap: 9px; }
+  .hajj-programme .hajj-academy-head { align-items: start; }
+  .hajj-programme .hajj-academy > div {
+    grid-template-columns: minmax(0,1fr);
+    gap: 2px;
+    padding: 8px 10px;
+  }
+  .hajj-programme .hajj-academy .hajj-check { justify-self: start; }
+  .hajj-programme .hajj-tools-grid .hajj-pledge-fields,
+  .hajj-programme .hajj-tools-grid .hajj-guide-fields { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 390px) {
+  .hajj-programme .hajj-overview .hajj-actions { grid-template-columns: minmax(0,1fr); }
+  .hajj-programme .hajj-jump a { gap: 4px; padding-inline: 6px; font-size: 10.5px; }
+  .hajj-programme .hajj-reference { font-size: 9.5px; }
+  .hajj-programme .hajj-funding-summary strong { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hajj-programme :is(.button, .outline-button, .hajj-jump a) { transition: none; }
+}

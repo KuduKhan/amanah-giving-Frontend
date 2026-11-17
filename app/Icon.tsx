@@ -1,7 +1,7 @@
 import {
   Apple, ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, Bell,
   BookOpen, Building2, CalendarDays, Check, CircleCheck, Clock3,
-  CreditCard, Droplets, Gift, Globe2, HandHeart, Heart, House, MessageCircle,
+  CreditCard, Droplets, Gift, Globe2, HandHeart, Heart, House, Mail, MessageCircle, MessageSquareText,
   Infinity as InfinityIcon, Landmark, LayoutGrid, Menu, Moon,
   Package, Play, Plus, Repeat2, Search, Share2, ShieldCheck, Sparkles, Users,
   Wallet, X, Smartphone, Download, ReceiptText, Settings2, LifeBuoy, Stethoscope, GraduationCap, FileCheck2, ChevronRight, Images, type LucideIcon,
@@ -10,7 +10,7 @@ import {
 const icons: Record<string, LucideIcon> = {
   download: Download, receipt: ReceiptText, settings: Settings2, support: LifeBuoy, healthcare: Stethoscope, education: GraduationCap, evidence: FileCheck2, chevron: ChevronRight, check: Check, 'arrow-right': ArrowRight, 'arrow-left': ArrowLeft, search: Search, bell: Bell, globe: Globe2, menu: Menu, close: X,
   heart: Heart, home: House, giving: HandHeart, platform: LayoutGrid,
-  apple: Apple, play: Play, comment: MessageCircle, share: Share2,
+  apple: Apple, play: Play, comment: MessageCircle, mail: Mail, sms: MessageSquareText, share: Share2,
   wallet: Wallet, shield: ShieldCheck, users: Users, calendar: CalendarDays, phone: Smartphone,
   book: BookOpen, bank: Landmark, card: CreditCard,
   photos: Images,

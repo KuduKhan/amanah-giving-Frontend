@@ -1686,7 +1686,8 @@ footer.refined-footer { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) min
 .refined-updates .update-card { display: flex; flex-direction: column; border-radius: 18px; border-color: #dfe7e0; background: #fff; box-shadow: 0 4px 16px #071a2c05; }
 .refined-updates .update-card:hover { transform: none; box-shadow: 0 10px 26px #071a2c0c; }
 .refined-updates .update-image { flex: 0 0 auto; height: 166px; min-height: 0; }
-.refined-updates .update-image span { display: inline-flex; align-items: center; gap: 6px; left: 12px; bottom: 12px; max-width: calc(100% - 24px); padding: 7px 9px; font-size: 11px; line-height: 1.4; }
+/* Scope legacy image-label styling to its intended badge, not every descendant span. */
+.refined-updates .update-image > .update-photo-badge { display: inline-flex; align-items: center; gap: 6px; max-width: calc(100% - 24px); padding: 7px 9px; font-size: 11px; line-height: 1.4; }
 .refined-updates .update-image .app-icon { width: 14px; height: 14px; }
 .refined-updates .update-card > div { padding: 18px; }
 .refined-updates .update-card .update-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 12px; margin: 0 0 10px; color: #7c734f; font-size: 11px; line-height: 1.5; }

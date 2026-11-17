@@ -322,13 +322,6 @@ export default function Home() {
     <main id="main-content">
       <a className="skip-link" href="#top">Skip to main content</a>
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
-      <div className="trustbar refined-trustbar" role="note" aria-label="Giving safeguards">
-        <ul className="trustbar-inner">
-          <li className="trustbar-item"><i><Icon name="shield"/></i><span>Sample campaigns</span></li>
-          <li className="trustbar-item"><i><Icon name="wallet"/></i><span>No live payments</span></li>
-          <li className="trustbar-item"><i><Icon name="receipt"/></i><span>Local draft only</span></li>
-        </ul>
-      </div>
       <SiteHeader labels={t} language={language} unreadCount={notificationIds.filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
 
       <section className="hero refined-hero" id="top" aria-labelledby="hero-title">
@@ -528,11 +521,15 @@ export default function Home() {
           ].map(update => <article className="update-card" key={update.campaign.id} aria-labelledby={`update-${update.campaign.id}`}>
             <div className="update-image">
               <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
-              <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
+              <div className="update-image-toolbar">
+                <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
+                <button type="button" className="update-evidence-pill" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>
+                  <Icon name="evidence"/>View evidence
+                </button>
+              </div>
               <div className="update-image-content"><p className="update-meta"><time dateTime={update.isoDate}>{update.date}</time><span>{update.campaign.id}</span></p><h3 id={`update-${update.campaign.id}`}>{update.title}</h3></div>
-              <button className="update-photo-action" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View ${update.title}`} />
             </div>
-            <div className="update-summary"><p>{update.body}</p><button aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>View evidence <span><Icon name="arrow-right"/></span></button></div>
+            <div className="update-summary"><p>{update.body}</p></div>
           </article>)}
         </div>
       </section>
@@ -712,7 +709,35 @@ export default function Home() {
 
       {notificationsOpen && <NotificationCenter read={readNotifications} onRead={updateReadNotifications} readError={notificationReadError} onClose={() => setNotificationsOpen(false)}/>}
 
-      {languagesOpen && <div className="overlay" role="dialog" aria-modal="true" aria-labelledby="language-title"><div className="search-panel language-panel"><button className="close" aria-label="Close languages" onClick={() => setLanguagesOpen(false)}><Icon name="close"/></button><p className="eyebrow">Language</p><h2 id="language-title">Read with clarity.</h2><p>English is available throughout this preview. Other languages will be offered after every page and giving step has been translated.</p><div className="language-options"><button aria-pressed="true" onClick={() => setLanguagesOpen(false)}><b>English</b><span>Current language <Icon name="check"/></span></button><div><b>Kiswahili</b><span>Translation in preparation</span></div><div lang="ar"><b>العربية</b><span lang="en">Translation in preparation</span></div></div></div></div>}
+      {languagesOpen && (
+        <div className="overlay language-overlay" role="dialog" aria-modal="true" aria-labelledby="language-title" aria-describedby="language-description">
+          <div className="search-panel language-panel language-panel-premium">
+            <button className="close" type="button" aria-label="Close languages" onClick={() => setLanguagesOpen(false)}><Icon name="close"/></button>
+            <header className="language-panel-heading">
+              <p className="eyebrow"><Icon name="globe"/>Language</p>
+              <h2 id="language-title">Read with clarity.</h2>
+              <p id="language-description">English is available throughout this preview. Other languages will be offered after every page and giving step has been translated.</p>
+            </header>
+            <div className="language-options language-choice-list" role="group" aria-label="Choose a language">
+              <button type="button" className="language-choice language-choice-active" aria-pressed="true" onClick={() => setLanguagesOpen(false)}>
+                <span className="language-choice-symbol" aria-hidden="true">EN</span>
+                <span className="language-choice-copy"><b>English</b><small>Current language</small></span>
+                <span className="language-choice-status" aria-hidden="true"><Icon name="check"/></span>
+              </button>
+              <div className="language-choice language-choice-pending" aria-disabled="true">
+                <span className="language-choice-symbol" aria-hidden="true">SW</span>
+                <span className="language-choice-copy"><b lang="sw">Kiswahili</b><small>Translation in preparation</small></span>
+                <span className="language-choice-coming">Coming soon</span>
+              </div>
+              <div className="language-choice language-choice-pending" aria-disabled="true">
+                <span className="language-choice-symbol language-choice-symbol-ar" aria-hidden="true" lang="ar">ع</span>
+                <span className="language-choice-copy"><b lang="ar" dir="rtl">العربية</b><small>Translation in preparation</small></span>
+                <span className="language-choice-coming">Coming soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {toast && <div className="toast" role="status" aria-live="polite"><span><Icon name="✓"/></span>{toast}</div>}
       <a className="back-to-top" href="#top" aria-label="Back to top"><Icon name="↑"/></a>
     </main>
@@ -735,7 +760,50 @@ export default function Home() {
           <small>{!zakatAvailable ? 'Not eligible for this campaign' : description}</small>
         </label>;
       })}</fieldset><button className="button full" type="submit">Continue to amount <Icon name="→"/></button></form>}
-      {donationStep === 2 && <div className="donation-step"><button className="back" type="button" onClick={() => setDonationStep(1)} aria-label="Return to previous giving step"><Icon name="arrow-left"/> Back</button><h2>Shape your gift</h2>{donationCampaign && <div className="donation-campaign"><Image src={donationCampaign.image} alt="" width={100} height={80}/><span><small>Giving to</small><b>{donationCampaign.title}</b></span></div>}<div className="amount-grid">{['500','1000','2500','5000'].map(value => <button className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>)}</div><label className="custom-amount"><span>Custom amount</span><div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div></label><label className="check-row"><input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/><span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span></label><label className="check-row"><input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/><span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span></label>{onBehalf && <label className="dedication-field"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}<label className="check-row"><input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/><span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span></label>{recurring && <label className="schedule-field"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}<button className="button full" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button></div>}
+      {donationStep === 2 && (
+        <div className="donation-step giving-amount-step">
+          <header className="giving-amount-heading">
+            <button className="back" type="button" onClick={() => setDonationStep(1)} aria-label="Return to previous giving step"><Icon name="arrow-left"/> Back</button>
+            <h2>Shape your gift</h2>
+          </header>
+          <div className="giving-amount-layout">
+            <section className="giving-amount-panel" aria-label="Gift amount">
+              {donationCampaign && (
+                <div className="donation-campaign giving-amount-campaign">
+                  <Image src={donationCampaign.image} alt="" width={100} height={80}/>
+                  <span><small>Giving to</small><b>{donationCampaign.title}</b></span>
+                </div>
+              )}
+              <div className="amount-grid giving-amount-presets" role="group" aria-label="Choose a suggested gift amount">
+                {['500','1000','2500','5000'].map(value => (
+                  <button type="button" className={amount === value ? 'selected' : ''} aria-pressed={amount === value} key={value} onClick={() => setAmount(value)}>KSh {Number(value).toLocaleString()}</button>
+                ))}
+              </div>
+              <label className="custom-amount giving-amount-custom">
+                <span>Custom amount</span>
+                <div><small>KSh</small><input inputMode="numeric" value={amount} aria-label="Custom donation amount in Kenyan shillings" onChange={event => setAmount(event.target.value.replace(/\D/g,'').slice(0,9))}/></div>
+              </label>
+            </section>
+            <section className="giving-amount-preferences" aria-label="Gift preferences">
+              <label className="check-row giving-amount-option">
+                <input type="checkbox" checked={anonymous} onChange={event => setAnonymous(event.target.checked)}/>
+                <span><b>Give anonymously</b><small>Your identity stays private publicly.</small></span>
+              </label>
+              <label className="check-row giving-amount-option">
+                <input type="checkbox" checked={onBehalf} onChange={event => setOnBehalf(event.target.checked)}/>
+                <span><b>Give on behalf of someone</b><small>Keep a dedication with your giving draft.</small></span>
+              </label>
+              {onBehalf && <label className="dedication-field giving-amount-extra"><span>Dedication or name</span><input value={dedication} onChange={event => setDedication(event.target.value.slice(0,80))} placeholder="In honour or memory of…"/></label>}
+              <label className="check-row giving-amount-option">
+                <input type="checkbox" checked={recurring} onChange={event => setRecurring(event.target.checked)}/>
+                <span><b>Make this recurring</b><small>Save a schedule preference. Automatic payments are not activated.</small></span>
+              </label>
+              {recurring && <label className="schedule-field giving-amount-extra"><span>Giving schedule</span><select value={schedule} onChange={event => setSchedule(event.target.value)}>{['Daily', 'Every Jumu’ah', 'Monthly', 'Last 10 nights', 'Qurbani reserve'].map(value => <option key={value}>{value}</option>)}</select></label>}
+            </section>
+          </div>
+          <button className="button full giving-amount-next" type="button" disabled={!numericAmount || numericAmount > 999999999} onClick={() => setDonationStep(3)}>Review your gift <Icon name="→"/></button>
+        </div>
+      )}
       {donationStep === 3 && (
         <form className="donation-step giving-review-step" onSubmit={finishDonation} aria-busy={draftSaving}>
           <header className="giving-review-heading">
