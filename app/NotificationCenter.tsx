@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Icon from './Icon';
+import FooterBrandIcon from './FooterBrandIcon';
 
 const notices = [
   { id: 'impact', category: 'Impact', icon: 'shield', label: 'Impact verified', title: 'Clean water is now flowing in Garissa', description: 'Example WTR-183 update: completed delivery serves 340 people.', time: '2h', timeLabel: '2 hours ago' },
@@ -10,6 +11,12 @@ const notices = [
   { id: 'security', category: 'Security', icon: 'shield', label: 'New sign-in protected', title: 'A sign-in from Nairobi was verified', description: 'If this was not you, secure your account.', time: '3d', timeLabel: '3 days ago' },
 ];
 const channels = ['In-app', 'Email', 'SMS', 'WhatsApp'];
+
+function NotificationChannelIcon({ channel }: { channel: string }) {
+  if (channel === 'WhatsApp') return <FooterBrandIcon brand="whatsapp" className="notification-channel-mark notification-channel-whatsapp"/>;
+  const name = channel === 'In-app' ? 'bell' : channel === 'Email' ? 'mail' : 'sms';
+  return <Icon name={name} className={`notification-channel-mark notification-channel-${name}`}/>;
+}
 type Props = { read: string[]; onRead: (ids: string[]) => void; readError: string; onClose: () => void };
 
 export default function NotificationCenter({ read, onRead, readError, onClose }: Props) {
@@ -64,7 +71,14 @@ export default function NotificationCenter({ read, onRead, readError, onClose }:
       </div>
       <div className="notification-settings">
         <Icon name="settings"/>
-        <span className="notification-settings-copy"><b>Delivery preferences</b><small>{preferences.length ? preferences.join(' · ') : 'No channels selected'}</small></span>
+        <span className="notification-settings-copy">
+          <b>Delivery preferences</b>
+          <small className="notification-saved-channels">
+            {preferences.length ? preferences.map(channel => (
+              <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/>{channel}</span>
+            )) : 'No channels selected'}
+          </small>
+        </span>
         <button type="button" aria-expanded={preferencesOpen} aria-controls="notification-preferences" onClick={() => {
           if (!preferencesOpen) { setDraftChannels(preferences); setSavedMessage(''); }
           setPreferencesOpen(!preferencesOpen);
@@ -83,11 +97,11 @@ export default function NotificationCenter({ read, onRead, readError, onClose }:
           <legend>Choose your channels</legend>
           <p id="notification-delivery-note">Saved on this device. Email, SMS and WhatsApp delivery isn’t connected yet.</p>
           <div className="notice-channels">
-            {channels.map(channel => <label key={channel}><input type="checkbox" checked={draftChannels.includes(channel)} onChange={event => {
+            {channels.map(channel => <label className="notification-channel-choice" key={channel}><input type="checkbox" checked={draftChannels.includes(channel)} onChange={event => {
               const checked = event.target.checked;
               setSavedMessage('');
               setDraftChannels(current => channels.filter(value => value === channel ? checked : current.includes(value)));
-            }}/><span>{channel}</span></label>)}
+            }}/><NotificationChannelIcon channel={channel}/><span className="notification-channel-label">{channel}</span></label>)}
           </div>
         </fieldset>
         <div className="notice-preferences-footer notification-preferences-actions"><button className="button" type="submit">Save preferences</button><p role="status">{savedMessage}</p></div>
