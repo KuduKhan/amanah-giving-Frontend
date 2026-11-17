@@ -2297,3 +2297,91 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .platform-overlay button.platform-close,
   .platform-overlay button.workflow-close { transition: none; }
 }
+
+/* Footer inline app links and compact guide control */
+/* Keep the label and both stores in a single compact row at every viewport width. */
+.refined-footer .footer-apps {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: 6px;
+  row-gap: 0;
+  min-width: 0;
+  padding-top: 8px;
+}
+.refined-footer .footer-apps > p {
+  grid-column: auto;
+  align-self: center;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.refined-footer .footer-apps .footer-app-link {
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 6px;
+  gap: 5px;
+  justify-content: center;
+  border-radius: 8px;
+}
+.refined-footer .footer-apps .footer-app-link .app-icon {
+  width: 14px;
+  height: 14px;
+}
+.refined-footer .footer-apps .footer-app-link strong {
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+/* Feedback text occupies the entire brand row and is centrally aligned. */
+.refined-footer .footer-brand .footer-feedback-copy {
+  justify-self: stretch;
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+}
+/* The Giving guide matches the 34px Close control without affecting the guide action. */
+.platform-overlay .platform-topbar button.platform-ai {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: auto;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  gap: 5px;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+.platform-overlay .platform-topbar button.platform-ai .app-icon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+.platform-overlay .platform-topbar button.platform-ai:focus-visible {
+  outline: 2px solid #218360;
+  outline-offset: 3px;
+}
+@media (max-width: 480px) {
+  .platform-overlay .platform-topbar button.platform-ai {
+    width: 34px;
+    padding: 0;
+  }
+}
+@media (max-width: 360px) {
+  .refined-footer .footer-apps { column-gap: 4px; }
+  .refined-footer .footer-apps > p { font-size: 10px; }
+  .refined-footer .footer-apps .footer-app-link { gap: 3px; padding-inline: 4px; }
+  .refined-footer .footer-apps .footer-app-link strong { font-size: 9px; }
+  .refined-footer .footer-apps .footer-app-link .app-icon { width: 13px; height: 13px; }
+}
