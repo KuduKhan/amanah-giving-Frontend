@@ -71,18 +71,16 @@ export default function NotificationCenter({ read, onRead, readError, onClose }:
       </div>
       <div className="notification-settings">
         <Icon name="settings"/>
-        <span className="notification-settings-copy">
-          <b>Delivery preferences</b>
-          <div className="notification-saved-channels" aria-label="Saved delivery preferences">
-            {preferences.length ? preferences.map(channel => (
-              <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/><span className="notification-saved-channel-label">{channel}</span></span>
-            )) : <span className="notification-no-channels">No channels selected</span>}
-          </div>
-        </span>
+        <span className="notification-settings-copy"><b>Delivery preferences</b></span>
         <button type="button" aria-expanded={preferencesOpen} aria-controls="notification-preferences" onClick={() => {
           if (!preferencesOpen) { setDraftChannels(preferences); setSavedMessage(''); }
           setPreferencesOpen(!preferencesOpen);
         }}>{preferencesOpen ? 'Close' : 'Manage'}<Icon name={preferencesOpen ? 'close' : 'chevron'}/></button>
+        <div className="notification-saved-channels" aria-label="Saved delivery preferences">
+          {preferences.length ? preferences.map(channel => (
+            <span className="notification-saved-channel" key={channel}><NotificationChannelIcon channel={channel}/><span className="notification-saved-channel-label">{channel}</span></span>
+          )) : <span className="notification-no-channels">No channels selected</span>}
+        </div>
       </div>
       <form id="notification-preferences" className="notice-preferences notification-preferences-panel" aria-label="Notification delivery preferences" hidden={!preferencesOpen} onSubmit={event => {
         event.preventDefault();
