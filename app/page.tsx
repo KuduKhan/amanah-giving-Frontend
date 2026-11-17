@@ -637,6 +637,12 @@ export default function Home() {
           <a href="https://www.tiktok.com/search?q=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on TikTok" title="Search Amanah Giving on TikTok">
             <FooterBrandIcon brand="tiktok"/>
           </a>
+          <a href="https://x.com/search?q=Amanah%20Giving&src=typed_query" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on X (Twitter)" title="Search Amanah Giving on X (Twitter)">
+            <FooterBrandIcon brand="x"/>
+          </a>
+          <a href="https://www.linkedin.com/search/results/all/?keywords=Amanah%20Giving" target="_blank" rel="noopener noreferrer" aria-label="Search for Amanah Giving on LinkedIn" title="Search Amanah Giving on LinkedIn">
+            <FooterBrandIcon brand="linkedin"/>
+          </a>
         </nav>
         <div className="footer-trust">
           <span className="footer-security">
