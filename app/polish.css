@@ -4415,7 +4415,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   align-items: center;
   justify-content: center;
   justify-self: center;
-  gap: 6px;
+  gap: 10px;
   min-width: 0;
 }
 .refined-footer-bottom .footer-social-links a {
@@ -4424,20 +4424,22 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   justify-content: center;
   flex: none;
   box-sizing: border-box;
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  min-height: 42px;
-  border: 1px solid #294c51;
-  border-radius: 12px;
-  background: #10313b;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: #eaf4f1;
   text-decoration: none;
-  transition: background-color .16s ease, border-color .16s ease;
+  transition: opacity .16s ease;
 }
 .refined-footer-bottom .footer-social-links a:hover {
-  border-color: #78bba5;
-  background: #1b454d;
+  background: transparent;
+  opacity: .8;
 }
 .refined-footer-bottom .footer-social-links a:focus-visible {
   outline: 2px solid #a4e6c4;
@@ -4445,8 +4447,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .refined-footer-bottom .footer-social-links .footer-brand-icon {
   display: block;
-  width: 19px;
-  height: 19px;
+  width: 21px;
+  height: 21px;
   flex: none;
 }
 .refined-footer-bottom .footer-social-links .footer-brand-icon--youtube { color: #ff4448; }
@@ -4480,13 +4482,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     justify-self: center;
   }
   .refined-footer-bottom .footer-legal { font-size: 11px; }
-  .refined-footer-bottom .footer-social-links { gap: 9px; }
-  .refined-footer-bottom .footer-social-links a {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-  }
+  .refined-footer-bottom .footer-social-links { gap: 8px; }
 }
 @media (max-width: 400px) {
   .refined-footer .footer-apps { column-gap: 5px; }
