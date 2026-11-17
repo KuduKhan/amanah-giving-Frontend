@@ -19,6 +19,9 @@ const EXIT_FADE_MS = 400;
 export default function WelcomeSplash() {
   const [stage, setStage] = useState<WelcomeStage>('salaam');
   const [timelineStarted, setTimelineStarted] = useState(false);
+  const [welcomeNoticeVisible, setWelcomeNoticeVisible] = useState(false);
+  const skipRequested = useRef(false);
+  const noticeTimeout = useRef<number | null>(null);
   const timeouts = useRef<number[]>([]);
   const skipButton = useRef<HTMLButtonElement>(null);
   const originalOverflow = useRef('');
@@ -29,6 +32,7 @@ export default function WelcomeSplash() {
   };
 
   const finish = () => {
+    skipRequested.current = true;
     clearTimers();
     setStage('done');
   };
@@ -51,6 +55,7 @@ export default function WelcomeSplash() {
 
     return () => {
       clearTimers();
+      if (noticeTimeout.current !== null) window.clearTimeout(noticeTimeout.current);
       document.body.style.overflow = originalOverflow.current;
     };
   }, []);
@@ -60,12 +65,33 @@ export default function WelcomeSplash() {
 
     document.body.style.overflow = originalOverflow.current;
 
-    // Transfer keyboard focus to the visible page after the overlay is removed.
-    const firstPageLink = document.querySelector<HTMLElement>('.site-header .brand, header a[href], main a[href]');
-    firstPageLink?.focus({ preventScroll: true });
+    // Only move focus when visitors actively choose to skip. The old
+    // fallback focused the hidden "Skip to main content" accessibility link,
+    // making it look like an unwanted notification after automatic completion.
+    if (skipRequested.current) {
+      const main = document.getElementById('main-content');
+      if (main) {
+        main.tabIndex = -1;
+        main.focus({ preventScroll: true });
+      }
+    }
+
+    // A short, non-blocking greeting replaces the accidental skip-link flash.
+    setWelcomeNoticeVisible(true);
+    noticeTimeout.current = window.setTimeout(() => setWelcomeNoticeVisible(false), 2600);
+    return () => {
+      if (noticeTimeout.current !== null) window.clearTimeout(noticeTimeout.current);
+    };
   }, [stage]);
 
-  if (stage === 'done') return null;
+  if (stage === 'done') {
+    return welcomeNoticeVisible ? (
+      <div className="amanah-welcome-notice" role="status" aria-live="polite">
+        <span className="amanah-welcome-notice-symbol" aria-hidden="true">✦</span>
+        Welcome!
+      </div>
+    ) : null;
+  }
 
   const second = stage !== 'salaam';
 
