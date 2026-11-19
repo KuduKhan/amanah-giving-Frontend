@@ -157,6 +157,55 @@ async function inspect({ path: route, name }, viewport) {
   if (route === '/') {
     assert.equal(info.impactStages, 5, 'Project Trace must retain all five original milestones');
     assert.equal(new Set(info.milestoneGlows).size, 5, 'Milestone glow colors must remain distinct');
+
+    const campaigns = await evalPage(`(() => {
+      const rows = [...document.querySelectorAll('.refined-opportunities .campaign-card')];
+      return rows.map(card => {
+        const body = card.querySelector('.campaign-body-inline');
+        const amount = card.querySelector('.funding-amount');
+        const percentage = card.querySelector('.money-row > b');
+        const progress = card.querySelector('.campaign-compact-controls > .progress');
+        const actions = card.querySelector('.campaign-compact-controls > .card-footer');
+        const buttons = [...(actions?.querySelectorAll('button') || [])];
+        if (!body || !amount || !percentage || !progress || !actions || buttons.length !== 2) {
+          return { error: 'Campaign funding/action element missing' };
+        }
+        const bounds = [body, amount, percentage, progress, actions, ...buttons]
+          .map(node => node.getBoundingClientRect());
+        return {
+          bodyWidth: Math.round(bounds[0].width),
+          progressWidth: Math.round(bounds[3].width),
+          actionsRight: Math.round(bounds[4].right),
+          bodyRight: Math.round(bounds[0].right),
+          fundingOverlap: bounds[1].right - bounds[2].left,
+          actionOverlap: bounds[3].right - bounds[4].left,
+          actionHeight: buttons.map(node => Math.round(node.getBoundingClientRect().height)),
+          labels: buttons.map(node => node.textContent.trim()),
+        };
+      });
+    })()`);
+    assert.ok(campaigns.length >= 3, 'Expected campaign cards to render');
+    for (const card of campaigns) {
+      assert.equal(card.error, undefined, 'Compact campaign controls missing');
+      assert.ok(card.progressWidth >= 24, 'Funding progress is too narrow');
+      assert.ok(card.actionsRight <= card.bodyRight + 2, 'Campaign actions clipped by card');
+      assert.ok(card.fundingOverlap <= 1, 'Funding amount and percentage overlap');
+      assert.ok(card.actionOverlap <= 1, 'Progress indicator overlaps action buttons');
+      assert.ok(card.actionHeight.every(height => height >= 44), 'Campaign action smaller than 44px');
+      assert.deepEqual(card.labels, ['View details', 'Donate']);
+    }
+    await evalPage(`document.querySelector('.refined-opportunities .campaign-card')?.scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
+    await pause(260);
+    const cardShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, `campaign-inline-${viewport.name}.png`), Buffer.from(cardShot.data, 'base64'));
+    console.log(JSON.stringify({ route: 'campaign-inline', viewport: viewport.name, campaignCount: campaigns.length, cardWidths: campaigns.map(card => card.bodyWidth) }));
+
+    await evalPage(`document.querySelector('.refined-opportunities .campaign-card .card-footer button:first-child')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.overlay[aria-modal="true"]')`), 5000);
+    await evalPage(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); true`);
+    await until(async () => evalPage(`!document.querySelector('.overlay[aria-modal="true"]')`), 5000);
+    await evalPage(`document.querySelector('.refined-opportunities .campaign-card .card-footer .donate-mini')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.overlay[aria-modal="true"]')`), 5000);
   }
   if (route === '/contact') assert.equal(info.feedbackFormPresent, true, 'Contact form missing');
   if (route === '/hajj') assert.equal(info.hajjDemoPresent, true, 'Hajj demo missing');
