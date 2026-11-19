@@ -15,7 +15,6 @@ main.home-premium {
   --home-radius: 17px;
   --home-shadow: 0 14px 28px -23px rgba(8, 49, 35, .40), 0 1px 3px rgba(9, 59, 39, .045);
   color: var(--home-ink);
-  overflow-x: clip;
 }
 
 /* Shared editorial hierarchy — scale down smoothly, never let headings crowd
