@@ -210,6 +210,13 @@ async function inspect({ path: route, name }, viewport) {
       });
     })()`);
     assert.equal(campaigns.length, 6, 'All six example campaigns must remain visible');
+    const sectionGap = await evalPage(`(() => {
+      const grid = document.querySelector('.refined-opportunities .campaign-grid');
+      const next = document.querySelector('.refined-knowledge .section-heading');
+      return Math.round(next.getBoundingClientRect().top - grid.getBoundingClientRect().bottom);
+    })()`);
+    assert.ok(sectionGap >= 12 && sectionGap <= 110,
+      `Excessive or collapsed gap after campaigns: ${sectionGap}px`);
     for (const card of campaigns) {
       assert.equal(card.error, undefined, 'Compact campaign controls missing');
       assert.ok(card.photoHeight >= 140, 'Campaign photo area is overly compressed');
