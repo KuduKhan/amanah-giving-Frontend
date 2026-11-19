@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { setTimeout as pause } from 'node:timers/promises';
@@ -75,16 +75,28 @@ async function setup() {
   await mkdir(out, { recursive: true });
   const profile = await mkdtemp(path.join(os.tmpdir(), 'amanah-browser-qa-'));
   const executable = process.env.CHROME_BIN || 'google-chrome';
+  const chromeDiagnostics = [];
   chrome = spawn(executable, [
     '--headless=new', '--no-sandbox', '--disable-gpu',
     '--disable-dev-shm-usage', '--no-first-run', '--no-default-browser-check',
     '--no-proxy-server', '--remote-debugging-address=127.0.0.1',
-    '--remote-debugging-port=9222', `--user-data-dir=${profile}`,
+    '--remote-debugging-port=0', `--user-data-dir=${profile}`,
     'about:blank',
-  ], { stdio: 'ignore' });
+  ], { stdio: ['ignore', 'ignore', 'pipe'] });
+  chrome.stderr?.on('data', chunk => {
+    chromeDiagnostics.push(String(chunk));
+    if (chromeDiagnostics.length > 15) chromeDiagnostics.shift();
+  });
   chrome.on('error', error => errors.push(`Chrome launch failed: ${error.message}`));
+  const port = await until(async () => {
+    const file = await readFile(path.join(profile, 'DevToolsActivePort'), 'utf8');
+    const selectedPort = Number.parseInt(file.split('\\n')[0], 10);
+    return Number.isInteger(selectedPort) && selectedPort > 0 ? selectedPort : null;
+  }, 30000).catch(error => {
+    throw new Error(`Chrome debugger did not start: ${error.message}; exit=${chrome.exitCode}; stderr=${chromeDiagnostics.join('').slice(-1200)}`);
+  });
   const tab = await until(async () => {
-    const response = await fetch('http://127.0.0.1:9222/json/list');
+    const response = await fetch(`http://127.0.0.1:${port}/json/list`);
     if (!response.ok) return null;
     const pages = await response.json();
     return pages.find(p => p.type === 'page' && p.webSocketDebuggerUrl);
