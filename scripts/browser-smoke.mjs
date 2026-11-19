@@ -189,6 +189,7 @@ async function inspect({ path: route, name }, viewport) {
           raised: card.querySelector('.funding-amount strong')?.textContent?.trim(),
           goal: card.querySelector('.funding-amount small')?.textContent?.trim(),
           percentage: card.querySelector('.money-row > b')?.textContent?.trim(),
+          cardHeight: Math.round(card.getBoundingClientRect().height),
           photoHeight: Math.round(photoBounds.height),
           photoOverlap: toolbarBounds.bottom - heroBounds.top,
           photoTextContained: heroBounds.bottom <= photoBounds.bottom + 2,
@@ -219,7 +220,8 @@ async function inspect({ path: route, name }, viewport) {
       `Excessive or collapsed gap after campaigns: ${sectionGap}px`);
     for (const card of campaigns) {
       assert.equal(card.error, undefined, 'Compact campaign controls missing');
-      assert.ok(card.photoHeight >= 140, 'Campaign photo area is overly compressed');
+      assert.ok(card.photoHeight >= 165 && card.photoHeight <= 220, 'Campaign photo must be compact but still readable');
+      assert.ok(card.cardHeight <= 350, 'Campaign card must not retain the oversized square format');
       assert.ok(card.photoOverlap <= 2 && card.photoTextContained, 'Photo badges and project details must not overlap');
       assert.equal(card.metadataPresent, true, 'Missing campaign verification/deadline/location metadata');
       assert.ok(card.progressWidth >= card.bodyWidth * 0.82, 'Funding bar must span the usable card width');
@@ -237,7 +239,15 @@ async function inspect({ path: route, name }, viewport) {
     assert.equal(orphanCard.goal, 'raised of KSh 1.1M', 'Orphans goal must remain KSh 1.1M');
     assert.equal(orphanCard.percentage, '57% funded', 'Orphans percentage must remain 57%');
     await evalPage(`document.querySelector('#title-ORP-2841')?.closest('.campaign-card')?.scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
-    await pause(260);
+    await until(async () => evalPage(`(() => {
+      const visibleImages = [...document.querySelectorAll('.refined-opportunities .campaign-image > img')]
+        .filter(img => {
+          const bounds = img.getBoundingClientRect();
+          return bounds.bottom > 0 && bounds.top < innerHeight;
+        });
+      return visibleImages.length > 0 && visibleImages.every(img => img.complete && img.naturalWidth > 0);
+    })()`), 10000);
+    await pause(220);
     const cardShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, `campaign-orphans-inline-${viewport.name}.png`), Buffer.from(cardShot.data, 'base64'));
     console.log(JSON.stringify({ route: 'campaign-inline', viewport: viewport.name, campaignCount: campaigns.length, cardWidths: campaigns.map(card => card.bodyWidth) }));
