@@ -1,12 +1,12 @@
-/* Amanah Giving · compact campaign finance/action rows.
-   Keep original figures, badges, colors, semantic progressbar and full-size
-   keyboard/touch targets while removing the extra stacked footer row. */
+/* Amanah Giving · campaign funding/action layout.
+   Preserve original numbers, labels, progress semantics and generous 44px
+   targets. Do not squeeze the progress track alongside the two CTAs. */
 .refined-opportunities .campaign-card .campaign-body-inline {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+  gap: 7px;
   min-width: 0;
-  padding: 10px 12px 12px;
+  padding: 10px 12px 11px;
 }
 
 .refined-opportunities .campaign-body-inline .campaign-funding {
@@ -56,9 +56,9 @@
 }
 .refined-opportunities .campaign-body-inline .campaign-compact-controls {
   display: grid;
-  grid-template-columns: minmax(32px, 1fr) auto;
-  align-items: center;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 7px;
   min-width: 0;
 }
 .refined-opportunities .campaign-compact-controls > .progress {
@@ -75,22 +75,22 @@
   border-radius: inherit;
 }
 .refined-opportunities .campaign-compact-controls > .card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 7px;
   min-width: 0;
-  width: auto;
+  width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
 }
 .refined-opportunities .campaign-compact-controls .card-footer > button {
   display: inline-flex;
-  flex: none;
+  min-width: 0;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   min-height: 44px;
   margin: 0;
   padding: 8px 9px;
@@ -129,11 +129,11 @@
     font-size: 10px;
   }
   .refined-opportunities .campaign-body-inline .campaign-compact-controls {
-    grid-template-columns: minmax(24px, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     gap: 6px;
   }
   .refined-opportunities .campaign-compact-controls > .card-footer {
-    gap: 4px;
+    gap: 6px;
   }
   .refined-opportunities .campaign-compact-controls .card-footer > button {
     gap: 3px;
@@ -144,5 +144,33 @@
 @media (prefers-reduced-motion: reduce) {
   .refined-opportunities .campaign-compact-controls .card-footer button {
     transition: none;
+  }
+}
+
+/* The funding summary remains orderly even for long figures such as KSh 612K
+   raised of KSh 1.1M. On tight cards the descriptor deliberately moves below
+   the figure rather than colliding with the percentage badge. */
+.refined-opportunities .campaign-body-inline {
+  container-type: inline-size;
+}
+.refined-opportunities .campaign-body-inline .funding-amount {
+  align-content: center;
+}
+.refined-opportunities .campaign-body-inline .funding-amount small {
+  overflow-wrap: normal;
+  text-wrap: nowrap;
+}
+.refined-opportunities .campaign-body-inline .money-row > b {
+  align-self: center;
+}
+@container (max-width: 315px) {
+  .refined-opportunities .campaign-body-inline .funding-amount {
+    display: grid;
+    align-items: center;
+    justify-items: start;
+    gap: 1px;
+  }
+  .refined-opportunities .campaign-body-inline .funding-amount small {
+    font-size: 10px;
   }
 }
