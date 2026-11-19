@@ -508,39 +508,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="impact-metrics" aria-labelledby="impact-metrics-title">
-        <div className="impact-metrics-inner">
-          <div className="impact-metrics-heading">
-            <div>
-              <p className="impact-metrics-eyebrow"><Icon name="giving"/> Impact snapshot</p>
-              <h2 id="impact-metrics-title">Every act of giving adds up.</h2>
-            </div>
-            <p className="impact-metrics-note"><Icon name="shield"/> Illustrative figures for this preview</p>
-          </div>
-          <div className="impact-metrics-grid">
-            {[
-              { label: 'donated', icon: 'giving', value: 'KSh 246,820,450' },
-              { label: 'families supported', icon: 'users', value: '18,742' },
-              { label: 'meals provided', icon: 'gift', value: '2.4M' },
-              { label: 'water projects', icon: '≈', value: '189' },
-              { label: 'orphans supported', icon: 'heart', value: '4,280' },
-            ].map(({ label, icon, value }, index) => (
-              <div className={`impact-metric${index === 0 ? ' impact-metric-featured' : ''}`} key={label}>
-                <span className="impact-metric-icon" aria-hidden="true"><Icon name={icon}/></span>
-                <div className="impact-metric-copy">
-                  {index === 0 ? (
-                    <b className="impact-metric-value impact-metric-value-currency" aria-label={value}>
-                      <span>KSh</span><span>246,820,450</span>
-                    </b>
-                  ) : (
-                    <b className="impact-metric-value">{value}</b>
-                  )}
-                  <span className="impact-metric-label">{label}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section className="stats-band refined-impact-stats" aria-label="Giving impact in numbers">
+        {[['KSh 246,820,450','donated'],['18,742','families supported'],['2.4M','meals provided'],['189','water projects'],['4,280','orphans supported']].map(([value,label]) => <div key={label}><b>{value}</b><span>{label}</span></div>)}
       </section>
 
       <section className="updates-section refined-updates" aria-labelledby="updates-title">
