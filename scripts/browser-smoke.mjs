@@ -267,6 +267,79 @@ async function inspect({ path: route, name }, viewport) {
     await writeFile(path.join(out, `campaign-orphans-inline-${viewport.name}.png`), Buffer.from(cardShot.data, 'base64'));
     console.log(JSON.stringify({ route: 'campaign-inline', viewport: viewport.name, campaignCount: campaigns.length, cardWidths: campaigns.map(card => card.bodyWidth) }));
 
+    const updateCards = await evalPage(`(() => {
+      return [...document.querySelectorAll('.refined-updates .update-card')].map(card => {
+        const image = card.querySelector('.update-image');
+        const toolbar = card.querySelector('.update-image-toolbar');
+        const badge = toolbar?.querySelector('.update-photo-badge');
+        const evidence = toolbar?.querySelector('.update-evidence-pill');
+        const title = card.querySelector('.update-image-content');
+        const summary = card.querySelector('.update-summary');
+        if (!image || !toolbar || !badge || !evidence || !title || !summary) return { error: 'Update element missing' };
+        const i = image.getBoundingClientRect(), b = badge.getBoundingClientRect();
+        const e = evidence.getBoundingClientRect(), t = title.getBoundingClientRect();
+        const h = getComputedStyle(evidence, '::before');
+        return {
+          id: card.querySelector('.update-meta span')?.textContent?.trim(),
+          cardHeight: Math.round(card.getBoundingClientRect().height),
+          imageHeight: Math.round(i.height),
+          badgeOverlap: b.right - e.left,
+          topOverlap: Math.max(b.bottom, e.bottom) - t.top,
+          titleContained: t.bottom <= i.bottom + 2,
+          summaryText: summary.textContent?.trim(),
+          evidenceHeight: Math.round(e.height),
+          effectiveHitHeight: Math.round(e.height - (parseFloat(h.top) || 0) - (parseFloat(h.bottom) || 0)),
+          evidenceLabel: evidence.textContent?.trim(),
+        };
+      });
+    })()`);
+    assert.equal(updateCards.length, 3, 'Expected three example impact update cards');
+    assert.deepEqual(updateCards.map(card => card.id), ['WTR-183','FOD-398','MSQ-112']);
+    for (const update of updateCards) {
+      assert.equal(update.error, undefined, 'Impact card missing content');
+      assert.ok(update.cardHeight <= 340, 'Impact update card too tall');
+      assert.ok(update.imageHeight >= 180 && update.imageHeight <= 215, 'Impact image should remain compact');
+      assert.ok(update.badgeOverlap <= 2 && update.topOverlap <= 2 && update.titleContained, 'Update badge, evidence button or title overlap');
+      assert.ok(update.evidenceHeight >= 38 && update.evidenceHeight <= 42, 'Evidence action height not compact');
+      assert.ok(update.effectiveHitHeight >= 44, 'Evidence button needs at least 44px hit area');
+      assert.ok(update.summaryText?.length > 25, 'Impact summary text missing');
+      assert.equal(update.evidenceLabel, 'View evidence');
+    }
+    await evalPage(`document.querySelector('#updates .update-card')?.scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
+    await pause(260);
+    const updatesShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, `impact-updates-${viewport.name}.png`), Buffer.from(updatesShot.data, 'base64'));
+
+    const googlePreview = await evalPage(`(() => {
+      const panel = document.querySelector('footer .google-review-preview');
+      const stars = [...(panel?.querySelectorAll('.google-review-stars button') || [])];
+      const link = panel?.querySelector('.google-review-link');
+      const cta = panel?.closest('.footer-cta');
+      return { present: !!panel, starCount: stars.length, link: link?.href,
+        initialClaim: panel?.querySelector('.google-review-preview-status')?.textContent?.trim(),
+        contentOverflow: cta ? cta.scrollWidth - cta.clientWidth : null,
+        appLinkCount: cta?.querySelectorAll('.footer-apps .footer-app-link').length };
+    })()`);
+    assert.equal(googlePreview.present, true, 'Footer Google review panel missing');
+    assert.equal(googlePreview.starCount, 5, 'Expected 5 interactive rating stars');
+    assert.equal(googlePreview.appLinkCount, 2, 'Preserve App Store and Google Play links');
+    assert.ok(googlePreview.contentOverflow <= 3, 'Footer Google preview overflows');
+    assert.match(googlePreview.initialClaim, /No public rating or review count is claimed/);
+    assert.ok(googlePreview.link.startsWith('https://www.google.com/maps/search/'), 'Unverified listing must use Google search, not claim review connection');
+    await evalPage(`document.querySelectorAll('.google-review-stars button')[3]?.click(); true`);
+    const rating = await evalPage(`(() => ({
+      selected: [...document.querySelectorAll('.google-review-stars button')].map(btn => btn.getAttribute('aria-pressed')),
+      text: document.querySelector('.google-review-preview-status')?.textContent?.trim(),
+    }))()`);
+    assert.deepEqual(rating.selected, ['false', 'false', 'false', 'true', 'false']);
+    assert.match(rating.text, /4 of 5 stars selected as a preview/);
+    assert.match(rating.text, /Nothing has been published to Google/);
+    await evalPage(`document.querySelector('.google-review-preview')?.scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
+    await pause(200);
+    const footerShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, `footer-google-reviews-${viewport.name}.png`), Buffer.from(footerShot.data, 'base64'));
+    console.log(JSON.stringify({ route: 'impact-updates-and-google', viewport: viewport.name, updates: updateCards.map(({id, cardHeight, imageHeight}) => ({id, cardHeight, imageHeight})), googlePreview: true }));
+
     await evalPage(`document.querySelector('.refined-opportunities .campaign-card .card-footer button:first-child')?.click(); true`);
     await until(async () => evalPage(`!!document.querySelector('.overlay[aria-modal="true"]')`), 5000);
     await evalPage(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); true`);
