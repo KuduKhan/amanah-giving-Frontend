@@ -1,0 +1,306 @@
+/*
+ * Amanah Giving · compact example impact updates and honest Google review
+ * preview. Scoped to this route so other cards/footers are unaffected.
+ */
+
+/* Remove the inherited 1:1 card composition used by older photo tiles. */
+.refined-updates .updates-grid {
+  gap: clamp(10px, 1.35vw, 16px);
+  align-items: start;
+}
+.refined-updates .update-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  aspect-ratio: auto;
+  min-height: 0;
+  min-block-size: 0;
+  align-self: start;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.refined-updates .update-card > .update-image {
+  position: relative;
+  display: block;
+  isolation: isolate;
+  height: clamp(186px, 15.4vw, 208px);
+  min-height: 186px;
+  padding: 0;
+}
+.refined-updates .update-image > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.refined-updates .update-card .update-image-toolbar {
+  inset: 9px 9px auto;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  width: auto;
+}
+.refined-updates .update-image-toolbar .update-photo-badge {
+  flex: 0 1 auto;
+  min-width: 0;
+  min-height: 27px;
+  max-width: calc(100% - 118px);
+  padding: 5px 8px;
+  gap: 4px;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.15;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.refined-updates .update-image-toolbar .update-photo-badge .app-icon {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+}
+.refined-updates .update-image-toolbar .update-evidence-pill {
+  position: relative;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: 38px;
+  height: 38px;
+  padding: 6px 8px;
+  gap: 4px;
+  border-radius: 9px;
+  font-size: 10px;
+  line-height: 1.15;
+}
+.refined-updates .update-image-toolbar .update-evidence-pill::before {
+  content: "";
+  position: absolute;
+  inset: -3px 0;
+  border-radius: 10px;
+}
+.refined-updates .update-image-toolbar .update-evidence-pill .app-icon {
+  width: 12px;
+  height: 12px;
+}
+.refined-updates .update-image-content {
+  position: absolute;
+  z-index: 2;
+  inset: auto 10px 10px;
+  width: auto;
+  max-width: calc(100% - 20px);
+  pointer-events: none;
+}
+.refined-updates .update-image-content .update-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 3px 8px;
+  margin: 0 0 5px;
+  color: #d7efe2;
+  font-size: 10.5px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.refined-updates .update-image-content .update-meta span {
+  position: static;
+  display: inline;
+  padding: 0;
+  color: #e9f9ee;
+  font-size: inherit;
+  font-weight: 700;
+}
+.refined-updates .update-image-content .update-meta span::before {
+  content: "·";
+  display: inline-block;
+  margin-inline-end: 8px;
+  color: #aee4c4;
+}
+.refined-updates .update-card .update-image-content h3 {
+  min-height: 0;
+  margin: 0;
+  font-size: clamp(17px, 1.42vw, 20px);
+  line-height: 1.18;
+  font-weight: 750;
+  letter-spacing: -.018em;
+  text-wrap: balance;
+}
+.refined-updates .update-card > .update-summary {
+  display: block;
+  min-height: 0;
+  padding: 10px 11px 11px;
+  background: #fff;
+}
+.refined-updates .update-card > .update-summary > p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.43;
+  color: #52685b;
+}
+.refined-updates .section-heading {
+  margin-bottom: 17px;
+  gap: 8px 16px;
+}
+.refined-updates .section-heading :is(p, h2) {
+  margin-top: 0;
+}
+.refined-updates .section-heading .text-link {
+  min-height: 38px;
+  padding-block: 6px;
+}
+.updates-section.refined-updates {
+  padding-block: clamp(30px, 3.1vw, 47px);
+}
+@media (max-width: 700px) {
+  .refined-updates .updates-grid { gap: 12px; }
+  .refined-updates .update-card > .update-image {
+    height: 194px;
+    min-height: 194px;
+  }
+  .refined-updates .update-card .update-image-content h3 {
+    font-size: 18px;
+  }
+  .refined-updates .update-card > .update-summary { padding: 10px; }
+  .refined-updates .update-image-toolbar .update-evidence-pill {
+    min-height: 40px;
+    height: 40px;
+  }
+  .refined-updates .update-image-toolbar .update-evidence-pill::before { inset-block: -2px; }
+}
+@media (max-width: 360px) {
+  .refined-updates .update-card > .update-image {
+    height: 202px;
+    min-height: 202px;
+  }
+  .refined-updates .update-image-toolbar .update-photo-badge {
+    max-width: calc(100% - 111px);
+    font-size: 9px;
+    padding-inline: 6px;
+  }
+  .refined-updates .update-image-toolbar .update-evidence-pill {
+    font-size: 9.5px;
+    padding-inline: 7px;
+  }
+}
+
+/* Footer review feature: five interactive stars are a clearly labelled
+ * LOCAL PREVIEW. No unverified Google review count or score is displayed. */
+footer.refined-footer .footer-cta > .google-review-preview {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 7px;
+  min-width: 0;
+  width: 100%;
+  margin-top: 3px;
+  padding: 10px 11px;
+  border: 1px solid #45675b;
+  border-radius: 11px;
+  background: linear-gradient(120deg, #0f302f, #153d3a);
+  color: #eff9ef;
+}
+.refined-footer .google-review-preview-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.refined-footer .google-review-g {
+  display: grid;
+  flex: 0 0 29px;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border: 1px solid #5b766b;
+  border-radius: 9px;
+  background: #fefefe;
+  color: #4285f4;
+  font: 800 18px/1 Arial, sans-serif;
+}
+.refined-footer .google-review-preview-heading > div {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+.refined-footer .google-review-preview-heading strong {
+  font-size: 12px;
+  line-height: 1.25;
+}
+.refined-footer .google-review-preview-heading span:not(.google-review-g) {
+  color: #bacfc5;
+  font-size: 10px;
+  line-height: 1.25;
+}
+.refined-footer .google-review-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 10px;
+  min-width: 0;
+}
+.refined-footer .google-review-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+}
+.refined-footer .google-review-stars button {
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #f0bf63;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+}
+.refined-footer .google-review-stars button:hover,
+.refined-footer .google-review-stars button[aria-pressed="true"] {
+  background: #f0c66e1a;
+  border-color: #e3c27a40;
+}
+.refined-footer .google-review-stars button:focus-visible,
+.refined-footer .google-review-link:focus-visible {
+  outline: 2px solid #f3d38e;
+  outline-offset: 2px;
+}
+.refined-footer .google-review-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 7px 8px;
+  border: 1px solid #628679;
+  border-radius: 8px;
+  color: #f5f9f3;
+  background: #214b3f;
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+.refined-footer .google-review-link:hover {
+  background: #2c5d4c;
+  border-color: #a2c7b3;
+}
+footer.refined-footer .footer-cta .google-review-preview-status {
+  margin: 0;
+  color: #b4c9bf;
+  font: 400 10px/1.35 system-ui, sans-serif;
+  text-wrap: pretty;
+}
+@media (max-width: 390px) {
+  footer.refined-footer .footer-cta > .google-review-preview { padding: 9px 8px; }
+  .refined-footer .google-review-stars button { width: 26px; }
+  .refined-footer .google-review-link { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-footer .google-review-stars button,
+  .refined-footer .google-review-link { transition: none; }
+}
