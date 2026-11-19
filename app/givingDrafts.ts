@@ -7,7 +7,19 @@ export const DRAFT_KEY = 'amanah-giving-drafts-v1';
 export function readDrafts(): GivingDraft[] {
   try {
     const data: unknown = JSON.parse(localStorage.getItem(DRAFT_KEY) || '[]');
-    return Array.isArray(data) ? data.filter((item): item is GivingDraft => !!item && typeof item === 'object' && typeof item.id === 'string' && typeof item.createdAt === 'string' && typeof item.amount === 'number' && typeof item.campaign === 'string' && typeof item.intention === 'string' && typeof item.total === 'number') : [];
+    return Array.isArray(data) ? data.filter((item): item is GivingDraft => {
+      if (!item || typeof item !== 'object') return false;
+      const draft = item as Partial<GivingDraft>;
+      return typeof draft.id === 'string' && draft.id.length > 0 && draft.id.length <= 80
+        && typeof draft.createdAt === 'string' && Number.isFinite(Date.parse(draft.createdAt))
+        && Number.isSafeInteger(draft.amount) && draft.amount! > 0 && draft.amount! <= 999999999
+        && Number.isSafeInteger(draft.total) && draft.total! >= draft.amount! && draft.total! <= 2000000000
+        && typeof draft.campaign === 'string' && draft.campaign.length > 0 && draft.campaign.length <= 200
+        && typeof draft.intention === 'string' && draft.intention.length > 0 && draft.intention.length <= 80
+        && typeof draft.payment === 'string' && typeof draft.schedule === 'string' && typeof draft.cause === 'string'
+        && typeof draft.recurring === 'boolean' && typeof draft.reminders === 'boolean'
+        && typeof draft.anonymous === 'boolean' && typeof draft.dedication === 'string';
+    }) : [];
   } catch { return []; }
 }
 export function downloadText(filename: string, content: string, contentType = 'text/plain;charset=utf-8') {
