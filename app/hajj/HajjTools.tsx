@@ -34,9 +34,19 @@ export default function HajjTools({ extras, ready, hasApplication, update }: Pro
   function logSavings(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const amount = Number(new FormData(event.currentTarget).get('amount'));
-    if (!validAmount(amount)) return;
-    update(current => current.savings && amount <= current.savings.target - current.savings.saved ? { ...current, savings: { ...current.savings, saved: current.savings.saved + amount } } : current);
-    event.currentTarget.reset();
+    if (!validAmount(amount)) {
+      setFeedback('Enter a whole-shilling demo transfer amount within the permitted range.');
+      return;
+    }
+    let accepted = false;
+    update(current => {
+      if (!current.savings || amount > current.savings.target - current.savings.saved) return current;
+      accepted = true;
+      return { ...current, savings: { ...current.savings, saved: current.savings.saved + amount } };
+    });
+    setFeedback(accepted ? `Sample transfer of ${formatKes(amount)} recorded. No real funds moved.`
+      : 'The remaining sample savings balance has changed. Review your target before trying again.');
+    if (accepted) event.currentTarget.reset();
   }
 
   function removePledge(fund: FundId) {

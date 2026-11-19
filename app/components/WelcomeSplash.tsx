@@ -43,8 +43,8 @@ export default function WelcomeSplash() {
 
     // Keep keyboard focus on the welcome dialog, not on the obscured page.
     skipButton.current?.focus({ preventScroll: true });
-    // Start progress with the same post-hydration clock as the greeting timers.
-    setTimelineStarted(true);
+    // Start progress on the next paint; avoid cascading effect renders.
+    const progressFrame = window.requestAnimationFrame(() => setTimelineStarted(true));
 
     timeouts.current = [
       window.setTimeout(() => setStage('bismillah'), FIRST_MESSAGE_MS),
@@ -55,6 +55,7 @@ export default function WelcomeSplash() {
 
     return () => {
       clearTimers();
+      window.cancelAnimationFrame(progressFrame);
       if (noticeTimeout.current !== null) window.clearTimeout(noticeTimeout.current);
       document.body.style.overflow = originalOverflow.current;
     };
@@ -76,10 +77,15 @@ export default function WelcomeSplash() {
       }
     }
 
-    // A short, non-blocking greeting replaces the accidental skip-link flash.
-    setWelcomeNoticeVisible(true);
+    // An explicit Skip intro request should open the app immediately, without
+    // adding a second toast that can cover the content the visitor requested.
+    if (skipRequested.current) return;
+
+    // Keep the small welcome acknowledgment only after the full timed greeting.
+    const noticeFrame = window.requestAnimationFrame(() => setWelcomeNoticeVisible(true));
     noticeTimeout.current = window.setTimeout(() => setWelcomeNoticeVisible(false), 2600);
     return () => {
+      window.cancelAnimationFrame(noticeFrame);
       if (noticeTimeout.current !== null) window.clearTimeout(noticeTimeout.current);
     };
   }, [stage]);

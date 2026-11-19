@@ -2,6 +2,7 @@
 
 import Icon from './Icon';
 import FooterBrandIcon from './FooterBrandIcon';
+import './impact-updates-cta.css';
 import CampaignDetails from './CampaignDetails';
 import SiteHeader from './SiteHeader';
 import AmanahLogo from './AmanahLogo';
@@ -15,6 +16,8 @@ import GivingPlanner, { type GivingOccasion } from './GivingPlanner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
+import './campaign-inline.css';
+import { campaignImageFocus } from './campaignImageFocus';
 
 type Campaign = {
   id: string;
@@ -412,7 +415,7 @@ export default function Home() {
             const progress = Math.round(campaign.raised / campaign.goal * 100);
             return <article className="campaign-card" key={campaign.id} aria-labelledby={`title-${campaign.id}`}>
               <div className="campaign-image">
-                <Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaign.id === 'EDU-390' ? '50% 34%' : 'center' }} />
+                <Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaignImageFocus(campaign.image) }} />
                 <div className="campaign-photo-toolbar">
                   <span className="badge">{campaign.badge}</span>
                   <button className={`save ${saved.includes(campaign.id) ? 'saved' : ''}`} aria-pressed={saved.includes(campaign.id)} onClick={() => toggleSaved(campaign.id)} aria-label={`${saved.includes(campaign.id) ? 'Remove' : 'Save'} ${campaign.title}`}><Icon name={saved.includes(campaign.id) ? '♥' : '♡'}/></button>
@@ -423,9 +426,20 @@ export default function Home() {
                 <p className="muted campaign-location"><span>{campaign.meta}</span><span aria-hidden="true">·</span><span>{campaign.donors.toLocaleString()} donors</span>{campaign.zakat && campaign.badge !== 'Zakat eligible' && <span className="campaign-eligibility">Zakat eligible</span>}</p>
                 </div>
               </div>
-              <div className="campaign-body">
-                <div className="campaign-funding"><div className="money-row"><div className="funding-amount"><strong>{money(campaign.raised)}</strong><small>raised of {money(campaign.goal)}</small></div><b>{progress}% funded</b></div><div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div></div>
-                <div className="card-footer"><button aria-haspopup="dialog" onClick={() => { setEvidenceOpen(false); setSelected(campaign); }} aria-label={`View details: ${campaign.title}`}>View details<Icon name="arrow-right"/></button><button className="donate-mini" aria-haspopup="dialog" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="giving"/></button></div>
+              <div className="campaign-body campaign-body-inline">
+                <div className="campaign-funding">
+                  <div className="money-row">
+                    <div className="funding-amount"><strong>{money(campaign.raised)}</strong><small>raised of {money(campaign.goal)}</small></div>
+                    <b>{progress}% funded</b>
+                  </div>
+                </div>
+                <div className="campaign-compact-controls">
+                  <div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div>
+                  <div className="card-footer">
+                    <button type="button" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(false); setSelected(campaign); }} aria-label={`View details: ${campaign.title}`}>View details<Icon name="arrow-right"/></button>
+                    <button type="button" className="donate-mini" aria-haspopup="dialog" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="giving"/></button>
+                  </div>
+                </div>
               </div>
             </article>;
           })}
@@ -511,7 +525,7 @@ export default function Home() {
         {[['KSh 246,820,450','donated'],['18,742','families supported'],['2.4M','meals provided'],['189','water projects'],['4,280','orphans supported']].map(([value,label]) => <div key={label}><b>{value}</b><span>{label}</span></div>)}
       </section>
 
-      <section className="updates-section refined-updates" aria-labelledby="updates-title">
+      <section className="updates-section refined-updates" id="updates" aria-labelledby="updates-title">
         <div className="section-heading"><div><p className="eyebrow">Example impact updates</p><h2 id="updates-title">Proof of progress, not promises.</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setNotificationsOpen(true)}>See all your updates <Icon name="arrow-right"/></button></div>
         <div className="updates-grid">
           {[
@@ -520,7 +534,7 @@ export default function Home() {
             { campaign: campaigns[1], date: '06 Mar 2026', isoDate: '2026-03-06', icon: 'check', label: 'Example milestone', title: 'Al-Rahmah mosque roofing is complete', body: 'An example next release covers electrical work and the accessible water facility.' },
           ].map(update => <article className="update-card" key={update.campaign.id} aria-labelledby={`update-${update.campaign.id}`}>
             <div className="update-image">
-              <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
+              <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw" style={{ objectPosition: campaignImageFocus(update.campaign.image) }}/>
               <div className="update-image-toolbar">
                 <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
                 <button type="button" className="update-evidence-pill" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>
@@ -673,7 +687,7 @@ export default function Home() {
               <div className="search-results">
                 {filteredCampaigns.map(campaign => (
                   <button key={campaign.id} aria-haspopup="dialog" onClick={() => { setSearchOpen(false); setEvidenceOpen(false); setSelected(campaign); }}>
-                    <Image src={campaign.image} alt="" width={120} height={96}/>
+                    <Image src={campaign.image} alt="" width={120} height={96} style={{ objectFit: "cover", objectPosition: campaignImageFocus(campaign.image) }}/>
                     <span className="search-result-copy"><b>{campaign.title}</b><small>{campaign.meta} · {campaign.zakat ? 'Zakat eligible' : campaign.category}</small></span>
                     <span className="search-result-end"><span className="search-funded">{Math.round(campaign.raised / campaign.goal * 100)}% funded</span><Icon name="chevron"/></span>
                   </button>

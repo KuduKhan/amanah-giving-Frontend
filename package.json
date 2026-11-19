@@ -9,7 +9,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "qa:logic": "node --experimental-strip-types --test tests/*.test.mjs",
+    "qa:types": "tsc --noEmit",
+    "qa": "pnpm lint && pnpm qa:types && pnpm qa:logic && pnpm build"
   },
   "dependencies": {
     "@vercel/speed-insights": "^2.0.0",

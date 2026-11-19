@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Icon from './Icon';
 import { downloadText } from './givingDrafts';
+import { campaignImageFocus } from './campaignImageFocus';
 
 const budget = [['Project delivery', 82], ['Verification & reporting', 8], ['Payment and operations', 10]] as const;
 const stages = [
@@ -30,7 +31,7 @@ export default function CampaignDetails({ campaign, raised, evidenceOpen, onTogg
           <button className="close" type="button" aria-label="Close dialog" onClick={onClose}><Icon name="close"/></button>
         </div>
         <div className="detail-media">
-          <Image className="detail-hero" src={campaign.image} alt="" fill sizes="(max-width: 780px) 100vw, 450px"/>
+          <Image className="detail-hero" src={campaign.image} alt="" fill sizes="(max-width: 780px) 100vw, 450px" style={{ objectFit: "cover", objectPosition: campaignImageFocus(campaign.image) }}/>
           <div className="detail-media-caption">
             <span><Icon name="shield"/>Level 3 verified</span>
             <b>Field need and budget reviewed</b>
