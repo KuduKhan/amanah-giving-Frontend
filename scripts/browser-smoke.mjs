@@ -174,7 +174,9 @@ async function inspect({ path: route, name }, viewport) {
           .map(node => node.getBoundingClientRect());
         return {
           campaignTitle: card.querySelector('h3')?.textContent?.trim(),
-          fundingText: card.querySelector('.money-row')?.textContent?.replace(/\s+/g, ' ').trim(),
+          raised: card.querySelector('.funding-amount strong')?.textContent?.trim(),
+          goal: card.querySelector('.funding-amount small')?.textContent?.trim(),
+          percentage: card.querySelector('.money-row > b')?.textContent?.trim(),
           bodyWidth: Math.round(bounds[0].width),
           progressWidth: Math.round(bounds[3].width),
           actionsRight: Math.round(bounds[4].right),
@@ -201,7 +203,9 @@ async function inspect({ path: route, name }, viewport) {
     }
     const orphanCard = campaigns.find(card => card.campaignTitle === 'Keep 18 orphaned children learning');
     assert.ok(orphanCard, 'Orphans funding card must remain present');
-    assert.match(orphanCard.fundingText, /KSh 612K.*raised of KSh 1\.1M.*57% funded/, 'Orphans funding data and percent must remain unchanged');
+    assert.equal(orphanCard.raised, 'KSh 612K', 'Orphans raised amount must remain KSh 612K');
+    assert.equal(orphanCard.goal, 'raised of KSh 1.1M', 'Orphans goal must remain KSh 1.1M');
+    assert.equal(orphanCard.percentage, '57% funded', 'Orphans percentage must remain 57%');
     await evalPage(`document.querySelector('#title-ORP-2841')?.closest('.campaign-card')?.scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
     await pause(260);
     const cardShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
