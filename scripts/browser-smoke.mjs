@@ -15,8 +15,15 @@ const dimensions = [
 ];
 const routes = [
   { path: '/', name: 'home' },
-  { path: '/contact', name: 'contact' },
+  { path: '/about', name: 'about' },
+  { path: '/how-it-works', name: 'how-it-works' },
+  { path: '/zakat', name: 'zakat' },
+  { path: '/sadaqah', name: 'sadaqah' },
   { path: '/hajj', name: 'hajj' },
+  { path: '/verified-charities', name: 'verified-charities' },
+  { path: '/faq', name: 'faq' },
+  { path: '/contact', name: 'contact' },
+  { path: '/policies', name: 'policies' },
 ];
 const errors = [];
 const results = [];
@@ -130,6 +137,10 @@ async function inspect({ path: route, name }, viewport) {
       overflow: documentWidth - innerWidth,
       title, h1, missingImages: images, deadAnchors,
       impactStages: document.querySelectorAll('.refined-impact .timeline-item').length,
+      milestoneGlows: [...document.querySelectorAll('.refined-impact .timeline-item')]
+        .map(node => getComputedStyle(node).getPropertyValue('--trace-glow').trim()),
+      feedbackFormPresent: !!document.querySelector('#contact-feedback form'),
+      hajjDemoPresent: !!document.querySelector('.hajj-overview'),
       skipToastVisible: !!document.querySelector('.amanah-welcome-notice'),
       screenshot: ${JSON.stringify(name + '-' + viewport.name + '.png')},
     };
@@ -143,6 +154,12 @@ async function inspect({ path: route, name }, viewport) {
   assert.ok(info.h1, `Missing H1 at ${route} ${viewport.name}`);
   assert.ok(info.overflow <= 4, `Horizontal overflow ${info.overflow}px at ${route} ${viewport.name}`);
   assert.equal(info.skipToastVisible, false, `Skipping the welcome must not cover ${route} with a second notification`);
+  if (route === '/') {
+    assert.equal(info.impactStages, 5, 'Project Trace must retain all five original milestones');
+    assert.equal(new Set(info.milestoneGlows).size, 5, 'Milestone glow colors must remain distinct');
+  }
+  if (route === '/contact') assert.equal(info.feedbackFormPresent, true, 'Contact form missing');
+  if (route === '/hajj') assert.equal(info.hajjDemoPresent, true, 'Hajj demo missing');
   assert.equal(info.path, route);
 }
 
