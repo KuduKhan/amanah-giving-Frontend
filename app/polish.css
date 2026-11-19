@@ -956,6 +956,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-impact .timeline-item:last-child .timeline-dot { color: #fff; background: #15624c; box-shadow: none; }
 .refined-impact .timeline-item:last-child .timeline-dot .app-icon { color: inherit; }
 .refined-impact .timeline-item:last-child > div { border-radius: 9px; background: #edf7ef; padding: 5px 8px; }
+/* Match each arrival glow to its milestone icon, retaining the original trace timing.
+   Receipt = rose, funding = amber, approval = emerald, water test = blue,
+   verified impact = green. No unrelated icons are affected. */
+.refined-impact .timeline-item:nth-child(1) { --trace-glow: #b94b68c9; }
+.refined-impact .timeline-item:nth-child(2) { --trace-glow: #a7792dc9; }
+.refined-impact .timeline-item:nth-child(3) { --trace-glow: #148157c9; }
+.refined-impact .timeline-item:nth-child(4) { --trace-glow: #326fbac9; }
+.refined-impact .timeline-item:nth-child(5) { --trace-glow: #158057c9; }
 /* One shared timeline: each node glows only at the moment the preceding segment arrives.
    Each pulse settles before the trace travels onward; the full sequence restarts indefinitely. */
 .refined-impact .impact-stages { position: relative; isolation: isolate; }
@@ -1001,8 +1009,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   22.796%, 100% { opacity: 0; transform: scaleY(0); }
 }
 @keyframes impact-trace-icon-contact {
-  0% { transform: scale(1.13); filter: drop-shadow(0 0 8px #219668b8); }
-  3% { transform: scale(1.08); filter: drop-shadow(0 0 7px #2196689c); }
+  0% { transform: scale(1.1); filter: drop-shadow(0 0 7px var(--trace-glow, #219668b8)); }
+  3% { transform: scale(1.05); filter: drop-shadow(0 0 5px var(--trace-glow, #2196689c)); }
   9% { transform: scale(1); filter: none; }
   100% { transform: scale(1); filter: none; }
 }
