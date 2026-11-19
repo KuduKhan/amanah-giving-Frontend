@@ -22,7 +22,6 @@ const errors = [];
 const results = [];
 let chrome;
 let socket;
-let closeMessage;
 const pending = new Map();
 let nextId = 0;
 
