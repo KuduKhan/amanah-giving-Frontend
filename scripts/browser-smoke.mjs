@@ -126,9 +126,12 @@ async function inspect({ path: route, name }, viewport) {
     width: viewport.width, height: viewport.height,
     deviceScaleFactor: 1, mobile: viewport.width < 769,
   });
-  await cdp('Page.navigate', { url: new URL(route, origin).toString() });
+  // A unique marker prevents the previous document being mistaken for this viewport.
+  const target = new URL(route, origin);
+  target.searchParams.set('qa_viewport', viewport.name);
+  await cdp('Page.navigate', { url: target.toString() });
   await until(async () => evalPage(
-    `location.pathname === ${JSON.stringify(route)} && document.readyState === 'complete' && !!document.querySelector('main')`,
+    `location.pathname === ${JSON.stringify(route)} && new URLSearchParams(location.search).get('qa_viewport') === ${JSON.stringify(viewport.name)} && document.readyState === 'complete' && !!document.querySelector('main')`,
   ));
   // The branded splash is intentionally shown on hard refresh. Skip it for layout QA.
   await until(async () => evalPage(
@@ -258,7 +261,7 @@ async function inspect({ path: route, name }, viewport) {
           return bounds.bottom > 0 && bounds.top < innerHeight;
         });
       return visibleImages.length > 0 && visibleImages.every(img => img.complete && img.naturalWidth > 0);
-    })()`), 10000);
+    })()`), 18000);
     await pause(220);
     const cardShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, `campaign-orphans-inline-${viewport.name}.png`), Buffer.from(cardShot.data, 'base64'));
