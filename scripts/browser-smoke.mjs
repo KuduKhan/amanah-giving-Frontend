@@ -170,6 +170,45 @@ async function inspect({ path: route, name }, viewport) {
   assert.ok(info.overflow <= 4, `Horizontal overflow ${info.overflow}px at ${route} ${viewport.name}`);
   assert.equal(info.skipToastVisible, false, `Skipping the welcome must not cover ${route} with a second notification`);
   if (route === '/') {
+    const premium = await evalPage(`(() => {
+      const root = document.querySelector('main.home-premium');
+      if (!root) return { present: false };
+      const sections = ['#top', '#giving-ecosystem', '.refined-seasonal', '#causes', '#knowledge',
+        '#zakat', '#impact', '#updates', '#how', '#organizations', 'footer.refined-footer'];
+      const titles = [...root.querySelectorAll('h1,h2')].filter(el => el.getBoundingClientRect().width > 0);
+      const allButtons = [...root.querySelectorAll('button,a.button')];
+      const hero = root.querySelector('.refined-hero h1');
+      const heroBounds = hero?.getBoundingClientRect();
+      const card = root.querySelector('.refined-seasonal .seasonal-track article');
+      const cardStyle = card ? getComputedStyle(card) : null;
+      const calculator = root.querySelector('.refined-zakat .calculator');
+      return {
+        present: true,
+        sectionCount: sections.filter(selector => !!root.querySelector(selector)).length,
+        titleCount: titles.length,
+        heroContained: !!heroBounds && heroBounds.left >= -2 && heroBounds.right <= innerWidth + 2,
+        seasonalCardHasBorder: !!cardStyle && parseFloat(cardStyle.borderTopWidth) >= 1,
+        seasonalCardShadow: !!cardStyle && cardStyle.boxShadow !== 'none',
+        calculatorPresent: !!calculator,
+        zakatInputs: root.querySelectorAll('.refined-zakat .calc-grid input').length,
+        knowledgeCards: root.querySelectorAll('.refined-knowledge .knowledge-card').length,
+        ecosystemButtons: root.querySelectorAll('.refined-causes > button').length,
+        howSteps: root.querySelectorAll('.refined-how .steps-grid > li').length,
+        actionsWithFocus: allButtons.length,
+      };
+    })()`);
+    assert.equal(premium.present, true, 'Homepage premium styling scope missing');
+    assert.equal(premium.sectionCount, 11, 'A homepage section is missing');
+    assert.ok(premium.titleCount >= 10, 'Section heading hierarchy incomplete');
+    assert.equal(premium.heroContained, true, 'Hero title bleeds outside the viewport');
+    assert.equal(premium.seasonalCardHasBorder && premium.seasonalCardShadow, true, 'Premium card framing missing');
+    assert.equal(premium.calculatorPresent, true, 'Zakat calculator missing');
+    assert.equal(premium.zakatInputs, 6, 'Zakat calculator must have six inputs');
+    assert.equal(premium.knowledgeCards, 4, 'Four knowledge opportunities must remain');
+    assert.equal(premium.ecosystemButtons, 6, 'Six platform roles must remain');
+    assert.equal(premium.howSteps, 4, 'Four giving steps must remain');
+    console.log(JSON.stringify({ route: 'homepage-premium', viewport: viewport.name, premium }));
+
     assert.equal(info.impactStages, 5, 'Project Trace must retain all five original milestones');
     assert.equal(new Set(info.milestoneGlows).size, 5, 'Milestone glow colors must remain distinct');
 
@@ -319,6 +358,25 @@ async function inspect({ path: route, name }, viewport) {
     const updatesShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, `impact-updates-${viewport.name}.png`), Buffer.from(updatesShot.data, 'base64'));
 
+    // Capture the full editorial journey, not only the first fold and campaign cards.
+    const editorialSections = [
+      { selector: '#giving-ecosystem', name: 'ecosystem' },
+      { selector: '.refined-seasonal', name: 'seasonal' },
+      { selector: '#knowledge', name: 'knowledge' },
+      { selector: '#zakat', name: 'zakat-calculator' },
+      { selector: '#impact', name: 'project-trace' },
+      { selector: '#how', name: 'giving-steps' },
+      { selector: '#organizations', name: 'organizations' },
+      { selector: 'footer.refined-footer', name: 'footer' },
+    ];
+    for (const section of editorialSections) {
+      const found = await evalPage(`!!document.querySelector(${JSON.stringify(section.selector)})`);
+      assert.equal(found, true, `Missing ${section.name} section`);
+      await evalPage(`document.querySelector(${JSON.stringify(section.selector)}).scrollIntoView({ block: 'start', behavior: 'instant' }); true`);
+      await pause(165);
+      const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+      await writeFile(path.join(out, `home-premium-${section.name}-${viewport.name}.png`), Buffer.from(shot.data, 'base64'));
+    }
     // Google reviews were intentionally removed. Store buttons must remain.
     const footerCheck = await evalPage(`(() => ({
       hasGoogleReviews: !!document.querySelector('footer .google-review-preview'),
