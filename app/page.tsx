@@ -1,7 +1,6 @@
 'use client';
 
 import Icon from './Icon';
-import './impact-metrics.css';
 import FooterBrandIcon from './FooterBrandIcon';
 import CampaignDetails from './CampaignDetails';
 import SiteHeader from './SiteHeader';
