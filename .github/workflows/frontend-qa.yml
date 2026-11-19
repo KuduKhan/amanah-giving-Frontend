@@ -47,3 +47,25 @@ jobs:
 
       - name: Production compilation
         run: pnpm build
+
+      - name: Browser viewport and runtime smoke test
+        run: |
+          set -euo pipefail
+          pnpm start > /tmp/amanah-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:3000/ > /dev/null; then break; fi
+            sleep 2
+          done
+          curl --fail --silent http://127.0.0.1:3000/ > /dev/null
+          node scripts/browser-smoke.mjs
+
+      - name: Save browser screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: amanah-frontend-visual-qa
+          path: audit-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
