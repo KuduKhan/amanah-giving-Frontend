@@ -7019,3 +7019,48 @@ main > .site-header.refined-header + .hero.refined-hero {
 @media (max-width: 305px) {
   .refined-footer-bottom .footer-social-links { flex-wrap: wrap; }
 }
+
+/*
+ * Accent-aware icon interaction.
+ * Only the icon glows on pointer approach, keyboard focus, or tap:
+ * no animated backgrounds, pulsing effects, transform or layout changes.
+ * Each SVG uses the existing brand/icon tone palette from globals.css.
+ */
+.app-icon[data-icon-tone],
+.refined-footer-bottom .footer-social-links .footer-brand-icon {
+  transition: filter 170ms ease-out;
+}
+
+@media (hover: hover) {
+  :is(a, button, [role='button']):not(:disabled):hover .app-icon[data-icon-tone],
+  :is(.refined-causes button, .refined-seasonal .seasonal-track article,
+      .refined-how .steps-grid article, .knowledge-card,
+      .refined-opportunities .campaign-card, .refined-updates .update-card,
+      .refined-ecosystem .platform-preview-grid button):hover .app-icon[data-icon-tone] {
+    filter: drop-shadow(0 0 5px var(--icon-light, currentColor));
+  }
+
+  .refined-footer-bottom .footer-social-links a:hover .footer-brand-icon {
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+}
+
+/* Keyboard and touch users see the same localized accent response. */
+:is(a, button, [role='button']):focus-visible .app-icon[data-icon-tone],
+:is(.refined-causes button, .refined-seasonal .seasonal-track article,
+    .refined-how .steps-grid article, .knowledge-card,
+    .refined-opportunities .campaign-card, .refined-updates .update-card,
+    .refined-ecosystem .platform-preview-grid button):focus-within .app-icon[data-icon-tone],
+:is(a, button, [role='button']):active .app-icon[data-icon-tone] {
+  filter: drop-shadow(0 0 5px var(--icon-light, currentColor));
+}
+.refined-footer-bottom .footer-social-links a:is(:focus-visible, :active) .footer-brand-icon {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-icon[data-icon-tone],
+  .refined-footer-bottom .footer-social-links .footer-brand-icon {
+    transition: none;
+  }
+}
