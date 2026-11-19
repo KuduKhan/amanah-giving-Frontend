@@ -206,6 +206,8 @@ async function inspect({ path: route, name }, viewport) {
           percentage: card.querySelector('.money-row > b')?.textContent?.trim(),
           cardHeight: Math.round(card.getBoundingClientRect().height),
           photoHeight: Math.round(photoBounds.height),
+          imageFit: getComputedStyle(photo.querySelector('img')).objectFit,
+          imageFocus: getComputedStyle(photo.querySelector('img')).objectPosition,
           photoOverlap: toolbarBounds.bottom - heroBounds.top,
           photoTextContained: heroBounds.bottom <= photoBounds.bottom + 2,
           metadataPresent: !!card.querySelector('.verified')?.textContent?.includes('Example verification')
@@ -236,6 +238,9 @@ async function inspect({ path: route, name }, viewport) {
     for (const card of campaigns) {
       assert.equal(card.error, undefined, 'Compact campaign controls missing');
       assert.ok(card.photoHeight >= 165 && card.photoHeight <= 220, 'Campaign photo must be compact but still readable');
+      assert.equal(card.imageFit, 'cover', 'Campaign photos must crop without distortion');
+      assert.match(card.imageFocus, /^\d+% \d+%$/, 'Campaign photos need explicit focal positions');
+      assert.notEqual(card.imageFocus, '50% 50%', 'Campaign photos should not revert to indiscriminate centering');
       assert.ok(card.cardHeight <= 350, 'Campaign card must not retain the oversized square format');
       assert.ok(card.photoOverlap <= 2 && card.photoTextContained, 'Photo badges and project details must not overlap');
       assert.equal(card.metadataPresent, true, 'Missing campaign verification/deadline/location metadata');
@@ -244,7 +249,7 @@ async function inspect({ path: route, name }, viewport) {
       assert.ok(card.fundingOverlap <= 1, 'Funding amount and percentage overlap');
       assert.ok(card.progressToActionsGap >= -1, 'Progress indicator overlaps the action row');
       assert.ok(card.buttonsSameRow && card.buttonsBalanced, 'View details / Donate must fit evenly inline');
-      assert.ok(card.actionHeight.every(height => height >= 38 && height <= 42), 'CTA visual height must stay compact');
+      assert.ok(card.actionHeight.every(height => height >= 33 && height <= 37), 'View details and Donate should have short 34/36px visuals');
       assert.ok(card.effectiveHitHeights.every(height => height >= 44), 'Effective CTA hit area must remain at least 44px');
       assert.deepEqual(card.labels, ['View details', 'Donate']);
     }
@@ -283,6 +288,8 @@ async function inspect({ path: route, name }, viewport) {
           id: card.querySelector('.update-meta span')?.textContent?.trim(),
           cardHeight: Math.round(card.getBoundingClientRect().height),
           imageHeight: Math.round(i.height),
+          imageFit: getComputedStyle(image.querySelector('img')).objectFit,
+          imageFocus: getComputedStyle(image.querySelector('img')).objectPosition,
           badgeOverlap: b.right - e.left,
           topOverlap: Math.max(b.bottom, e.bottom) - t.top,
           titleContained: t.bottom <= i.bottom + 2,
@@ -299,8 +306,10 @@ async function inspect({ path: route, name }, viewport) {
       assert.equal(update.error, undefined, 'Impact card missing content');
       assert.ok(update.cardHeight <= 340, 'Impact update card too tall');
       assert.ok(update.imageHeight >= 180 && update.imageHeight <= 215, 'Impact image should remain compact');
+      assert.equal(update.imageFit, 'cover', 'Update images must crop without stretching');
+      assert.match(update.imageFocus, /^\d+% \d+%$/, 'Update images must use their photo-specific crop');
       assert.ok(update.badgeOverlap <= 2 && update.topOverlap <= 2 && update.titleContained, 'Update badge, evidence button or title overlap');
-      assert.ok(update.evidenceHeight >= 38 && update.evidenceHeight <= 42, 'Evidence action height not compact');
+      assert.ok(update.evidenceHeight >= 33 && update.evidenceHeight <= 37, 'View evidence should have compact 34/36px visuals');
       assert.ok(update.effectiveHitHeight >= 44, 'Evidence button needs at least 44px hit area');
       assert.ok(update.summaryText?.length > 25, 'Impact summary text missing');
       assert.equal(update.evidenceLabel, 'View evidence');
