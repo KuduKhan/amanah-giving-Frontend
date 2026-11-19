@@ -2,7 +2,6 @@
 
 import Icon from './Icon';
 import FooterBrandIcon from './FooterBrandIcon';
-import GoogleReviewPreview from './GoogleReviewPreview';
 import './impact-updates-cta.css';
 import CampaignDetails from './CampaignDetails';
 import SiteHeader from './SiteHeader';
@@ -629,7 +628,6 @@ export default function Home() {
               <span><strong>Google Play</strong></span>
             </a>
           </div>
-          <GoogleReviewPreview/>
         </div>
       </footer>
       <div className="footer-bottom refined-footer-bottom">
