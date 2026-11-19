@@ -50,27 +50,78 @@ export const demoKey = 'amanah-hajj-demo-v1';
 export const formatKes = (amount: number) => `KSh ${amount.toLocaleString('en-KE')}`;
 
 export function parseDemo(raw: string | null): Demo {
-  const data = raw ? JSON.parse(raw) as Partial<Demo> | null : null;
-  if (!data || !Array.isArray(data.gifts) || !Array.isArray(data.checklist)) return emptyDemo;
-  const gifts = data.gifts.filter(gift => gift && typeof gift.id === 'string' && funds.some(fund => fund.id === gift.fund) && Number.isSafeInteger(gift.amount) && gift.amount > 0 && typeof gift.anonymous === 'boolean');
+  // Bad or outdated browser storage must not disable persistence for the session.
+  let data: Partial<Demo> | null;
+  try {
+    data = raw ? JSON.parse(raw) as Partial<Demo> | null : null;
+  } catch {
+    return emptyDemo;
+  }
+  if (!data || typeof data !== 'object' || !Array.isArray(data.gifts) || !Array.isArray(data.checklist)) return emptyDemo;
+
+  // Stored demo records are untrusted: preserve only plausible, internally
+  // consistent values. This is display hygiene, never server-side authorisation.
+  const gifts: Gift[] = [];
+  const giftTotals = new Map<FundId, number>();
+  const giftIds = new Set<string>();
+  for (const gift of data.gifts) {
+    const fund = funds.find(item => item.id === gift?.fund);
+    if (!fund || typeof gift?.id !== 'string' || gift.id.length > 64 || giftIds.has(gift.id)
+      || !validAmount(gift.amount) || typeof gift.anonymous !== 'boolean') continue;
+    const remaining = fund.target - fund.raised - (giftTotals.get(fund.id) ?? 0);
+    if (gift.amount > remaining) continue;
+    const method = paymentMethods.find(item => item === gift.method);
+    gifts.push({ id: gift.id, fund: fund.id, amount: gift.amount, anonymous: gift.anonymous, ...(method ? { method } : {}) });
+    giftTotals.set(fund.id, (giftTotals.get(fund.id) ?? 0) + gift.amount);
+    giftIds.add(gift.id);
+  }
+
   const entry = data.application;
-  const application = entry && typeof entry.id === 'string' && ['community', 'family'].includes(entry.path) && ['first-time', 'accessibility'].includes(entry.scenario) && Number.isInteger(entry.stage) && entry.stage >= 0 && entry.stage < milestones.length ? entry : null;
+  const application = entry && typeof entry.id === 'string' && entry.id.length <= 64
+    && ['community', 'family'].includes(entry.path) && ['first-time', 'accessibility'].includes(entry.scenario)
+    && Number.isInteger(entry.stage) && entry.stage >= 0 && entry.stage < milestones.length ? entry : null;
+
   const extras = data.extras;
-  return { gifts, application, checklist: validIndexes(data.checklist, academy.length), extras: {
-    documents: validIndexes(extras?.documents, documentItems.length),
-    audit: Array.isArray(extras?.audit) ? extras.audit.filter(item => typeof item?.action === 'string' && typeof item.date === 'string' && Number.isFinite(Date.parse(item.date))) : [],
-    cancelled: extras?.cancelled === true && !!application,
-    resolution: extras?.cancelled && (extras.resolution === 'refund' || extras.resolution === 'reassign') ? extras.resolution : null,
-    circle: extras?.circle === true,
-    pledges: Array.isArray(extras?.pledges) ? extras.pledges.filter(item => item && funds.some(fund => fund.id === item.fund) && validAmount(item.amount) && frequencies.includes(item.frequency)) : [],
-    savings: extras?.savings && validAmount(extras.savings.target) && Number.isSafeInteger(extras.savings.saved) && extras.savings.saved >= 0 && extras.savings.saved <= extras.savings.target ? extras.savings : null,
-    umrah: extras?.umrah === true,
-    attached: validIndexes(extras?.attached, sampleDocuments.length),
-    booking: extras?.booking === true && !!application,
-    caseContributions: Array.isArray(extras?.caseContributions) ? extras.caseContributions.filter(validAmount) : application && application.stage >= 2 ? [sampleQuote] : [],
-    financeCleared: extras?.financeCleared === true || !!application && application.stage >= 2,
-    assistance: application && (extras?.assistance === 'queued' || extras?.assistance === 'reviewed') ? extras.assistance : null,
-  } };
+  const caseContributions: number[] = [];
+  if (Array.isArray(extras?.caseContributions)) {
+    let balance = 0;
+    for (const contribution of extras.caseContributions) {
+      if (!validAmount(contribution) || contribution > sampleQuote - balance) continue;
+      caseContributions.push(contribution);
+      balance += contribution;
+    }
+  } else if (application && application.stage >= 2) {
+    // Legacy demo data stored an approved case without individual contributions.
+    caseContributions.push(sampleQuote);
+  }
+  const caseFullyFunded = caseContributions.reduce((sum, amount) => sum + amount, 0) === sampleQuote;
+  const cancelled = extras?.cancelled === true && !!application;
+  return {
+    gifts, application, checklist: validIndexes(data.checklist, academy.length),
+    extras: {
+      documents: validIndexes(extras?.documents, documentItems.length),
+      audit: Array.isArray(extras?.audit)
+        ? extras.audit.filter(item => typeof item?.action === 'string' && item.action.length <= 220
+            && typeof item.date === 'string' && Number.isFinite(Date.parse(item.date))).slice(-200)
+        : [],
+      cancelled,
+      resolution: cancelled && (extras?.resolution === 'refund' || extras?.resolution === 'reassign') ? extras.resolution : null,
+      circle: extras?.circle === true,
+      pledges: Array.isArray(extras?.pledges)
+        ? extras.pledges.filter(item => item && funds.some(fund => fund.id === item.fund)
+            && validAmount(item.amount) && frequencies.includes(item.frequency))
+        : [],
+      savings: extras?.savings && validAmount(extras.savings.target)
+        && Number.isSafeInteger(extras.savings.saved) && extras.savings.saved >= 0
+        && extras.savings.saved <= extras.savings.target ? extras.savings : null,
+      umrah: extras?.umrah === true,
+      attached: validIndexes(extras?.attached, sampleDocuments.length),
+      booking: extras?.booking === true && !!application,
+      caseContributions,
+      financeCleared: !!application && (application.stage >= 2 || (extras?.financeCleared === true && caseFullyFunded)),
+      assistance: application && (extras?.assistance === 'queued' || extras?.assistance === 'reviewed') ? extras.assistance : null,
+    },
+  };
 }
 
 export function validAmount(amount: number) { return Number.isSafeInteger(amount) && amount > 0 && amount <= 100000000; }
