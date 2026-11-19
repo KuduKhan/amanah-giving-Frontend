@@ -77,7 +77,11 @@ export default function WelcomeSplash() {
       }
     }
 
-    // Defer the non-blocking notice until the next frame, without changing its duration.
+    // An explicit Skip intro request should open the app immediately, without
+    // adding a second toast that can cover the content the visitor requested.
+    if (skipRequested.current) return;
+
+    // Keep the small welcome acknowledgment only after the full timed greeting.
     const noticeFrame = window.requestAnimationFrame(() => setWelcomeNoticeVisible(true));
     noticeTimeout.current = window.setTimeout(() => setWelcomeNoticeVisible(false), 2600);
     return () => {
