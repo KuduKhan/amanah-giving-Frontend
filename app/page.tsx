@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
 import './campaign-inline.css';
 import { campaignImageFocus } from './campaignImageFocus';
+import './home-premium.css';
 
 type Campaign = {
   id: string;
@@ -322,7 +323,7 @@ export default function Home() {
   };
 
   return (
-    <main id="main-content">
+    <main id="main-content" className="home-premium">
       <a className="skip-link" href="#top">Skip to main content</a>
       <div className="scroll-progress" aria-hidden="true"><span style={{width:`${scrollProgress}%`}}/></div>
       <SiteHeader labels={t} language={language} unreadCount={notificationIds.filter(id => !readNotifications.includes(id)).length} onLanguage={() => setLanguagesOpen(true)} onSearch={() => setSearchOpen(true)} onNotifications={() => setNotificationsOpen(true)} onAccount={() => setDashboardOpen(true)} onGive={() => startDonation()} onPlatform={() => setPlatformOpen(true)}/>
