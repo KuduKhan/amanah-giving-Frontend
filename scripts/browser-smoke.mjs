@@ -310,36 +310,16 @@ async function inspect({ path: route, name }, viewport) {
     const updatesShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, `impact-updates-${viewport.name}.png`), Buffer.from(updatesShot.data, 'base64'));
 
-    const googlePreview = await evalPage(`(() => {
-      const panel = document.querySelector('footer .google-review-preview');
-      const stars = [...(panel?.querySelectorAll('.google-review-stars button') || [])];
-      const link = panel?.querySelector('.google-review-link');
-      const cta = panel?.closest('.footer-cta');
-      return { present: !!panel, starCount: stars.length, link: link?.href,
-        initialClaim: panel?.querySelector('.google-review-preview-status')?.textContent?.trim(),
-        contentOverflow: cta ? cta.scrollWidth - cta.clientWidth : null,
-        appLinkCount: cta?.querySelectorAll('.footer-apps .footer-app-link').length };
-    })()`);
-    assert.equal(googlePreview.present, true, 'Footer Google review panel missing');
-    assert.equal(googlePreview.starCount, 5, 'Expected 5 interactive rating stars');
-    assert.equal(googlePreview.appLinkCount, 2, 'Preserve App Store and Google Play links');
-    assert.ok(googlePreview.contentOverflow <= 3, 'Footer Google preview overflows');
-    assert.match(googlePreview.initialClaim, /No public rating or review count is claimed/);
-    assert.ok(googlePreview.link.startsWith('https://www.google.com/maps/search/'), 'Unverified listing must use Google search, not claim review connection');
-    await evalPage(`document.querySelectorAll('.google-review-stars button')[3]?.click(); true`);
-    const rating = await evalPage(`(() => ({
-      selected: [...document.querySelectorAll('.google-review-stars button')].map(btn => btn.getAttribute('aria-pressed')),
-      text: document.querySelector('.google-review-preview-status')?.textContent?.trim(),
+    // Google reviews were intentionally removed. Store buttons must remain.
+    const footerCheck = await evalPage(`(() => ({
+      hasGoogleReviews: !!document.querySelector('footer .google-review-preview'),
+      appStoreLinks: document.querySelectorAll('footer .footer-apps .footer-app-link').length,
+      appStoreText: document.querySelector('footer .footer-apps')?.textContent?.trim(),
     }))()`);
-    assert.deepEqual(rating.selected, ['false', 'false', 'false', 'true', 'false']);
-    assert.match(rating.text, /4 of 5 stars selected as a preview/);
-    assert.match(rating.text, /Nothing has been published to Google/);
-    await evalPage(`document.querySelector('.google-review-preview')?.scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
-    await pause(200);
-    const footerShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
-    await writeFile(path.join(out, `footer-google-reviews-${viewport.name}.png`), Buffer.from(footerShot.data, 'base64'));
-    console.log(JSON.stringify({ route: 'impact-updates-and-google', viewport: viewport.name, updates: updateCards.map(({id, cardHeight, imageHeight}) => ({id, cardHeight, imageHeight})), googlePreview: true }));
-
+    assert.equal(footerCheck.hasGoogleReviews, false, 'Google review widget must be absent');
+    assert.equal(footerCheck.appStoreLinks, 2, 'App Store and Google Play links must be preserved');
+    assert.match(footerCheck.appStoreText, /App Store/);
+    assert.match(footerCheck.appStoreText, /Google Play/);
     await evalPage(`document.querySelector('.refined-opportunities .campaign-card .card-footer button:first-child')?.click(); true`);
     await until(async () => evalPage(`!!document.querySelector('.overlay[aria-modal="true"]')`), 5000);
     await evalPage(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); true`);
