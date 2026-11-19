@@ -17,6 +17,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
 import './campaign-inline.css';
+import { campaignImageFocus } from './campaignImageFocus';
 
 type Campaign = {
   id: string;
@@ -414,7 +415,7 @@ export default function Home() {
             const progress = Math.round(campaign.raised / campaign.goal * 100);
             return <article className="campaign-card" key={campaign.id} aria-labelledby={`title-${campaign.id}`}>
               <div className="campaign-image">
-                <Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaign.id === 'EDU-390' ? '50% 34%' : 'center' }} />
+                <Image src={campaign.image} alt="" width={900} height={600} sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw" style={{ objectPosition: campaignImageFocus(campaign.image) }} />
                 <div className="campaign-photo-toolbar">
                   <span className="badge">{campaign.badge}</span>
                   <button className={`save ${saved.includes(campaign.id) ? 'saved' : ''}`} aria-pressed={saved.includes(campaign.id)} onClick={() => toggleSaved(campaign.id)} aria-label={`${saved.includes(campaign.id) ? 'Remove' : 'Save'} ${campaign.title}`}><Icon name={saved.includes(campaign.id) ? '♥' : '♡'}/></button>
@@ -533,7 +534,7 @@ export default function Home() {
             { campaign: campaigns[1], date: '06 Mar 2026', isoDate: '2026-03-06', icon: 'check', label: 'Example milestone', title: 'Al-Rahmah mosque roofing is complete', body: 'An example next release covers electrical work and the accessible water facility.' },
           ].map(update => <article className="update-card" key={update.campaign.id} aria-labelledby={`update-${update.campaign.id}`}>
             <div className="update-image">
-              <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw"/>
+              <Image src={update.campaign.image} alt="" width={760} height={500} sizes="(max-width: 700px) 100vw, (max-width: 1050px) 50vw, 33vw" style={{ objectPosition: campaignImageFocus(update.campaign.image) }}/>
               <div className="update-image-toolbar">
                 <span className="update-photo-badge"><Icon name={update.icon}/>{update.label}</span>
                 <button type="button" className="update-evidence-pill" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(true); setSelected(update.campaign); }} aria-label={`View evidence: ${update.title}`}>
@@ -686,7 +687,7 @@ export default function Home() {
               <div className="search-results">
                 {filteredCampaigns.map(campaign => (
                   <button key={campaign.id} aria-haspopup="dialog" onClick={() => { setSearchOpen(false); setEvidenceOpen(false); setSelected(campaign); }}>
-                    <Image src={campaign.image} alt="" width={120} height={96}/>
+                    <Image src={campaign.image} alt="" width={120} height={96} style={{ objectFit: "cover", objectPosition: campaignImageFocus(campaign.image) }}/>
                     <span className="search-result-copy"><b>{campaign.title}</b><small>{campaign.meta} · {campaign.zakat ? 'Zakat eligible' : campaign.category}</small></span>
                     <span className="search-result-end"><span className="search-funded">{Math.round(campaign.raised / campaign.goal * 100)}% funded</span><Icon name="chevron"/></span>
                   </button>
