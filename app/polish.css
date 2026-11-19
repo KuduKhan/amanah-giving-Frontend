@@ -956,6 +956,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .refined-impact .timeline-item:last-child .timeline-dot { color: #fff; background: #15624c; box-shadow: none; }
 .refined-impact .timeline-item:last-child .timeline-dot .app-icon { color: inherit; }
 .refined-impact .timeline-item:last-child > div { border-radius: 9px; background: #edf7ef; padding: 5px 8px; }
+/* Match each arrival glow to its milestone icon, retaining the original trace timing.
+   Receipt = rose, funding = amber, approval = emerald, water test = blue,
+   verified impact = green. No unrelated icons are affected. */
+.refined-impact .timeline-item:nth-child(1) { --trace-glow: #b94b68c9; }
+.refined-impact .timeline-item:nth-child(2) { --trace-glow: #a7792dc9; }
+.refined-impact .timeline-item:nth-child(3) { --trace-glow: #148157c9; }
+.refined-impact .timeline-item:nth-child(4) { --trace-glow: #326fbac9; }
+.refined-impact .timeline-item:nth-child(5) { --trace-glow: #158057c9; }
 /* One shared timeline: each node glows only at the moment the preceding segment arrives.
    Each pulse settles before the trace travels onward; the full sequence restarts indefinitely. */
 .refined-impact .impact-stages { position: relative; isolation: isolate; }
@@ -1001,8 +1009,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   22.796%, 100% { opacity: 0; transform: scaleY(0); }
 }
 @keyframes impact-trace-icon-contact {
-  0% { transform: scale(1.13); filter: drop-shadow(0 0 8px #219668b8); }
-  3% { transform: scale(1.08); filter: drop-shadow(0 0 7px #2196689c); }
+  0% { transform: scale(1.1); filter: drop-shadow(0 0 7px var(--trace-glow, #219668b8)); }
+  3% { transform: scale(1.05); filter: drop-shadow(0 0 5px var(--trace-glow, #2196689c)); }
   9% { transform: scale(1); filter: none; }
   100% { transform: scale(1); filter: none; }
 }
@@ -7018,49 +7026,4 @@ main > .site-header.refined-header + .hero.refined-hero {
 }
 @media (max-width: 305px) {
   .refined-footer-bottom .footer-social-links { flex-wrap: wrap; }
-}
-
-/*
- * Accent-aware icon interaction.
- * Only the icon glows on pointer approach, keyboard focus, or tap:
- * no animated backgrounds, pulsing effects, transform or layout changes.
- * Each SVG uses the existing brand/icon tone palette from globals.css.
- */
-.app-icon[data-icon-tone],
-.refined-footer-bottom .footer-social-links .footer-brand-icon {
-  transition: filter 170ms ease-out;
-}
-
-@media (hover: hover) {
-  :is(a, button, [role='button']):not(:disabled):hover .app-icon[data-icon-tone],
-  :is(.refined-causes button, .refined-seasonal .seasonal-track article,
-      .refined-how .steps-grid article, .knowledge-card,
-      .refined-opportunities .campaign-card, .refined-updates .update-card,
-      .refined-ecosystem .platform-preview-grid button):hover .app-icon[data-icon-tone] {
-    filter: drop-shadow(0 0 5px var(--icon-light, currentColor));
-  }
-
-  .refined-footer-bottom .footer-social-links a:hover .footer-brand-icon {
-    filter: drop-shadow(0 0 6px currentColor);
-  }
-}
-
-/* Keyboard and touch users see the same localized accent response. */
-:is(a, button, [role='button']):focus-visible .app-icon[data-icon-tone],
-:is(.refined-causes button, .refined-seasonal .seasonal-track article,
-    .refined-how .steps-grid article, .knowledge-card,
-    .refined-opportunities .campaign-card, .refined-updates .update-card,
-    .refined-ecosystem .platform-preview-grid button):focus-within .app-icon[data-icon-tone],
-:is(a, button, [role='button']):active .app-icon[data-icon-tone] {
-  filter: drop-shadow(0 0 5px var(--icon-light, currentColor));
-}
-.refined-footer-bottom .footer-social-links a:is(:focus-visible, :active) .footer-brand-icon {
-  filter: drop-shadow(0 0 6px currentColor);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .app-icon[data-icon-tone],
-  .refined-footer-bottom .footer-social-links .footer-brand-icon {
-    transition: none;
-  }
 }
