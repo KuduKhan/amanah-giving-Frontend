@@ -63,19 +63,19 @@
   position: relative;
   flex: 0 0 auto;
   min-width: 0;
-  min-height: 38px;
-  height: 38px;
-  padding: 6px 8px;
+  min-height: 34px;
+  height: 34px;
+  padding: 5px 7px;
   gap: 4px;
-  border-radius: 9px;
-  font-size: 10px;
+  border-radius: 8px;
+  font-size: 9.5px;
   line-height: 1.15;
 }
 .refined-updates .update-image-toolbar .update-evidence-pill::before {
   content: "";
   position: absolute;
-  inset: -3px 0;
-  border-radius: 10px;
+  inset: -5px 0;
+  border-radius: 9px;
 }
 .refined-updates .update-image-toolbar .update-evidence-pill .app-icon {
   width: 12px;
@@ -161,10 +161,10 @@
   }
   .refined-updates .update-card > .update-summary { padding: 10px; }
   .refined-updates .update-image-toolbar .update-evidence-pill {
-    min-height: 40px;
-    height: 40px;
+    min-height: 36px;
+    height: 36px;
   }
-  .refined-updates .update-image-toolbar .update-evidence-pill::before { inset-block: -2px; }
+  .refined-updates .update-image-toolbar .update-evidence-pill::before { inset-block: -4px; }
 }
 @media (max-width: 360px) {
   .refined-updates .update-card > .update-image {
