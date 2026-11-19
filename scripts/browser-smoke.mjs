@@ -130,6 +130,7 @@ async function inspect({ path: route, name }, viewport) {
       overflow: documentWidth - innerWidth,
       title, h1, missingImages: images, deadAnchors,
       impactStages: document.querySelectorAll('.refined-impact .timeline-item').length,
+      skipToastVisible: !!document.querySelector('.amanah-welcome-notice'),
       screenshot: ${JSON.stringify(name + '-' + viewport.name + '.png')},
     };
   })()`);
@@ -141,6 +142,7 @@ async function inspect({ path: route, name }, viewport) {
   console.log(JSON.stringify(info));
   assert.ok(info.h1, `Missing H1 at ${route} ${viewport.name}`);
   assert.ok(info.overflow <= 4, `Horizontal overflow ${info.overflow}px at ${route} ${viewport.name}`);
+  assert.equal(info.skipToastVisible, false, `Skipping the welcome must not cover ${route} with a second notification`);
   assert.equal(info.path, route);
 }
 
