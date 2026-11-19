@@ -75,7 +75,7 @@ export default function MyGiving({ drafts, saved, onClose, onView, onRemove, onG
         <section className="my-giving-shortcuts" aria-label="Giving shortcuts">
           <div className="my-giving-section-heading">
             <p>QUICK ACTIONS</p>
-            <span>Continue when you're ready</span>
+            <span>Continue when you&apos;re ready</span>
           </div>
           <div className="dashboard-actions my-giving-actions">
             {actions.map(([icon, label, action], index) => (
