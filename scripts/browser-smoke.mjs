@@ -161,22 +161,40 @@ async function inspect({ path: route, name }, viewport) {
     const campaigns = await evalPage(`(() => {
       const rows = [...document.querySelectorAll('.refined-opportunities .campaign-card')];
       return rows.map(card => {
+        const photo = card.querySelector('.campaign-image');
+        const toolbar = card.querySelector('.campaign-photo-toolbar');
+        const heroCopy = card.querySelector('.campaign-image-content');
         const body = card.querySelector('.campaign-body-inline');
         const amount = card.querySelector('.funding-amount');
         const percentage = card.querySelector('.money-row > b');
         const progress = card.querySelector('.campaign-compact-controls > .progress');
         const actions = card.querySelector('.campaign-compact-controls > .card-footer');
         const buttons = [...(actions?.querySelectorAll('button') || [])];
-        if (!body || !amount || !percentage || !progress || !actions || buttons.length !== 2) {
+        if (!photo || !toolbar || !heroCopy || !body || !amount || !percentage || !progress || !actions || buttons.length !== 2) {
           return { error: 'Campaign funding/action element missing' };
         }
         const bounds = [body, amount, percentage, progress, actions, ...buttons]
           .map(node => node.getBoundingClientRect());
+        const photoBounds = photo.getBoundingClientRect();
+        const toolbarBounds = toolbar.getBoundingClientRect();
+        const heroBounds = heroCopy.getBoundingClientRect();
+        const effectiveHitHeights = buttons.map(button => {
+          const hitSlop = getComputedStyle(button, '::before');
+          return Math.round(button.getBoundingClientRect().height
+            - (Number.parseFloat(hitSlop.top) || 0)
+            - (Number.parseFloat(hitSlop.bottom) || 0));
+        });
         return {
           campaignTitle: card.querySelector('h3')?.textContent?.trim(),
           raised: card.querySelector('.funding-amount strong')?.textContent?.trim(),
           goal: card.querySelector('.funding-amount small')?.textContent?.trim(),
           percentage: card.querySelector('.money-row > b')?.textContent?.trim(),
+          photoHeight: Math.round(photoBounds.height),
+          photoOverlap: toolbarBounds.bottom - heroBounds.top,
+          photoTextContained: heroBounds.bottom <= photoBounds.bottom + 2,
+          metadataPresent: !!card.querySelector('.verified')?.textContent?.includes('Example verification')
+            && !!card.querySelector('.campaign-deadline')?.textContent?.includes('days left')
+            && !!card.querySelector('.campaign-location')?.textContent?.includes('donors'),
           bodyWidth: Math.round(bounds[0].width),
           progressWidth: Math.round(bounds[3].width),
           actionsRight: Math.round(bounds[4].right),
@@ -186,19 +204,24 @@ async function inspect({ path: route, name }, viewport) {
           buttonsSameRow: Math.abs(bounds[5].top - bounds[6].top) <= 1,
           buttonsBalanced: Math.abs(bounds[5].width - bounds[6].width) <= 1,
           actionHeight: buttons.map(node => Math.round(node.getBoundingClientRect().height)),
+          effectiveHitHeights,
           labels: buttons.map(node => node.textContent.trim()),
         };
       });
     })()`);
-    assert.ok(campaigns.length >= 3, 'Expected campaign cards to render');
+    assert.equal(campaigns.length, 6, 'All six example campaigns must remain visible');
     for (const card of campaigns) {
       assert.equal(card.error, undefined, 'Compact campaign controls missing');
+      assert.ok(card.photoHeight >= 140, 'Campaign photo area is overly compressed');
+      assert.ok(card.photoOverlap <= 2 && card.photoTextContained, 'Photo badges and project details must not overlap');
+      assert.equal(card.metadataPresent, true, 'Missing campaign verification/deadline/location metadata');
       assert.ok(card.progressWidth >= card.bodyWidth * 0.82, 'Funding bar must span the usable card width');
       assert.ok(card.actionsRight <= card.bodyRight + 2, 'Campaign actions clipped by card');
       assert.ok(card.fundingOverlap <= 1, 'Funding amount and percentage overlap');
       assert.ok(card.progressToActionsGap >= -1, 'Progress indicator overlaps the action row');
       assert.ok(card.buttonsSameRow && card.buttonsBalanced, 'View details / Donate must fit evenly inline');
-      assert.ok(card.actionHeight.every(height => height >= 44), 'Campaign action smaller than 44px');
+      assert.ok(card.actionHeight.every(height => height >= 38 && height <= 42), 'CTA visual height must stay compact');
+      assert.ok(card.effectiveHitHeights.every(height => height >= 44), 'Effective CTA hit area must remain at least 44px');
       assert.deepEqual(card.labels, ['View details', 'Donate']);
     }
     const orphanCard = campaigns.find(card => card.campaignTitle === 'Keep 18 orphaned children learning');
