@@ -272,3 +272,19 @@
     transition: none;
   }
 }
+
+/* Tight editorial transition below the campaign grid. */
+.section.refined-opportunities {
+  padding-block-end: clamp(24px, 2.7vw, 39px);
+}
+.section.refined-knowledge {
+  padding-block-start: clamp(29px, 3.2vw, 45px);
+}
+@media (max-width: 700px) {
+  .section.refined-opportunities {
+    padding-block-end: 26px;
+  }
+  .section.refined-knowledge {
+    padding-block-start: 30px;
+  }
+}
