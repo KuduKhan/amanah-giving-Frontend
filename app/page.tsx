@@ -15,6 +15,7 @@ import GivingPlanner, { type GivingOccasion } from './GivingPlanner';
 import Image from 'next/image';
 import Link from 'next/link';
 import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from './givingDrafts';
+import './campaign-inline.css';
 
 type Campaign = {
   id: string;
@@ -423,9 +424,20 @@ export default function Home() {
                 <p className="muted campaign-location"><span>{campaign.meta}</span><span aria-hidden="true">·</span><span>{campaign.donors.toLocaleString()} donors</span>{campaign.zakat && campaign.badge !== 'Zakat eligible' && <span className="campaign-eligibility">Zakat eligible</span>}</p>
                 </div>
               </div>
-              <div className="campaign-body">
-                <div className="campaign-funding"><div className="money-row"><div className="funding-amount"><strong>{money(campaign.raised)}</strong><small>raised of {money(campaign.goal)}</small></div><b>{progress}% funded</b></div><div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div></div>
-                <div className="card-footer"><button aria-haspopup="dialog" onClick={() => { setEvidenceOpen(false); setSelected(campaign); }} aria-label={`View details: ${campaign.title}`}>View details<Icon name="arrow-right"/></button><button className="donate-mini" aria-haspopup="dialog" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="giving"/></button></div>
+              <div className="campaign-body campaign-body-inline">
+                <div className="campaign-funding">
+                  <div className="money-row">
+                    <div className="funding-amount"><strong>{money(campaign.raised)}</strong><small>raised of {money(campaign.goal)}</small></div>
+                    <b>{progress}% funded</b>
+                  </div>
+                </div>
+                <div className="campaign-compact-controls">
+                  <div className="progress" role="progressbar" aria-label={`Funding for ${campaign.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, progress)} aria-valuetext={`${campaign.raised.toLocaleString()} Kenyan shillings raised of ${campaign.goal.toLocaleString()}`}><span style={{width: `${Math.min(100, progress)}%`}} /></div>
+                  <div className="card-footer">
+                    <button type="button" aria-haspopup="dialog" onClick={() => { setEvidenceOpen(false); setSelected(campaign); }} aria-label={`View details: ${campaign.title}`}>View details<Icon name="arrow-right"/></button>
+                    <button type="button" className="donate-mini" aria-haspopup="dialog" onClick={() => startDonation(campaign)} aria-label={`Donate to ${campaign.title}`}>Donate<Icon name="giving"/></button>
+                  </div>
+                </div>
               </div>
             </article>;
           })}
