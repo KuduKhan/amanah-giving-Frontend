@@ -525,7 +525,7 @@ export default function Home() {
         {[['KSh 246,820,450','donated'],['18,742','families supported'],['2.4M','meals provided'],['189','water projects'],['4,280','orphans supported']].map(([value,label]) => <div key={label}><b>{value}</b><span>{label}</span></div>)}
       </section>
 
-      <section className="updates-section refined-updates" aria-labelledby="updates-title">
+      <section className="updates-section refined-updates" id="updates" aria-labelledby="updates-title">
         <div className="section-heading"><div><p className="eyebrow">Example impact updates</p><h2 id="updates-title">Proof of progress, not promises.</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setNotificationsOpen(true)}>See all your updates <Icon name="arrow-right"/></button></div>
         <div className="updates-grid">
           {[
