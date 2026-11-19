@@ -1,0 +1,148 @@
+/* Amanah Giving · compact campaign finance/action rows.
+   Keep original figures, badges, colors, semantic progressbar and full-size
+   keyboard/touch targets while removing the extra stacked footer row. */
+.refined-opportunities .campaign-card .campaign-body-inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+  padding: 10px 12px 12px;
+}
+
+.refined-opportunities .campaign-body-inline .campaign-funding {
+  min-width: 0;
+  margin: 0;
+}
+.refined-opportunities .campaign-body-inline .money-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0;
+}
+.refined-opportunities .campaign-body-inline .funding-amount {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2px 5px;
+  min-width: 0;
+}
+.refined-opportunities .campaign-body-inline .money-row strong {
+  color: #153d31;
+  font-size: clamp(16px, 1.45vw, 19px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.22;
+  letter-spacing: -.035em;
+  white-space: nowrap;
+}
+.refined-opportunities .campaign-body-inline .funding-amount small {
+  color: #61736b;
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.refined-opportunities .campaign-body-inline .money-row > b {
+  justify-self: end;
+  flex: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: #e8f4ec;
+  color: #216747;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.refined-opportunities .campaign-body-inline .campaign-compact-controls {
+  display: grid;
+  grid-template-columns: minmax(32px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.refined-opportunities .campaign-compact-controls > .progress {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 5px;
+  margin: 0;
+  border-radius: 999px;
+  background: #e2ece5;
+  box-shadow: inset 0 0 0 1px #d5e6db;
+}
+.refined-opportunities .campaign-compact-controls .progress > span {
+  border-radius: inherit;
+}
+.refined-opportunities .campaign-compact-controls > .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.refined-opportunities .campaign-compact-controls .card-footer > button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 9px;
+  border-radius: 9px;
+  font-size: 11.5px;
+  line-height: 1.25;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.refined-opportunities .campaign-compact-controls .card-footer > button .app-icon {
+  display: block;
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+.refined-opportunities .campaign-compact-controls > .card-footer .donate-mini {
+  background: #157b56;
+  color: #fff;
+  border-color: #157b56;
+}
+.refined-opportunities .campaign-compact-controls > .card-footer .donate-mini:hover {
+  background: #0e6144;
+}
+@media (max-width: 380px) {
+  .refined-opportunities .campaign-card .campaign-body-inline {
+    gap: 6px;
+    padding: 9px 10px 10px;
+  }
+  .refined-opportunities .campaign-body-inline .money-row {
+    gap: 4px;
+  }
+  .refined-opportunities .campaign-body-inline .money-row strong {
+    font-size: 16px;
+  }
+  .refined-opportunities .campaign-body-inline .funding-amount small {
+    font-size: 10px;
+  }
+  .refined-opportunities .campaign-body-inline .campaign-compact-controls {
+    grid-template-columns: minmax(24px, 1fr) auto;
+    gap: 6px;
+  }
+  .refined-opportunities .campaign-compact-controls > .card-footer {
+    gap: 4px;
+  }
+  .refined-opportunities .campaign-compact-controls .card-footer > button {
+    gap: 3px;
+    padding-inline: 7px;
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .refined-opportunities .campaign-compact-controls .card-footer button {
+    transition: none;
+  }
+}
