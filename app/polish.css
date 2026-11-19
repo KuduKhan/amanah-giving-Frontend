@@ -7027,3 +7027,25 @@ main > .site-header.refined-header + .hero.refined-hero {
 @media (max-width: 305px) {
   .refined-footer-bottom .footer-social-links { flex-wrap: wrap; }
 }
+
+/* Keep the timed welcome acknowledgment away from key actions and mobile nav.
+   Explicit intro skips do not show this toast at all. */
+@keyframes amanah-welcome-qa-appear {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.amanah-welcome-notice {
+  left: auto;
+  right: clamp(16px, 2.2vw, 34px);
+  bottom: max(18px, env(safe-area-inset-bottom));
+  transform: none;
+  animation: amanah-welcome-qa-appear .22s ease-out both;
+}
+@media (max-width: 780px) {
+  body:has(.mobile-nav) .amanah-welcome-notice {
+    bottom: calc(90px + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .amanah-welcome-notice { animation: none; }
+}
