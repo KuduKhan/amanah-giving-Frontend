@@ -90,7 +90,7 @@ async function setup() {
   chrome.on('error', error => errors.push(`Chrome launch failed: ${error.message}`));
   const port = await until(async () => {
     const file = await readFile(path.join(profile, 'DevToolsActivePort'), 'utf8');
-    const selectedPort = Number.parseInt(file.split('\\n')[0], 10);
+    const selectedPort = Number.parseInt(file.split(String.fromCharCode(10))[0], 10);
     return Number.isInteger(selectedPort) && selectedPort > 0 ? selectedPort : null;
   }, 30000).catch(error => {
     throw new Error(`Chrome debugger did not start: ${error.message}; exit=${chrome.exitCode}; stderr=${chromeDiagnostics.join('').slice(-1200)}`);
