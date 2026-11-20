@@ -32,7 +32,10 @@ main.home-premium .refined-opportunities .cause-search-trigger {
   border-radius: 9px;
   background: #fff;
   color: #1d563c;
-  font: 750 12px/1.2 inherit;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.2;
   text-align: start;
   cursor: pointer;
 }
