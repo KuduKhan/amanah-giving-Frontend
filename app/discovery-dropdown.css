@@ -432,3 +432,265 @@ main.home-premium .refined-opportunities .cause-results-line > button:hover {
   .discovery-field,
   .discovery-field .cause-category-select { transition: none; }
 }
+
+
+/*
+ * Place the complete search toolbar beside the opportunities heading (the
+ * highlighted right-hand desktop region), never in a spare row below it.
+ * Keep the original text hierarchy and restore a full-width tool on tablets.
+ */
+@media (min-width: 1180px) {
+  main.home-premium .refined-opportunities .section-heading.opportunity-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(22px, 2.3vw, 38px);
+    margin-bottom: 14px;
+  }
+}
+@media (max-width: 1179px) {
+  main.home-premium .refined-opportunities .section-heading.opportunity-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    gap: 11px;
+    margin-bottom: 14px;
+  }
+}
+main.home-premium .refined-opportunities .section-heading.opportunity-heading {
+  position: relative;
+  z-index: 8;
+  min-width: 0;
+}
+main.home-premium .refined-opportunities .opportunity-heading-copy {
+  min-width: 0;
+}
+main.home-premium .refined-opportunities .opportunity-heading-copy > h2 {
+  max-width: 100%;
+  margin-bottom: 0;
+}
+main.home-premium .refined-opportunities .opportunity-heading .cause-browser-bar {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+main.home-premium .refined-opportunities .opportunity-heading .cause-search-controls {
+  grid-template-columns: minmax(0, 1fr) clamp(126px, 13vw, 159px);
+}
+
+/* A true icon-rich category menu. Each category uses the exact existing
+ * cause icon, rather than trying to put SVG elements inside native <option>.
+ */
+.discovery-field .cause-category-select {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 40px;
+  min-height: 40px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-inline-start: 1px solid #dceae0;
+  border-radius: 0 9px 9px 0;
+  background: #f9fcf9;
+}
+.discovery-field .cause-category-select[data-open="true"] {
+  z-index: 90;
+  background: #edf7ee;
+}
+.discovery-field .cause-category-select:focus-within {
+  box-shadow: none;
+  background: #f1f8f2;
+}
+.discovery-field .cause-category-trigger {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  min-height: 40px;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 0;
+  border-radius: 0 9px 9px 0;
+  background: transparent;
+  color: #2c654a;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 770;
+  text-align: start;
+  cursor: pointer;
+}
+.discovery-field .cause-category-trigger:hover {
+  background: #edf7ef;
+}
+.discovery-field .cause-category-trigger:focus-visible {
+  outline: 2px solid #b18b4a;
+  outline-offset: -3px;
+}
+.discovery-field .cause-category-select[data-filtered="true"] .cause-category-trigger {
+  color: #12613e;
+}
+.discovery-field .cause-category-current-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: #e8f3ea;
+  color: #21744f;
+}
+.discovery-field .cause-category-current-icon .app-icon {
+  width: 15px;
+  height: 15px;
+}
+.discovery-field .cause-category-current-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.discovery-field .cause-category-caret.app-icon {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  transform: rotate(90deg);
+  transition: transform .15s ease;
+}
+.discovery-field .cause-category-select[data-open="true"] .cause-category-caret {
+  transform: rotate(-90deg);
+}
+.discovery-field .cause-category-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 120;
+  display: grid;
+  gap: 2px;
+  box-sizing: border-box;
+  width: max(100%, 224px);
+  max-width: min(285px, calc(100vw - 28px));
+  max-height: min(366px, calc(100dvh - 185px));
+  padding: 6px;
+  border: 1px solid #c9dfd1;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 18px 42px -20px rgba(8, 49, 31, .33), 0 5px 14px -10px rgba(8, 49, 31, .18);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.discovery-field .cause-category-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 39px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #fff;
+  color: #355847;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 690;
+  line-height: 1.2;
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.discovery-field .cause-category-option:hover,
+.discovery-field .cause-category-option:focus-visible {
+  outline: 0;
+  background: #edf6ef;
+  color: #17583d;
+}
+.discovery-field .cause-category-option[aria-selected="true"] {
+  background: #e5f3e9;
+  color: #145f41;
+  font-weight: 810;
+}
+.discovery-field .cause-category-option-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e2ece5;
+  border-radius: 8px;
+  background: #f6faf7;
+}
+.discovery-field .cause-category-option-icon .app-icon {
+  width: 16px;
+  height: 16px;
+}
+.discovery-field .cause-category-option[aria-selected="true"] .cause-category-option-icon {
+  border-color: #c8dfcd;
+  background: #fff;
+}
+.discovery-field .cause-category-check.app-icon {
+  width: 15px;
+  height: 15px;
+  margin-inline-start: auto;
+  color: #1f8656;
+}
+/* Keep floating dropdown menus above the first campaign row. */
+main.home-premium .refined-opportunities .opportunity-heading:has(.cause-category-select[data-open="true"]) {
+  z-index: 24;
+}
+/* The modal menu remains anchored to its right-hand dropdown. */
+.overlay .campaign-search-panel .search-toolbar-unified .cause-category-select {
+  height: 41px;
+}
+@media (max-width: 1179px) {
+  main.home-premium .refined-opportunities .opportunity-heading .cause-search-controls {
+    grid-template-columns: minmax(0, 1fr) minmax(126px, 165px);
+  }
+}
+@media (max-width: 760px) {
+  main.home-premium .refined-opportunities .section-heading.opportunity-heading {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  main.home-premium .refined-opportunities .opportunity-heading .cause-search-controls {
+    grid-template-columns: minmax(0, 1fr) clamp(111px, 37vw, 142px);
+  }
+  .discovery-field .cause-category-trigger {
+    gap: 4px;
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  .discovery-field .cause-category-current-icon {
+    flex-basis: 21px;
+    width: 21px;
+    height: 21px;
+    border-radius: 6px;
+  }
+  .discovery-field .cause-category-current-icon .app-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .discovery-field .cause-category-menu {
+    width: max(100%, 218px);
+  }
+}
+@media (max-width: 360px) {
+  main.home-premium .refined-opportunities .opportunity-heading .cause-search-controls {
+    grid-template-columns: minmax(0, 1fr) 112px;
+  }
+  .discovery-field .cause-category-trigger {
+    padding-inline: 5px;
+    font-size: 10.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .discovery-field .cause-category-caret.app-icon {
+    transition: none;
+  }
+}
