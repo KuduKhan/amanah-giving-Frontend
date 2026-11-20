@@ -377,6 +377,127 @@ async function inspect({ path: route, name }, viewport) {
       const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
       await writeFile(path.join(out, `home-premium-${section.name}-${viewport.name}.png`), Buffer.from(shot.data, 'base64'));
     }
+    // Discovery browser and search modal must share the same concise eight filters.
+    const causeBar = await evalPage(`(() => {
+      const root = document.querySelector('.refined-opportunities .cause-browser-bar');
+      const row = root?.querySelector('.filter-row');
+      const buttons = [...(row?.querySelectorAll('button') || [])];
+      return {
+        count: buttons.length,
+        names: buttons.map(b => b.textContent.trim()),
+        columns: row ? getComputedStyle(row).gridTemplateColumns.split(' ').length : 0,
+        width: row?.getBoundingClientRect().width,
+        scrollWidth: row?.scrollWidth,
+        countText: root?.querySelector('.cause-results-line p')?.textContent?.trim(),
+        height: root?.getBoundingClientRect().height,
+        buttonHeights: buttons.map(b => Math.round(b.getBoundingClientRect().height)),
+      };
+    })()`);
+    assert.deepEqual(causeBar.names, ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
+    assert.equal(causeBar.columns, viewport.width <= 760 ? 4 : 8, 'Cause category filters must stay in 4 or 8 grid columns');
+    assert.ok(causeBar.scrollWidth <= causeBar.width + 3, 'Cause filter row must not horizontally scroll');
+    assert.ok(causeBar.buttonHeights.every(height => height >= 35 && height <= 46), 'Cause filters must be compact');
+    assert.match(causeBar.countText, /6 opportunities/);
+    assert.ok(causeBar.height <= (viewport.width <= 760 ? 135 : 110), 'Opportunity controls should not consume too much height');
+    if (viewport.width <= 780) {
+      const dock = await evalPage(`(() => {
+        const nav = document.querySelector('.refined-mobile-nav');
+        const children = [...(nav?.children || [])];
+        const rects = children.map(c => c.getBoundingClientRect());
+        return {
+          count: children.length,
+          labels: children.map(c => c.textContent.trim()),
+          widths: rects.map(r => r.width),
+          minHeight: Math.min(...rects.map(r => r.height)),
+          overflow: nav?.scrollWidth - nav?.clientWidth,
+          withinView: rects.every(r => r.left >= -2 && r.right <= innerWidth + 2),
+          bottom: nav?.getBoundingClientRect().bottom,
+        };
+      })()`);
+      assert.deepEqual(dock.labels, ['Home','Explore','Give','Impact','Account']);
+      assert.equal(dock.count, 5);
+      assert.ok(dock.minHeight >= 52, 'Mobile navigation taps must remain accessible');
+      assert.ok(Math.max(...dock.widths) - Math.min(...dock.widths) <= 4, 'Mobile navigation items must be evenly spaced');
+      assert.ok(dock.overflow <= 3 && dock.withinView, 'Mobile navigation must not scroll or overflow');
+    }
+
+    // The search dialog is interactive: chips, filter count, live query and result buttons.
+    await evalPage(`document.querySelector('.refined-opportunities .section-heading > button')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.overlay .campaign-search-panel')`), 6000);
+    const searchInitial = await evalPage(`(() => {
+      const panel = document.querySelector('.campaign-search-panel');
+      const filters = [...panel.querySelectorAll('.filter-row button')];
+      const results = [...panel.querySelectorAll('.search-results > button')];
+      const rect = panel.getBoundingClientRect();
+      return {
+        count: results.length,
+        categoryCount: filters.length,
+        columns: getComputedStyle(panel.querySelector('.filter-row')).gridTemplateColumns.split(' ').length,
+        withinView: rect.left >= -2 && rect.right <= innerWidth + 2,
+        scrollX: panel.scrollWidth - panel.clientWidth,
+        height: rect.height,
+        maxVisibleResultWidth: results.length ? Math.max(...results.map(r => r.scrollWidth - r.clientWidth)) : 0,
+        thumbs: results.map(r => getComputedStyle(r.querySelector('img')).objectFit),
+        rowHeights: results.map(r => Math.round(r.getBoundingClientRect().height)),
+        countLabel: panel.querySelector('.search-count')?.textContent.trim(),
+      };
+    })()`);
+    assert.equal(searchInitial.categoryCount, 8);
+    assert.equal(searchInitial.count, 6);
+    assert.equal(searchInitial.columns, viewport.width <= 760 ? 4 : 8);
+    assert.equal(searchInitial.withinView, true, 'Search panel must fit its viewport');
+    assert.ok(searchInitial.scrollX <= 3, 'Search panel must not scroll horizontally');
+    assert.ok(searchInitial.maxVisibleResultWidth <= 3, 'Search results must not overflow');
+    assert.ok(searchInitial.thumbs.every(v => v === 'cover'), 'Search photos should preserve focal cover crops');
+    assert.ok(searchInitial.rowHeights.every(h => h <= 88), 'Search results should remain compact');
+    assert.match(searchInitial.countLabel, /6 example campaigns/);
+    const searchShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, `compact-search-${viewport.name}.png`), Buffer.from(searchShot.data, 'base64'));
+
+    await evalPage(`[...document.querySelectorAll('.campaign-search-panel .filter-row button')].find(b => b.textContent.trim() === 'Zakat')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 3`), 5000);
+    await evalPage(`[...document.querySelectorAll('.campaign-search-panel .filter-row button')].find(b => b.textContent.trim() === 'All')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
+    await evalPage(`(() => {
+      const i = document.querySelector('.campaign-search-panel input[aria-label="Search campaigns"]');
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+      setter.call(i, 'Garissa');
+      i.dispatchEvent(new Event('input', { bubbles: true }));
+    })()`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 1`), 5000);
+    await evalPage(`document.querySelector('.campaign-search-panel .search-clear')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
+    await evalPage(`document.querySelector('.campaign-search-panel .close')?.click(); true`);
+    await until(async () => evalPage(`!document.querySelector('.overlay .campaign-search-panel')`), 5000);
+    assert.equal(await evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length`), 6);
+
+    // Platform guide remains functional and accessible after compact styling.
+    const openPlatformButton = await evalPage(`(() => {
+      const b = document.querySelector('.site-header .nav-platform');
+      const visible = b && getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0;
+      return visible;
+    })()`);
+    if (openPlatformButton) {
+      await evalPage(`document.querySelector('.site-header .nav-platform').click(); true`);
+      await until(async () => evalPage(`!!document.querySelector('.platform-overlay .platform-ai')`), 5000);
+      await evalPage(`document.querySelector('.platform-overlay .platform-ai')?.click(); true`);
+      await until(async () => evalPage(`!!document.querySelector('.platform-overlay #platform-guide:not([hidden])')`), 5000);
+      const guide = await evalPage(`(() => {
+        const bar = document.querySelector('.platform-overlay #platform-guide');
+        return {
+          fits: bar.scrollWidth <= bar.clientWidth + 3,
+          inputVisible: bar.querySelector('input').getBoundingClientRect().width > 70,
+          ask: bar.querySelector('button').textContent.trim(),
+          controls: [...bar.querySelectorAll('input,button')].map(n => n.getBoundingClientRect().height),
+        };
+      })()`);
+      assert.ok(guide.fits && guide.inputVisible, 'Giving guide input and Ask button must fit');
+      assert.equal(guide.ask, 'Ask');
+      assert.ok(guide.controls.every(v => v >= 39), 'Guide controls require accessible heights');
+      await evalPage(`document.querySelector('.platform-overlay .platform-close')?.click(); true`);
+      await until(async () => evalPage(`!document.querySelector('.platform-overlay')`), 5000);
+    }
+    console.log(JSON.stringify({route:'compact-discovery',viewport:viewport.name,searchResults:searchInitial.count,filterColumns:searchInitial.columns,mobileNav:viewport.width<=780}));
     // Google reviews were intentionally removed. Store buttons must remain.
     const footerCheck = await evalPage(`(() => ({
       hasGoogleReviews: !!document.querySelector('footer .google-review-preview'),
