@@ -1,6 +1,7 @@
 'use client';
 
 import Icon from './Icon';
+import CategoryDropdown from './CategoryDropdown';
 import FooterBrandIcon from './FooterBrandIcon';
 import './impact-updates-cta.css';
 import CampaignDetails from './CampaignDetails';
@@ -19,6 +20,8 @@ import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from
 import './campaign-inline.css';
 import { campaignImageFocus } from './campaignImageFocus';
 import './home-premium.css';
+import './discovery-compact.css';
+import './discovery-dropdown.css';
 
 type Campaign = {
   id: string;
@@ -401,14 +404,29 @@ export default function Home() {
       </section>
 
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
-        <div className="section-heading"><div><p className="eyebrow">Example opportunities</p><h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2></div><button className="text-link button-link" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}><Icon name="search"/>Search all causes</button></div>
-        <div className="cause-browser-bar">
-          <div className="filter-row" role="group" aria-label="Filter verified causes">
-            {causeFilters.map(([label, icon]) => <button className={filter === label ? 'active' : ''} aria-pressed={filter === label} key={label} onClick={() => setFilter(label)}><Icon name={icon}/>{label}</button>)}
+        <div className="section-heading opportunity-heading">
+          <div className="opportunity-heading-copy">
+            <p className="eyebrow">Example opportunities</p>
+            <h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2>
           </div>
-          <div className="cause-results-line">
-            <p role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'opportunity' : 'opportunities'}{query.trim() ? ` matching “${query.trim()}”` : ''}</p>
-            {filter !== 'All' || query ? <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); }}>Clear filters <Icon name="close"/></button> : null}
+          <div className="cause-browser-bar">
+            <div className="cause-search-controls discovery-field">
+              <button type="button" className="cause-search-trigger" aria-label="Search all causes" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}>
+                <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
+                <span className="discovery-search-label">Search all causes</span>
+                <kbd aria-hidden="true" className="discovery-search-shortcut">/</kbd>
+              </button>
+              <CategoryDropdown
+                options={causeFilters}
+                value={filter}
+                onChange={setFilter}
+                label="Filter causes by category"
+              />
+            </div>
+            <div className="cause-results-line">
+              <p role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'opportunity' : 'opportunities'}{query.trim() ? ` matching “${query.trim()}”` : ''}</p>
+              {filter !== 'All' || query ? <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); }}>Clear <Icon name="close"/></button> : null}
+            </div>
           </div>
         </div>
         <div className="campaign-grid">
@@ -675,13 +693,19 @@ export default function Home() {
             <button className="close" aria-label="Close dialog" onClick={() => setSearchOpen(false)}><Icon name="close"/></button>
             <p className="eyebrow">Search Amanah Giving</p>
             <h2 id="campaign-search-title">Find a cause close to your heart.</h2>
-            <div className="search-input" role="search" aria-label="Find verified campaigns">
-              <Icon name="search"/>
-              <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Try ‘water Garissa’" />
-              {query && <button className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
-            </div>
-            <div className="filter-row" role="group" aria-label="Filter search results">
-              {causeFilters.map(([label]) => <button className={filter === label ? 'active' : ''} aria-pressed={filter === label} key={label} onClick={() => setFilter(label)}>{label}</button>)}
+            <div className="search-toolbar-unified discovery-field">
+              <div className="search-input" role="search" aria-label="Find verified campaigns">
+                <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
+                <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Search causes…" autoComplete="off" />
+                {query && <button type="button" className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
+              </div>
+              <CategoryDropdown
+                options={causeFilters}
+                value={filter}
+                onChange={setFilter}
+                label="Filter search results by category"
+                className="search-category-select"
+              />
             </div>
             <p className="search-count" role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'example campaign' : 'example campaigns'}</p>
             {filteredCampaigns.length > 0 ? (

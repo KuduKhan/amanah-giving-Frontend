@@ -377,6 +377,216 @@ async function inspect({ path: route, name }, viewport) {
       const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
       await writeFile(path.join(out, `home-premium-${section.name}-${viewport.name}.png`), Buffer.from(shot.data, 'base64'));
     }
+    // Main discovery toolbar sits in the heading's right-hand region on desktop.
+    // The icon-rich category listbox replaces the native SVG-less select.
+    const causeBar = await evalPage(`(() => {
+      const section = document.querySelector('.refined-opportunities');
+      const heading = section?.querySelector('.opportunity-heading-copy h2');
+      const bar = section?.querySelector('.cause-browser-bar');
+      const trigger = bar?.querySelector('.cause-search-trigger');
+      const dropdown = bar?.querySelector('.cause-category-trigger');
+      const rect = bar?.getBoundingClientRect();
+      const titleRect = heading?.getBoundingClientRect();
+      const searchRect = trigger?.getBoundingClientRect();
+      const dropdownRect = dropdown?.getBoundingClientRect();
+      return {
+        searchText: trigger?.textContent?.trim(),
+        category: dropdown?.textContent?.trim(),
+        optionsVisibleInitially: !!bar?.querySelector('.cause-category-menu'),
+        dropdownRole: dropdown?.getAttribute('aria-haspopup'),
+        expanded: dropdown?.getAttribute('aria-expanded'),
+        countText: bar?.querySelector('.cause-results-line p')?.textContent?.trim(),
+        height: rect?.height,
+        overflow: bar?.scrollWidth - bar?.clientWidth,
+        searchHeight: searchRect?.height,
+        dropdownHeight: dropdownRect?.height,
+        sameRow: Math.abs((searchRect?.top || 0) - (dropdownRect?.top || 0)) < 8,
+        rightOfTitle: rect?.left >= titleRect?.right - 6,
+        belowTitle: rect?.top >= titleRect?.bottom - 3,
+        headingContainsToolbar: !!bar?.closest('.section-heading'),
+        fieldHeight: bar?.querySelector('.discovery-field')?.getBoundingClientRect().height,
+      };
+    })()`);
+    assert.ok(causeBar.headingContainsToolbar && causeBar.sameRow, 'Search bar and category must live together inside heading');
+    assert.ok(viewport.width >= 1180 ? causeBar.rightOfTitle : causeBar.belowTitle,
+      'Search bar must sit right of desktop title or stack below it on mobile');
+    assert.equal(causeBar.dropdownRole, 'listbox');
+    assert.equal(causeBar.expanded, 'false');
+    assert.equal(causeBar.optionsVisibleInitially, false);
+    assert.match(causeBar.searchText, /Search all causes/);
+    assert.match(causeBar.category, /All causes/);
+    assert.match(causeBar.countText, /6 opportunities/);
+    assert.ok(causeBar.overflow <= 3, 'Search bar must not overflow');
+    assert.ok(causeBar.height <= (viewport.width <= 760 ? 86 : 58), 'Toolbar must stay compact');
+    assert.ok(causeBar.fieldHeight >= 40 && causeBar.fieldHeight <= 45);
+    assert.ok(causeBar.searchHeight >= 38 && causeBar.dropdownHeight >= 35);
+    await evalPage(`document.querySelector('#causes .cause-browser-bar').scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
+    await pause(220);
+    const toolbarShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, 'discovery-toolbar-' + viewport.name + '.png'), Buffer.from(toolbarShot.data, 'base64'));
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    const iconMenu = await evalPage(`(() => {
+      const menu = document.querySelector('.cause-browser-bar [role="listbox"]');
+      const options = [...menu.querySelectorAll('[role="option"]')];
+      const rect = menu.getBoundingClientRect();
+      return {
+        labels: options.map(o => o.textContent.trim()),
+        iconCount: options.filter(o => !!o.querySelector('.cause-category-option-icon .app-icon')).length,
+        count: options.length,
+        optionMinHeight: Math.min(...options.map(o => o.getBoundingClientRect().height)),
+        fits: rect.left >= 0 && rect.right <= innerWidth + 2,
+        selected: menu.querySelector('[aria-selected="true"]')?.dataset.category,
+      };
+    })()`);
+    assert.equal(iconMenu.count, 8);
+    assert.equal(iconMenu.iconCount, 8, 'Each category must have its original SVG icon');
+    assert.ok(iconMenu.fits && iconMenu.optionMinHeight >= 36, 'Icon dropdown must fit and remain touch-usable');
+    assert.equal(iconMenu.selected, 'All');
+    assert.deepEqual([...iconMenu.labels].map(x => x.replace(/All causes/, 'All').replace('Allcheck','All')), 
+      ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map((v,i) => i===0 ? v : v));
+    const menuShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, 'discovery-categories-' + viewport.name + '.png'), Buffer.from(menuShot.data, 'base64'));
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-option[data-category="Water"]')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 1`), 5000);
+    const water = await evalPage(`(() => ({
+      count: document.querySelector('.refined-opportunities .cause-results-line p')?.textContent.trim(),
+      current: document.querySelector('.cause-browser-bar .cause-category-current-label')?.textContent.trim(),
+      active: document.querySelector('.cause-browser-bar .cause-category-select')?.dataset.filtered,
+    }))()`);
+    assert.match(water.count, /1 opportunity/);
+    assert.equal(water.current, 'Water');
+    assert.equal(water.active, 'true');
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    await evalPage(`(() => {
+      const selected = document.querySelector('.cause-browser-bar [role="option"][aria-selected="true"]');
+      selected?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      return true;
+    })()`);
+    await until(async () => evalPage(`!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    assert.equal(await evalPage(`document.querySelector('.cause-browser-bar .cause-category-current-label')?.textContent.trim()`), 'Water',
+      'Escape closes menu without clearing the selection');
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-option[data-category="All"]')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 6`), 5000);
+    if (viewport.width <= 780) {
+      const dock = await evalPage(`(() => {
+        const nav = document.querySelector('.refined-mobile-nav');
+        const children = [...(nav?.children || [])];
+        const rects = children.map(c => c.getBoundingClientRect());
+        return {
+          count: children.length,
+          labels: children.map(c => c.textContent.trim()),
+          widths: rects.map(r => r.width),
+          minHeight: Math.min(...rects.map(r => r.height)),
+          overflow: nav?.scrollWidth - nav?.clientWidth,
+          withinView: rects.every(r => r.left >= -2 && r.right <= innerWidth + 2),
+          bottom: nav?.getBoundingClientRect().bottom,
+        };
+      })()`);
+      assert.deepEqual(dock.labels, ['Home','Explore','Give','Impact','Account']);
+      assert.equal(dock.count, 5);
+      assert.ok(dock.minHeight >= 52, 'Mobile navigation taps must remain accessible');
+      assert.ok(Math.max(...dock.widths) - Math.min(...dock.widths) <= 4, 'Mobile navigation items must be evenly spaced');
+      assert.ok(dock.overflow <= 3 && dock.withinView, 'Mobile navigation must not scroll or overflow');
+    }
+
+    // Search dialog shares the icon menu and filtering state with the homepage.
+    await evalPage(`document.querySelector('.refined-opportunities .cause-search-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.overlay .campaign-search-panel')`), 6000);
+    const searchInitial = await evalPage(`(() => {
+      const panel = document.querySelector('.campaign-search-panel');
+      const trigger = panel?.querySelector('.search-category-select .cause-category-trigger');
+      const search = panel?.querySelector('.search-toolbar-unified .search-input');
+      const results = [...(panel?.querySelectorAll('.search-results > button') || [])];
+      const rect = panel.getBoundingClientRect();
+      const triggerRect = trigger?.getBoundingClientRect();
+      const searchRect = search?.getBoundingClientRect();
+      return {
+        count: results.length,
+        selected: trigger?.textContent.trim(),
+        role: trigger?.getAttribute('aria-haspopup'),
+        sameRow: Math.abs((triggerRect?.top || 0) - (searchRect?.top || 0)) < 8,
+        withinView: rect.left >= -2 && rect.right <= innerWidth + 2,
+        scrollX: panel.scrollWidth - panel.clientWidth,
+        maxResultOverflow: results.length ? Math.max(...results.map(r => r.scrollWidth - r.clientWidth)) : 0,
+        thumbs: results.map(r => getComputedStyle(r.querySelector('img')).objectFit),
+        rowHeights: results.map(r => Math.round(r.getBoundingClientRect().height)),
+        countLabel: panel.querySelector('.search-count')?.textContent.trim(),
+        unifiedHeight: panel.querySelector('.search-toolbar-unified')?.getBoundingClientRect().height,
+        unifiedRadius: getComputedStyle(panel.querySelector('.search-toolbar-unified')).borderTopLeftRadius,
+      };
+    })()`);
+    assert.equal(searchInitial.count, 6);
+    assert.equal(searchInitial.role, 'listbox');
+    assert.match(searchInitial.selected, /All causes/);
+    assert.ok(searchInitial.sameRow && searchInitial.withinView && searchInitial.scrollX <= 3);
+    assert.ok(searchInitial.maxResultOverflow <= 3);
+    assert.ok(searchInitial.thumbs.every(v => v === 'cover'));
+    assert.ok(searchInitial.rowHeights.every(h => h <= 88));
+    assert.match(searchInitial.countLabel, /6 example campaigns/);
+    assert.ok(searchInitial.unifiedHeight >= 41 && searchInitial.unifiedHeight <= 46);
+    assert.ok(parseFloat(searchInitial.unifiedRadius) >= 9);
+    await pause(440);
+    const searchShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, 'compact-search-' + viewport.name + '.png'), Buffer.from(searchShot.data, 'base64'));
+    await evalPage(`document.querySelector('.search-category-select .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.search-category-select [role="listbox"]')`), 5000);
+    const menu = await evalPage(`(() => ({
+      count: document.querySelectorAll('.search-category-select [role="option"]').length,
+      icons: document.querySelectorAll('.search-category-select .cause-category-option-icon .app-icon').length,
+    }))()`);
+    assert.equal(menu.count, 8);
+    assert.equal(menu.icons, 8);
+    await evalPage(`document.querySelector('.search-category-select [data-category="Zakat"]')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 3`), 5000);
+    assert.equal(await evalPage(`document.querySelector('.campaign-search-panel .search-category-select')?.dataset.filtered`), 'true');
+    await evalPage(`document.querySelector('.search-category-select .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.search-category-select [role="listbox"]')`), 5000);
+    await evalPage(`document.querySelector('.search-category-select [data-category="All"]')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
+    await evalPage(`(() => {
+      const i = document.querySelector('.campaign-search-panel input[aria-label="Search campaigns"]');
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+      setter.call(i, 'Garissa');
+      i.dispatchEvent(new Event('input', { bubbles: true }));
+      return true;
+    })()`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 1`), 5000);
+    await evalPage(`document.querySelector('.campaign-search-panel .search-clear')?.click(); true`);
+    await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
+    await evalPage(`document.querySelector('.campaign-search-panel .close')?.click(); true`);
+    await until(async () => evalPage(`!document.querySelector('.overlay .campaign-search-panel')`), 5000);
+    assert.equal(await evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length`), 6);
+    // Platform guide remains functional and accessible after compact styling.
+    const openPlatformButton = await evalPage(`(() => {
+      const b = document.querySelector('.site-header .nav-platform');
+      const visible = b && getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0;
+      return visible;
+    })()`);
+    if (openPlatformButton) {
+      await evalPage(`document.querySelector('.site-header .nav-platform').click(); true`);
+      await until(async () => evalPage(`!!document.querySelector('.platform-overlay .platform-ai')`), 5000);
+      await evalPage(`document.querySelector('.platform-overlay .platform-ai')?.click(); true`);
+      await until(async () => evalPage(`!!document.querySelector('.platform-overlay #platform-guide:not([hidden])')`), 5000);
+      const guide = await evalPage(`(() => {
+        const bar = document.querySelector('.platform-overlay #platform-guide');
+        return {
+          fits: bar.scrollWidth <= bar.clientWidth + 3,
+          inputVisible: bar.querySelector('input').getBoundingClientRect().width > 70,
+          ask: bar.querySelector('button').textContent.trim(),
+          controls: [...bar.querySelectorAll('input,button')].map(n => n.getBoundingClientRect().height),
+        };
+      })()`);
+      assert.ok(guide.fits && guide.inputVisible, 'Giving guide input and Ask button must fit');
+      assert.equal(guide.ask, 'Ask');
+      assert.ok(guide.controls.every(v => v >= 39), 'Guide controls require accessible heights');
+      await evalPage(`document.querySelector('.platform-overlay .platform-close')?.click(); true`);
+      await until(async () => evalPage(`!document.querySelector('.platform-overlay')`), 5000);
+    }
+    console.log(JSON.stringify({route:'compact-discovery',viewport:viewport.name,searchResults:searchInitial.count,iconMenu:true,mobileNav:viewport.width<=780}));
     // Google reviews were intentionally removed. Store buttons must remain.
     const footerCheck = await evalPage(`(() => ({
       hasGoogleReviews: !!document.querySelector('footer .google-review-preview'),
