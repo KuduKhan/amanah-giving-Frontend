@@ -1,230 +1,434 @@
 /*
- * Amanah Giving — integrated discovery toolbar.
- * One search action + native category dropdown replaces eight always-visible
- * filter chips. The same selector is used inside the search dialog.
- * Native select preserves screen-reader, keyboard and mobile picker behavior.
+ * Amanah Giving — refined unified search controls, 2026-11.
+ * Homepage search trigger and search-dialog input share one restrained,
+ * segmented control with an accessible native category selector.
+ * No custom keyboard traps or imitation select menus.
  */
 main.home-premium .refined-opportunities .section-heading {
   margin-bottom: clamp(9px, 1vw, 13px);
 }
 main.home-premium .refined-opportunities .cause-browser-bar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(133px, 168px) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 7px;
-  min-height: 51px;
+  gap: 9px;
+  min-width: 0;
+  min-height: 50px;
   margin: 0 0 12px;
-  padding: 5px 7px;
-  border: 1px solid #d3e4d7;
-  border-radius: 13px;
-  background: #f9fcf9;
-  box-shadow: 0 8px 25px -22px rgba(9, 60, 37, .45);
+  padding: 4px 8px;
+  border: 1px solid #dae7dd;
+  border-radius: 14px;
+  background: #f6faf6;
+  box-shadow: 0 10px 24px -25px rgba(12, 55, 36, .50);
+}
+main.home-premium .refined-opportunities .cause-search-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(130px, 15vw, 166px);
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+}
+.discovery-field {
+  box-sizing: border-box;
+  position: relative;
+  min-width: 0;
+  border: 1px solid #cbded1;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 60, 39, .055);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.discovery-field:hover {
+  border-color: #9fc6ae;
+}
+.discovery-field:focus-within {
+  border-color: #21855c;
+  box-shadow: 0 0 0 3px rgba(36, 125, 78, .13);
 }
 main.home-premium .refined-opportunities .cause-search-trigger {
   display: flex;
   align-items: center;
   gap: 9px;
   box-sizing: border-box;
+  width: 100%;
   min-width: 0;
+  height: 40px;
   min-height: 40px;
-  padding: 6px 10px;
-  border: 0;
-  border-radius: 9px;
-  background: #fff;
-  color: #1d563c;
-  font-family: inherit;
+  margin: 0;
+  padding: 4px 10px 4px 7px;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  background: transparent;
+  color: #294e3a;
+  font: inherit;
   font-size: 12px;
-  font-weight: 750;
-  line-height: 1.2;
+  font-weight: 730;
   text-align: start;
+  line-height: 1.2;
   cursor: pointer;
 }
 main.home-premium .refined-opportunities .cause-search-trigger:hover {
-  background: #eff7f1;
+  background: #f3f9f4;
 }
-main.home-premium .refined-opportunities .cause-search-trigger > .app-icon:first-child {
-  width: 17px;
-  height: 17px;
-  flex: none;
-  color: #27845c;
+main.home-premium .refined-opportunities .cause-search-trigger:focus-visible {
+  outline: 2px solid #a9894c;
+  outline-offset: -3px;
 }
-main.home-premium .refined-opportunities .cause-search-trigger > span {
+.discovery-search-icon {
+  display: inline-grid;
+  flex: 0 0 29px;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 9px;
+  background: #edf6ef;
+  color: #26815b;
+  pointer-events: none;
+}
+.discovery-search-icon .app-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+main.home-premium .refined-opportunities .discovery-search-label {
   flex: 1 1 auto;
   min-width: 0;
+  color: #345b42;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-main.home-premium .refined-opportunities .cause-search-trigger > .app-icon:last-child {
+.discovery-search-shortcut {
   flex: none;
-  width: 14px;
-  height: 14px;
-  opacity: .65;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #e1eae2;
+  border-radius: 6px;
+  background: #fafcfa;
+  color: #7b9683;
+  font: 700 12px/1 inherit;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
 }
-.cause-category-select {
+.discovery-field .cause-category-select {
   position: relative;
   display: flex;
   align-items: center;
   box-sizing: border-box;
-  gap: 5px;
+  gap: 7px;
   min-width: 0;
+  height: 40px;
   min-height: 40px;
-  padding: 0 9px;
-  border: 1px solid #d6e5da;
-  border-radius: 9px;
-  background: #fff;
-  color: #2e654b;
+  margin: 0;
+  padding: 0 11px;
+  border: none;
+  border-inline-start: 1px solid #e0ebe3;
+  border-radius: 0 10px 10px 0;
+  background: #f9fcf9;
+  color: #2a6850;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
 }
-.cause-category-select:focus-within {
-  border-color: #2c9164;
-  box-shadow: 0 0 0 3px rgba(32, 128, 83, .13);
+.discovery-field .cause-category-select:hover {
+  background: #eaf5ed;
 }
-.cause-category-select > .app-icon {
+.discovery-field .cause-category-select[data-filtered="true"] {
+  background: #e5f3e8;
+  color: #145c3d;
+}
+.discovery-field .cause-category-select:focus-within {
+  background: #e9f5ec;
+  box-shadow: inset 0 0 0 1px #b3d5c0;
+}
+.discovery-field .cause-category-select > .app-icon {
   flex: 0 0 14px;
   width: 14px;
   height: 14px;
   pointer-events: none;
 }
-.cause-category-select > .app-icon:last-child {
-  flex-basis: 12px;
+.discovery-field .cause-category-select > .app-icon:last-child {
+  flex: 0 0 12px;
   width: 12px;
   height: 12px;
+  transform: rotate(90deg);
+  transition: transform .15s ease;
 }
-.cause-category-select select {
+.discovery-field .cause-category-select select {
   display: block;
   appearance: none;
   -webkit-appearance: none;
   flex: 1 1 auto;
-  min-width: 0;
   width: 100%;
-  height: 38px;
+  min-width: 0;
+  height: 40px;
   padding: 0;
-  border: 0;
+  border: none;
   outline: none;
   background: transparent;
-  color: #24513c;
+  color: inherit;
   font-family: inherit;
-  font-size: 11.5px;
+  font-size: 12px;
+  font-weight: 790;
+  letter-spacing: -.012em;
   line-height: 1.2;
-  font-weight: 780;
   cursor: pointer;
 }
-.cause-category-select select option {
+.discovery-field .cause-category-select select:focus-visible {
+  outline: none;
+}
+.discovery-field .cause-category-select select option {
   background: #fff;
-  color: #1f4b35;
+  color: #1e4c35;
 }
 main.home-premium .refined-opportunities .cause-results-line {
   display: inline-flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 3px 7px;
+  align-items: center;
+  gap: 6px;
   min-width: 0;
-  padding: 0 5px 0 7px;
+  padding: 0 3px;
   border: 0;
-  border-inline-start: 1px solid #dce8de;
   text-align: end;
 }
 main.home-premium .refined-opportunities .cause-results-line > p {
   flex: 0 1 auto;
   min-width: 0;
-  color: #54715f;
-  font-size: 10.5px;
-  font-weight: 760;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
+  margin: 0;
+  color: #5d7467;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 main.home-premium .refined-opportunities .cause-results-line > button {
   flex: none;
   gap: 3px;
-  min-height: 34px;
-  padding: 3px 5px;
-  font-size: 10px;
+  min-height: 33px;
+  padding: 5px 7px;
+  border-radius: 7px;
+  color: #186d4c;
+  font-size: 10.5px;
   white-space: nowrap;
 }
-main.home-premium .refined-opportunities .cause-search-trigger:focus-visible,
-.cause-category-select:has(select:focus-visible) {
-  outline: 2px solid #b48f54;
-  outline-offset: 2px;
+main.home-premium .refined-opportunities .cause-results-line > button:hover {
+  background: #e6f3e9;
+}
+
+/* The search sheet inherits the same segmented language as the homepage. */
+.overlay .campaign-search-panel {
+  width: min(640px, 100%);
+  max-height: calc(100dvh - 18px);
+  padding: clamp(15px, 2vw, 21px) clamp(12px, 2vw, 21px) max(13px, env(safe-area-inset-bottom));
+  border: 1px solid #dce8df;
+  border-radius: 17px;
+  background: #fcfdfa;
+  box-shadow: 0 23px 61px -32px rgba(4, 35, 26, .4);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.overlay .campaign-search-panel > .eyebrow {
+  margin: 0 42px 4px 0;
+  color: #1f7653;
+  font-size: 10px;
+  font-weight: 780;
+  letter-spacing: .105em;
+}
+.overlay .campaign-search-panel > h2 {
+  margin: 0 43px 0 0;
+  color: #174431;
+  font-size: clamp(22px, 2.45vw, 29px);
+  letter-spacing: -.031em;
+  line-height: 1.11;
+  text-wrap: balance;
 }
 .overlay .campaign-search-panel .search-toolbar-unified {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(133px, 167px);
-  align-items: center;
-  gap: 7px;
+  grid-template-columns: minmax(0, 1fr) clamp(130px, 16vw, 171px);
+  align-items: stretch;
+  gap: 0;
   min-width: 0;
-  margin: 10px 0 8px;
+  height: 43px;
+  margin: 10px 0 7px;
+  padding: 0;
 }
 .overlay .campaign-search-panel .search-toolbar-unified .search-input {
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   min-width: 0;
-  min-height: 41px;
   height: 41px;
+  min-height: 41px;
   margin: 0;
-  padding-inline: 10px 4px;
-  border-radius: 9px;
+  padding: 3px 4px 3px 6px;
+  border: 0;
+  border-radius: 10px 0 0 10px;
+  background: transparent;
+  box-shadow: none;
+}
+.overlay .campaign-search-panel .search-toolbar-unified .search-input:focus-within {
+  border: 0;
+  box-shadow: none;
 }
 .overlay .campaign-search-panel .search-toolbar-unified .search-input input {
+  display: block;
+  flex: 1 1 auto;
+  box-sizing: border-box;
   min-width: 0;
-  min-height: 32px;
-  padding: 5px 6px;
+  width: 100%;
+  min-height: 33px;
+  height: 33px;
+  margin: 0;
+  padding: 5px 7px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #264b39;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 570;
+  line-height: 1.3;
+}
+.overlay .campaign-search-panel .search-toolbar-unified .search-input input::placeholder {
+  color: #859789;
+  opacity: 1;
+}
+.overlay .campaign-search-panel .search-clear {
+  display: grid;
+  position: relative;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  border-radius: 8px;
+  color: #557162;
+  background: #f3f7f3;
+}
+.overlay .campaign-search-panel .search-clear::before {
+  position: absolute;
+  content: "";
+  inset: -4px;
+}
+.overlay .campaign-search-panel .search-clear:hover {
+  background: #e3f1e6;
+  color: #1d6f4b;
 }
 .overlay .campaign-search-panel .search-toolbar-unified .search-category-select {
   height: 41px;
   min-height: 41px;
 }
 .overlay .campaign-search-panel .search-count {
-  margin: 0 0 5px;
+  margin: 0 0 6px;
+  color: #63776b;
   font-size: 10.5px;
+  font-weight: 750;
+  line-height: 1.3;
 }
+
+/* 320px and 390px widths: compact, with adequate native control widths. */
 @media (max-width: 760px) {
   main.home-premium .refined-opportunities .cause-browser-bar {
-    grid-template-columns: minmax(0, 1fr) minmax(105px, 38%);
-    gap: 5px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
     min-height: 0;
-    padding: 5px 6px 4px;
+    margin-bottom: 11px;
+    padding: 5px 6px 3px;
+    border-radius: 12px;
+  }
+  main.home-premium .refined-opportunities .cause-search-controls {
+    grid-template-columns: minmax(0, 1fr) clamp(103px, 34vw, 135px);
+    height: 42px;
   }
   main.home-premium .refined-opportunities .cause-search-trigger {
-    min-height: 39px;
-    gap: 6px;
-    padding-inline: 7px;
+    gap: 5px;
+    min-height: 40px;
+    height: 40px;
+    padding: 4px 5px;
+    font-size: 11px;
+  }
+  .discovery-search-icon {
+    flex-basis: 26px;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+  }
+  .discovery-search-icon .app-icon {
+    width: 15px;
+    height: 15px;
+  }
+  .discovery-search-shortcut {
+    display: none;
+  }
+  .discovery-field .cause-category-select {
+    gap: 4px;
+    height: 40px;
+    padding: 0 6px;
+  }
+  .discovery-field .cause-category-select > .app-icon:first-of-type {
+    display: none;
+  }
+  .discovery-field .cause-category-select select {
+    height: 40px;
     font-size: 11px;
   }
   main.home-premium .refined-opportunities .cause-results-line {
-    grid-column: 1 / -1;
+    display: inline-flex;
     justify-content: space-between;
+    gap: 5px;
     min-height: 18px;
     padding: 1px 4px 0;
-    border: 0;
-    border-top: 1px solid #e4ece5;
+    border: none;
     text-align: start;
   }
-  main.home-premium .refined-opportunities .cause-results-line > p { font-size: 10px; }
-  main.home-premium .refined-opportunities .cause-results-line > button { min-height: 25px; }
-  .cause-category-select {
-    gap: 4px;
-    min-height: 39px;
-    padding: 0 6px;
+  main.home-premium .refined-opportunities .cause-results-line > p {
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: normal;
   }
-  .cause-category-select > .app-icon:first-of-type { display: none; }
-  .cause-category-select select {
-    height: 37px;
-    font-size: 11px;
+  main.home-premium .refined-opportunities .cause-results-line > button {
+    min-height: 24px;
+    padding-block: 2px;
+  }
+  .overlay .campaign-search-panel {
+    width: 100%;
+    max-width: 100%;
+    max-height: 94dvh;
+    padding: 15px 12px calc(13px + env(safe-area-inset-bottom));
+    border-radius: 17px 17px 0 0;
+  }
+  .overlay .campaign-search-panel > h2 {
+    font-size: clamp(20px, 5.1vw, 24px);
+    line-height: 1.14;
   }
   .overlay .campaign-search-panel .search-toolbar-unified {
-    grid-template-columns: minmax(0, 1fr) minmax(105px, 37%);
-    gap: 5px;
-    margin-block: 9px 6px;
+    grid-template-columns: minmax(0, 1fr) clamp(105px, 35vw, 136px);
+    height: 43px;
+    margin: 9px 0 7px;
   }
   .overlay .campaign-search-panel .search-toolbar-unified .search-input {
-    padding-inline: 6px 2px;
+    padding: 3px 2px 3px 5px;
+  }
+  .overlay .campaign-search-panel .search-toolbar-unified .search-input input {
+    padding-inline: 4px;
+    font-size: 13px;
   }
 }
 @media (max-width: 360px) {
-  main.home-premium .refined-opportunities .cause-browser-bar {
-    grid-template-columns: minmax(0, 1fr) 107px;
+  main.home-premium .refined-opportunities .cause-search-controls {
+    grid-template-columns: minmax(0, 1fr) 108px;
   }
-  main.home-premium .refined-opportunities .cause-search-trigger { font-size: 10.5px; }
-  main.home-premium .refined-opportunities .cause-search-trigger > .app-icon:last-child { display: none; }
   .overlay .campaign-search-panel .search-toolbar-unified {
     grid-template-columns: minmax(0, 1fr) 108px;
   }
-  .overlay .campaign-search-panel .search-toolbar-unified .search-input input { font-size: 13px; }
-  .cause-category-select select { font-size: 10px; }
+  .discovery-field .cause-category-select select { font-size: 10.7px; }
+  main.home-premium .refined-opportunities .discovery-search-label { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .discovery-field,
+  .discovery-field .cause-category-select { transition: none; }
 }
