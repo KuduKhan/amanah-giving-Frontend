@@ -377,65 +377,99 @@ async function inspect({ path: route, name }, viewport) {
       const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
       await writeFile(path.join(out, `home-premium-${section.name}-${viewport.name}.png`), Buffer.from(shot.data, 'base64'));
     }
-    // Main discovery: one integrated search action + native category dropdown.
+    // Main discovery toolbar sits in the heading's right-hand region on desktop.
+    // The icon-rich category listbox replaces the native SVG-less select.
     const causeBar = await evalPage(`(() => {
-      const bar = document.querySelector('.refined-opportunities .cause-browser-bar');
+      const section = document.querySelector('.refined-opportunities');
+      const heading = section?.querySelector('.opportunity-heading-copy h2');
+      const bar = section?.querySelector('.cause-browser-bar');
       const trigger = bar?.querySelector('.cause-search-trigger');
-      const select = bar?.querySelector('select[aria-label="Filter causes by category"]');
+      const dropdown = bar?.querySelector('.cause-category-trigger');
       const rect = bar?.getBoundingClientRect();
-      const triggerRect = trigger?.getBoundingClientRect();
-      const selectRect = select?.getBoundingClientRect();
+      const titleRect = heading?.getBoundingClientRect();
+      const searchRect = trigger?.getBoundingClientRect();
+      const dropdownRect = dropdown?.getBoundingClientRect();
       return {
         searchText: trigger?.textContent?.trim(),
-        optionLabels: [...(select?.options || [])].map(o => o.label),
-        value: select?.value,
+        category: dropdown?.textContent?.trim(),
+        optionsVisibleInitially: !!bar?.querySelector('.cause-category-menu'),
+        dropdownRole: dropdown?.getAttribute('aria-haspopup'),
+        expanded: dropdown?.getAttribute('aria-expanded'),
         countText: bar?.querySelector('.cause-results-line p')?.textContent?.trim(),
-        height: Math.round(rect?.height || 0),
+        height: rect?.height,
         overflow: bar?.scrollWidth - bar?.clientWidth,
-        triggerHeight: triggerRect?.height,
-        selectHeight: selectRect?.height,
-        sameRow: Math.abs((triggerRect?.top || 0) - (selectRect?.top || 0)) < 8,
-        visible: !!trigger && !!select,
-        oldGridAbsent: !bar?.querySelector('.filter-row'),
-        segmented: !!bar?.querySelector('.discovery-field .cause-search-trigger'),
+        searchHeight: searchRect?.height,
+        dropdownHeight: dropdownRect?.height,
+        sameRow: Math.abs((searchRect?.top || 0) - (dropdownRect?.top || 0)) < 8,
+        rightOfTitle: rect?.left >= titleRect?.right - 6,
+        belowTitle: rect?.top >= titleRect?.bottom - 3,
+        headingContainsToolbar: !!bar?.closest('.section-heading'),
         fieldHeight: bar?.querySelector('.discovery-field')?.getBoundingClientRect().height,
-        fieldRadius: getComputedStyle(bar?.querySelector('.discovery-field')).borderTopLeftRadius,
-        downChevron: getComputedStyle(bar?.querySelector('.cause-category-select > .app-icon:last-child')).transform,
-        caretPresent: !!bar?.querySelector('.cause-category-select > .app-icon:last-child'),
-        countSeparate: !bar?.querySelector('.discovery-field .cause-results-line'),
       };
     })()`);
-    assert.ok(causeBar.visible && causeBar.oldGridAbsent && causeBar.segmented, 'Filters must be in the segmented search bar, not a separate grid');
-    assert.ok(causeBar.fieldHeight >= 40 && causeBar.fieldHeight <= 45, 'Unified search bar should be compact');
-    assert.ok(parseFloat(causeBar.fieldRadius) >= 9 && causeBar.caretPresent, 'Unified search must have rounded corners and a dropdown indicator');
-    assert.ok(causeBar.downChevron !== 'none' && causeBar.countSeparate, 'Dropdown arrow must point down and results remain outside the field');
-    assert.deepEqual(causeBar.optionLabels, ['All causes','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
-    assert.equal(causeBar.value, 'All');
+    assert.ok(causeBar.headingContainsToolbar && causeBar.sameRow, 'Search bar and category must live together inside heading');
+    assert.ok(viewport.width >= 1180 ? causeBar.rightOfTitle : causeBar.belowTitle,
+      'Search bar must sit right of desktop title or stack below it on mobile');
+    assert.equal(causeBar.dropdownRole, 'listbox');
+    assert.equal(causeBar.expanded, 'false');
+    assert.equal(causeBar.optionsVisibleInitially, false);
     assert.match(causeBar.searchText, /Search all causes/);
+    assert.match(causeBar.category, /All causes/);
     assert.match(causeBar.countText, /6 opportunities/);
-    assert.ok(causeBar.overflow <= 3 && causeBar.sameRow, 'Integrated search and dropdown must fit in one row');
-    assert.ok(causeBar.height <= (viewport.width <= 760 ? 90 : 59), 'Integrated toolbar must eliminate unused vertical space');
-    assert.ok(causeBar.triggerHeight >= 38 && causeBar.selectHeight >= 35, 'Toolbar controls need usable sizes');
+    assert.ok(causeBar.overflow <= 3, 'Search bar must not overflow');
+    assert.ok(causeBar.height <= (viewport.width <= 760 ? 86 : 58), 'Toolbar must stay compact');
+    assert.ok(causeBar.fieldHeight >= 40 && causeBar.fieldHeight <= 45);
+    assert.ok(causeBar.searchHeight >= 38 && causeBar.dropdownHeight >= 35);
     await evalPage(`document.querySelector('#causes .cause-browser-bar').scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
-    await pause(210);
+    await pause(220);
     const toolbarShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
-    await writeFile(path.join(out, `discovery-toolbar-${viewport.name}.png`), Buffer.from(toolbarShot.data, 'base64'));
-    await evalPage(`(() => {
-      const el = document.querySelector('.cause-browser-bar select');
-      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
-      setter.call(el, 'Water');
-      el.dispatchEvent(new Event('change', { bubbles: true }));
+    await writeFile(path.join(out, 'discovery-toolbar-' + viewport.name + '.png'), Buffer.from(toolbarShot.data, 'base64'));
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    const iconMenu = await evalPage(`(() => {
+      const menu = document.querySelector('.cause-browser-bar [role="listbox"]');
+      const options = [...menu.querySelectorAll('[role="option"]')];
+      const rect = menu.getBoundingClientRect();
+      return {
+        labels: options.map(o => o.textContent.trim()),
+        iconCount: options.filter(o => !!o.querySelector('.cause-category-option-icon .app-icon')).length,
+        count: options.length,
+        optionMinHeight: Math.min(...options.map(o => o.getBoundingClientRect().height)),
+        fits: rect.left >= 0 && rect.right <= innerWidth + 2,
+        selected: menu.querySelector('[aria-selected="true"]')?.dataset.category,
+      };
     })()`);
+    assert.equal(iconMenu.count, 8);
+    assert.equal(iconMenu.iconCount, 8, 'Each category must have its original SVG icon');
+    assert.ok(iconMenu.fits && iconMenu.optionMinHeight >= 36, 'Icon dropdown must fit and remain touch-usable');
+    assert.equal(iconMenu.selected, 'All');
+    assert.deepEqual([...iconMenu.labels].map(x => x.replace(/All causes/, 'All').replace('Allcheck','All')), 
+      ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map((v,i) => i===0 ? v : v));
+    const menuShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, 'discovery-categories-' + viewport.name + '.png'), Buffer.from(menuShot.data, 'base64'));
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-option[data-category="Water"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 1`), 5000);
-    const waterResult = await evalPage(`document.querySelector('.refined-opportunities .cause-results-line p')?.textContent?.trim()`);
-    assert.match(waterResult, /1 opportunity/);
-    assert.equal(await evalPage(`document.querySelector('.cause-browser-bar .cause-category-select')?.dataset.filtered`), 'true', 'Active cause category must have a distinct visual state');
+    const water = await evalPage(`(() => ({
+      count: document.querySelector('.refined-opportunities .cause-results-line p')?.textContent.trim(),
+      current: document.querySelector('.cause-browser-bar .cause-category-current-label')?.textContent.trim(),
+      active: document.querySelector('.cause-browser-bar .cause-category-select')?.dataset.filtered,
+    }))()`);
+    assert.match(water.count, /1 opportunity/);
+    assert.equal(water.current, 'Water');
+    assert.equal(water.active, 'true');
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
     await evalPage(`(() => {
-      const el = document.querySelector('.cause-browser-bar select');
-      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
-      setter.call(el, 'All');
-      el.dispatchEvent(new Event('change', { bubbles: true }));
+      const selected = document.querySelector('.cause-browser-bar [role="option"][aria-selected="true"]');
+      selected?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      return true;
     })()`);
+    await until(async () => evalPage(`!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    assert.equal(await evalPage(`document.querySelector('.cause-browser-bar .cause-category-current-label')?.textContent.trim()`), 'Water',
+      'Escape closes menu without clearing the selection');
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-option[data-category="All"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 6`), 5000);
     if (viewport.width <= 780) {
       const dock = await evalPage(`(() => {
@@ -459,73 +493,66 @@ async function inspect({ path: route, name }, viewport) {
       assert.ok(dock.overflow <= 3 && dock.withinView, 'Mobile navigation must not scroll or overflow');
     }
 
-    // Modal dropdown shares the same filter state. Search remains fully interactive.
+    // Search dialog shares the icon menu and filtering state with the homepage.
     await evalPage(`document.querySelector('.refined-opportunities .cause-search-trigger')?.click(); true`);
     await until(async () => evalPage(`!!document.querySelector('.overlay .campaign-search-panel')`), 6000);
     const searchInitial = await evalPage(`(() => {
       const panel = document.querySelector('.campaign-search-panel');
-      const select = panel?.querySelector('select[aria-label="Filter search results by category"]');
+      const trigger = panel?.querySelector('.search-category-select .cause-category-trigger');
       const search = panel?.querySelector('.search-toolbar-unified .search-input');
       const results = [...(panel?.querySelectorAll('.search-results > button') || [])];
       const rect = panel.getBoundingClientRect();
-      const selectRect = select?.getBoundingClientRect();
+      const triggerRect = trigger?.getBoundingClientRect();
       const searchRect = search?.getBoundingClientRect();
       return {
         count: results.length,
-        options: [...(select?.options || [])].map(o => o.value),
-        selected: select?.value,
-        oldFilterGridAbsent: !panel.querySelector('.filter-row'),
-        sameRow: Math.abs((selectRect?.top || 0) - (searchRect?.top || 0)) < 8,
-        categoryHeight: selectRect?.height,
+        selected: trigger?.textContent.trim(),
+        role: trigger?.getAttribute('aria-haspopup'),
+        sameRow: Math.abs((triggerRect?.top || 0) - (searchRect?.top || 0)) < 8,
         withinView: rect.left >= -2 && rect.right <= innerWidth + 2,
         scrollX: panel.scrollWidth - panel.clientWidth,
-        height: rect.height,
         maxResultOverflow: results.length ? Math.max(...results.map(r => r.scrollWidth - r.clientWidth)) : 0,
         thumbs: results.map(r => getComputedStyle(r.querySelector('img')).objectFit),
         rowHeights: results.map(r => Math.round(r.getBoundingClientRect().height)),
         countLabel: panel.querySelector('.search-count')?.textContent.trim(),
         unifiedHeight: panel.querySelector('.search-toolbar-unified')?.getBoundingClientRect().height,
-        unifiedBorder: getComputedStyle(panel.querySelector('.search-toolbar-unified')).borderTopWidth,
         unifiedRadius: getComputedStyle(panel.querySelector('.search-toolbar-unified')).borderTopLeftRadius,
-        shortcutInModal: !!panel.querySelector('.discovery-search-shortcut'),
       };
     })()`);
-    assert.deepEqual(searchInitial.options, ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
-    assert.equal(searchInitial.selected, 'All');
-    assert.ok(searchInitial.oldFilterGridAbsent && searchInitial.sameRow, 'Search modal should use one toolbar with dropdown');
-    assert.ok(searchInitial.unifiedHeight >= 41 && searchInitial.unifiedHeight <= 46, 'Unified dialog field must remain compact');
-    assert.ok(parseFloat(searchInitial.unifiedBorder) >= 1 && parseFloat(searchInitial.unifiedRadius) >= 9, 'Search dialog needs a single premium segmented field');
-    assert.equal(searchInitial.shortcutInModal, false, 'Keyboard hint belongs only on homepage trigger');
     assert.equal(searchInitial.count, 6);
-    assert.equal(searchInitial.withinView, true, 'Search panel must fit its viewport');
-    assert.ok(searchInitial.scrollX <= 3, 'Search panel must not scroll horizontally');
-    assert.ok(searchInitial.maxResultOverflow <= 3, 'Search result rows must not overflow');
-    assert.ok(searchInitial.thumbs.every(v => v === 'cover'), 'Search photos must retain their focal crops');
-    assert.ok(searchInitial.rowHeights.every(h => h <= 88), 'Search rows should remain compact');
+    assert.equal(searchInitial.role, 'listbox');
+    assert.match(searchInitial.selected, /All causes/);
+    assert.ok(searchInitial.sameRow && searchInitial.withinView && searchInitial.scrollX <= 3);
+    assert.ok(searchInitial.maxResultOverflow <= 3);
+    assert.ok(searchInitial.thumbs.every(v => v === 'cover'));
+    assert.ok(searchInitial.rowHeights.every(h => h <= 88));
     assert.match(searchInitial.countLabel, /6 example campaigns/);
-    await pause(440); // Wait for entrance transition before capturing the visual.
+    assert.ok(searchInitial.unifiedHeight >= 41 && searchInitial.unifiedHeight <= 46);
+    assert.ok(parseFloat(searchInitial.unifiedRadius) >= 9);
+    await pause(440);
     const searchShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
-    await writeFile(path.join(out, `compact-search-${viewport.name}.png`), Buffer.from(searchShot.data, 'base64'));
-    await evalPage(`(() => {
-      const el = document.querySelector('.campaign-search-panel select');
-      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
-      setter.call(el, 'Zakat');
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    })()`);
+    await writeFile(path.join(out, 'compact-search-' + viewport.name + '.png'), Buffer.from(searchShot.data, 'base64'));
+    await evalPage(`document.querySelector('.search-category-select .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.search-category-select [role="listbox"]')`), 5000);
+    const menu = await evalPage(`(() => ({
+      count: document.querySelectorAll('.search-category-select [role="option"]').length,
+      icons: document.querySelectorAll('.search-category-select .cause-category-option-icon .app-icon').length,
+    }))()`);
+    assert.equal(menu.count, 8);
+    assert.equal(menu.icons, 8);
+    await evalPage(`document.querySelector('.search-category-select [data-category="Zakat"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 3`), 5000);
-    assert.equal(await evalPage(`document.querySelector('.campaign-search-panel .search-category-select')?.dataset.filtered`), 'true', 'Selected search category should be visually highlighted');
-    await evalPage(`(() => {
-      const el = document.querySelector('.campaign-search-panel select');
-      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
-      setter.call(el, 'All');
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    })()`);
+    assert.equal(await evalPage(`document.querySelector('.campaign-search-panel .search-category-select')?.dataset.filtered`), 'true');
+    await evalPage(`document.querySelector('.search-category-select .cause-category-trigger')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('.search-category-select [role="listbox"]')`), 5000);
+    await evalPage(`document.querySelector('.search-category-select [data-category="All"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
     await evalPage(`(() => {
       const i = document.querySelector('.campaign-search-panel input[aria-label="Search campaigns"]');
       const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
       setter.call(i, 'Garissa');
       i.dispatchEvent(new Event('input', { bubbles: true }));
+      return true;
     })()`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 1`), 5000);
     await evalPage(`document.querySelector('.campaign-search-panel .search-clear')?.click(); true`);
@@ -533,7 +560,6 @@ async function inspect({ path: route, name }, viewport) {
     await evalPage(`document.querySelector('.campaign-search-panel .close')?.click(); true`);
     await until(async () => evalPage(`!document.querySelector('.overlay .campaign-search-panel')`), 5000);
     assert.equal(await evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length`), 6);
-
     // Platform guide remains functional and accessible after compact styling.
     const openPlatformButton = await evalPage(`(() => {
       const b = document.querySelector('.site-header .nav-platform');
@@ -560,7 +586,7 @@ async function inspect({ path: route, name }, viewport) {
       await evalPage(`document.querySelector('.platform-overlay .platform-close')?.click(); true`);
       await until(async () => evalPage(`!document.querySelector('.platform-overlay')`), 5000);
     }
-    console.log(JSON.stringify({route:'compact-discovery',viewport:viewport.name,searchResults:searchInitial.count,dropdown:true,mobileNav:viewport.width<=780}));
+    console.log(JSON.stringify({route:'compact-discovery',viewport:viewport.name,searchResults:searchInitial.count,iconMenu:true,mobileNav:viewport.width<=780}));
     // Google reviews were intentionally removed. Store buttons must remain.
     const footerCheck = await evalPage(`(() => ({
       hasGoogleReviews: !!document.querySelector('footer .google-review-preview'),
