@@ -399,6 +399,53 @@ async function inspect({ path: route, name }, viewport) {
   assert.equal(info.path, route);
 }
 
+// The normal suite skips the intro intentionally; test the full ten-second
+// greeting separately to ensure the real acknowledgement returns bottom-center.
+async function verifyNaturalWelcome(viewport) {
+  await cdp('Emulation.setDeviceMetricsOverride', {
+    width: viewport.width, height: viewport.height,
+    deviceScaleFactor: 1, mobile: viewport.width < 769,
+  });
+  const target = new URL('/', origin);
+  target.searchParams.set('qa_welcome', viewport.name);
+  await cdp('Page.navigate', { url: target.toString() });
+  await until(async () => evalPage(
+    `location.pathname === '/' && new URLSearchParams(location.search).get('qa_welcome') === ${JSON.stringify(viewport.name)} && !!document.querySelector('.amanah-welcome')`,
+  ), 15000);
+  // The naturally completed Salaam/Bismillah sequence alone may show the note.
+  await until(async () => evalPage(`!!document.querySelector('.amanah-welcome-notice')`), 18000);
+  await pause(350);
+  const info = await evalPage(`(() => {
+    const toast = document.querySelector('.amanah-welcome-notice');
+    const box = toast?.getBoundingClientRect();
+    const nav = document.querySelector('.mobile-nav');
+    const navVisible = nav && getComputedStyle(nav).display !== 'none';
+    const navTop = navVisible ? nav.getBoundingClientRect().top : null;
+    return {
+      text: toast?.innerText?.trim(),
+      role: toast?.getAttribute('role'),
+      atomic: toast?.getAttribute('aria-atomic'),
+      centerOffset: box ? Math.abs((box.left + box.right)/2 - innerWidth/2) : null,
+      top: box?.top, bottom: box?.bottom, height: box?.height, width: box?.width,
+      navTop,
+      viewport: innerWidth,
+    };
+  })()`);
+  assert.match(info.text || '', /Welcome to Amanah Giving/);
+  assert.match(info.text || '', /Give with intention\. See the impact\./);
+  assert.equal(info.role, 'status');
+  assert.equal(info.atomic, 'true');
+  // Desktop scrollbar gutters can offset CSS viewport centering by ~5px.
+  assert.ok(info.centerOffset <= 8, `Welcome acknowledgment must be horizontally centered (offset ${info.centerOffset}px)`);
+  assert.ok(info.width <= viewport.width - 22, 'Welcome acknowledgment must fit within the viewport');
+  assert.ok(info.height <= 72, 'Welcome acknowledgment should remain compact');
+  assert.ok(info.top >= 0 && info.bottom <= viewport.height, 'Welcome acknowledgment clipped');
+  if (info.navTop !== null) assert.ok(info.bottom <= info.navTop, 'Welcome acknowledgment overlaps mobile bottom navigation');
+  const screenshot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+  await writeFile(path.join(out, `welcome-bottom-center-${viewport.name}.png`), Buffer.from(screenshot.data, 'base64'));
+  console.log(JSON.stringify({ route: 'welcome-natural', viewport: viewport.name, ...info }));
+}
+
 let profile;
 let failure;
 try {
@@ -410,6 +457,13 @@ try {
         failure ||= error;
         errors.push(`${route.name} ${viewport.name}: ${error.message}`);
       }
+    }
+  }
+  for (const viewport of [dimensions[1], dimensions[3]]) {
+    try { await verifyNaturalWelcome(viewport); }
+    catch (error) {
+      failure ||= error;
+      errors.push(`welcome-natural ${viewport.name}: ${error.message}`);
     }
   }
 } catch (error) {

@@ -92,9 +92,12 @@ export default function WelcomeSplash() {
 
   if (stage === 'done') {
     return welcomeNoticeVisible ? (
-      <div className="amanah-welcome-notice" role="status" aria-live="polite">
+      <div className="amanah-welcome-notice" role="status" aria-live="polite" aria-atomic="true">
         <span className="amanah-welcome-notice-symbol" aria-hidden="true">✦</span>
-        Welcome!
+        <span className="amanah-welcome-notice-copy">
+          <strong>Welcome to Amanah Giving</strong>
+          <small>Give with intention. See the impact.</small>
+        </span>
       </div>
     ) : null;
   }

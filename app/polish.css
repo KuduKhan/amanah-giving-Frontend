@@ -7028,24 +7028,98 @@ main > .site-header.refined-header + .hero.refined-hero {
   .refined-footer-bottom .footer-social-links { flex-wrap: wrap; }
 }
 
-/* Keep the timed welcome acknowledgment away from key actions and mobile nav.
-   Explicit intro skips do not show this toast at all. */
-@keyframes amanah-welcome-qa-appear {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: translateY(0); }
+/* A quiet, branded acknowledgement in its original bottom-center position.
+   It appears only after the timed greeting, never on an explicit Skip intro. */
+@keyframes amanah-welcome-centered-appear {
+  from { opacity: 0; transform: translate(-50%, 9px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 .amanah-welcome-notice {
-  left: auto;
-  right: clamp(16px, 2.2vw, 34px);
-  bottom: max(18px, env(safe-area-inset-bottom));
-  transform: none;
-  animation: amanah-welcome-qa-appear .22s ease-out both;
+  position: fixed;
+  left: 50%;
+  right: auto;
+  bottom: max(22px, env(safe-area-inset-bottom));
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(100vw - 28px);
+  min-height: 50px;
+  padding: 9px 15px 9px 10px;
+  border: 1px solid #b9d7c4;
+  border-radius: 15px;
+  background: #fbfdfa;
+  box-shadow: 0 12px 30px -17px rgba(11, 55, 38, .44), 0 2px 8px rgba(19, 61, 43, .10);
+  color: #163e30;
+  white-space: normal;
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: amanah-welcome-centered-appear .28s ease-out both;
+}
+.amanah-welcome-notice-symbol {
+  display: grid;
+  flex: 0 0 31px;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #d8e8db;
+  border-radius: 10px;
+  background: #e9f5ed;
+  color: #ab843d;
+  font-size: 17px;
+  line-height: 1;
+}
+.amanah-welcome-notice-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  text-align: start;
+  line-height: 1.2;
+}
+.amanah-welcome-notice-copy strong {
+  color: #194a36;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: -.015em;
+}
+.amanah-welcome-notice-copy small {
+  color: #5d7768;
+  font-size: 10.5px;
+  font-weight: 540;
+  letter-spacing: 0;
 }
 @media (max-width: 780px) {
+  /* The note stays centered, safely above the bottom navigation on phones. */
   body:has(.mobile-nav) .amanah-welcome-notice {
-    bottom: calc(90px + env(safe-area-inset-bottom));
+    left: 50%;
+    right: auto;
+    bottom: calc(83px + env(safe-area-inset-bottom));
   }
 }
+@media (max-width: 390px) {
+  .amanah-welcome-notice {
+    gap: 8px;
+    min-height: 46px;
+    padding: 8px 11px 8px 9px;
+    border-radius: 13px;
+  }
+  .amanah-welcome-notice-symbol {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 15px;
+  }
+  .amanah-welcome-notice-copy strong { font-size: 11.5px; }
+  .amanah-welcome-notice-copy small { font-size: 10px; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .amanah-welcome-notice { animation: none; }
+  .amanah-welcome-notice {
+    animation: none;
+    transform: translateX(-50%);
+  }
 }
