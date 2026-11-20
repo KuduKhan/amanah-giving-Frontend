@@ -692,7 +692,7 @@ export default function Home() {
             <div className="search-toolbar-unified discovery-field">
               <div className="search-input" role="search" aria-label="Find verified campaigns">
                 <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
-                <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Search cause or location" autoComplete="off" />
+                <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Search causes…" autoComplete="off" />
                 {query && <button type="button" className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
               </div>
               <label className="cause-category-select search-category-select" data-filtered={filter !== 'All'}>
