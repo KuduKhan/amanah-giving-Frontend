@@ -109,7 +109,7 @@ main.home-premium .refined-opportunities .discovery-search-label {
   border-radius: 6px;
   background: #fafcfa;
   color: #7b9683;
-  font: 700 12px/1 inherit;
+  line-height: 1;
   font-family: inherit;
   font-size: 12px;
   font-weight: 700;
