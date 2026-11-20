@@ -405,17 +405,21 @@ export default function Home() {
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
         <div className="section-heading"><div><p className="eyebrow">Example opportunities</p><h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2></div></div>
         <div className="cause-browser-bar">
-          <button type="button" className="cause-search-trigger" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}>
-            <Icon name="search"/><span>Search all causes</span><Icon name="arrow-right"/>
-          </button>
-          <label className="cause-category-select">
-            <span className="sr-only">Filter causes by category</span>
-            <Icon name="filter"/>
-            <select aria-label="Filter causes by category" value={filter} onChange={event => setFilter(event.target.value)}>
-              {causeFilters.map(([label]) => <option key={label} value={label}>{label === 'All' ? 'All causes' : label}</option>)}
-            </select>
-            <Icon name="chevron"/>
-          </label>
+          <div className="cause-search-controls discovery-field">
+            <button type="button" className="cause-search-trigger" aria-label="Search all causes" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}>
+              <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
+              <span className="discovery-search-label">Search all causes</span>
+              <kbd aria-hidden="true" className="discovery-search-shortcut">/</kbd>
+            </button>
+            <label className="cause-category-select" data-filtered={filter !== 'All'}>
+              <span className="sr-only">Filter causes by category</span>
+              <Icon name="filter"/>
+              <select aria-label="Filter causes by category" value={filter} onChange={event => setFilter(event.target.value)}>
+                {causeFilters.map(([label]) => <option key={label} value={label}>{label === 'All' ? 'All causes' : label}</option>)}
+              </select>
+              <Icon name="chevron"/>
+            </label>
+          </div>
           <div className="cause-results-line">
             <p role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'opportunity' : 'opportunities'}{query.trim() ? ` matching “${query.trim()}”` : ''}</p>
             {filter !== 'All' || query ? <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); }}>Clear <Icon name="close"/></button> : null}
@@ -685,13 +689,13 @@ export default function Home() {
             <button className="close" aria-label="Close dialog" onClick={() => setSearchOpen(false)}><Icon name="close"/></button>
             <p className="eyebrow">Search Amanah Giving</p>
             <h2 id="campaign-search-title">Find a cause close to your heart.</h2>
-            <div className="search-toolbar-unified">
+            <div className="search-toolbar-unified discovery-field">
               <div className="search-input" role="search" aria-label="Find verified campaigns">
-                <Icon name="search"/>
-                <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Try ‘water Garissa’" />
-                {query && <button className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
+                <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
+                <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Search cause or location" autoComplete="off" />
+                {query && <button type="button" className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
               </div>
-              <label className="cause-category-select search-category-select">
+              <label className="cause-category-select search-category-select" data-filtered={filter !== 'All'}>
                 <span className="sr-only">Filter search results by category</span>
                 <Icon name="filter"/>
                 <select aria-label="Filter search results by category" value={filter} onChange={event => setFilter(event.target.value)}>
