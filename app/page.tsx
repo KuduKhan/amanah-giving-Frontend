@@ -1,6 +1,7 @@
 'use client';
 
 import Icon from './Icon';
+import CategoryDropdown from './CategoryDropdown';
 import FooterBrandIcon from './FooterBrandIcon';
 import './impact-updates-cta.css';
 import CampaignDetails from './CampaignDetails';
@@ -403,26 +404,29 @@ export default function Home() {
       </section>
 
       <section className="section refined-opportunities" id="causes" aria-labelledby="causes-title">
-        <div className="section-heading"><div><p className="eyebrow">Example opportunities</p><h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2></div></div>
-        <div className="cause-browser-bar">
-          <div className="cause-search-controls discovery-field">
-            <button type="button" className="cause-search-trigger" aria-label="Search all causes" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}>
-              <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
-              <span className="discovery-search-label">Search all causes</span>
-              <kbd aria-hidden="true" className="discovery-search-shortcut">/</kbd>
-            </button>
-            <label className="cause-category-select" data-filtered={filter !== 'All'}>
-              <span className="sr-only">Filter causes by category</span>
-              <Icon name="filter"/>
-              <select aria-label="Filter causes by category" value={filter} onChange={event => setFilter(event.target.value)}>
-                {causeFilters.map(([label]) => <option key={label} value={label}>{label === 'All' ? 'All causes' : label}</option>)}
-              </select>
-              <Icon name="chevron"/>
-            </label>
+        <div className="section-heading opportunity-heading">
+          <div className="opportunity-heading-copy">
+            <p className="eyebrow">Example opportunities</p>
+            <h2 id="causes-title" tabIndex={-1}>Give where it matters most</h2>
           </div>
-          <div className="cause-results-line">
-            <p role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'opportunity' : 'opportunities'}{query.trim() ? ` matching “${query.trim()}”` : ''}</p>
-            {filter !== 'All' || query ? <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); }}>Clear <Icon name="close"/></button> : null}
+          <div className="cause-browser-bar">
+            <div className="cause-search-controls discovery-field">
+              <button type="button" className="cause-search-trigger" aria-label="Search all causes" aria-haspopup="dialog" onClick={() => setSearchOpen(true)}>
+                <span className="discovery-search-icon" aria-hidden="true"><Icon name="search"/></span>
+                <span className="discovery-search-label">Search all causes</span>
+                <kbd aria-hidden="true" className="discovery-search-shortcut">/</kbd>
+              </button>
+              <CategoryDropdown
+                options={causeFilters}
+                value={filter}
+                onChange={setFilter}
+                label="Filter causes by category"
+              />
+            </div>
+            <div className="cause-results-line">
+              <p role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'opportunity' : 'opportunities'}{query.trim() ? ` matching “${query.trim()}”` : ''}</p>
+              {filter !== 'All' || query ? <button className="text-link" onClick={() => { setFilter('All'); setQuery(''); }}>Clear <Icon name="close"/></button> : null}
+            </div>
           </div>
         </div>
         <div className="campaign-grid">
@@ -695,14 +699,13 @@ export default function Home() {
                 <input ref={searchInputRef} value={query} onChange={event => setQuery(event.target.value)} aria-label="Search campaigns" placeholder="Search causes…" autoComplete="off" />
                 {query && <button type="button" className="search-clear" aria-label="Clear search" onClick={() => { setQuery(''); searchInputRef.current?.focus(); }}><Icon name="close"/></button>}
               </div>
-              <label className="cause-category-select search-category-select" data-filtered={filter !== 'All'}>
-                <span className="sr-only">Filter search results by category</span>
-                <Icon name="filter"/>
-                <select aria-label="Filter search results by category" value={filter} onChange={event => setFilter(event.target.value)}>
-                  {causeFilters.map(([label]) => <option key={label} value={label}>{label === 'All' ? 'All causes' : label}</option>)}
-                </select>
-                <Icon name="chevron"/>
-              </label>
+              <CategoryDropdown
+                options={causeFilters}
+                value={filter}
+                onChange={setFilter}
+                label="Filter search results by category"
+                className="search-category-select"
+              />
             </div>
             <p className="search-count" role="status">{filteredCampaigns.length} {filteredCampaigns.length === 1 ? 'example campaign' : 'example campaigns'}</p>
             {filteredCampaigns.length > 0 ? (
