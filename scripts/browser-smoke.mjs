@@ -451,6 +451,8 @@ async function inspect({ path: route, name }, viewport) {
     assert.ok(searchInitial.thumbs.every(v => v === 'cover'), 'Search photos should preserve focal cover crops');
     assert.ok(searchInitial.rowHeights.every(h => h <= 88), 'Search results should remain compact');
     assert.match(searchInitial.countLabel, /6 example campaigns/);
+    // Let the dialog finish its entrance transition; otherwise screenshots capture partial opacity.
+    await pause(440);
     const searchShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, `compact-search-${viewport.name}.png`), Buffer.from(searchShot.data, 'base64'));
 
