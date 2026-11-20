@@ -1,0 +1,227 @@
+/*
+ * Amanah Giving — integrated discovery toolbar.
+ * One search action + native category dropdown replaces eight always-visible
+ * filter chips. The same selector is used inside the search dialog.
+ * Native select preserves screen-reader, keyboard and mobile picker behavior.
+ */
+main.home-premium .refined-opportunities .section-heading {
+  margin-bottom: clamp(9px, 1vw, 13px);
+}
+main.home-premium .refined-opportunities .cause-browser-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(133px, 168px) auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 51px;
+  margin: 0 0 12px;
+  padding: 5px 7px;
+  border: 1px solid #d3e4d7;
+  border-radius: 13px;
+  background: #f9fcf9;
+  box-shadow: 0 8px 25px -22px rgba(9, 60, 37, .45);
+}
+main.home-premium .refined-opportunities .cause-search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: #fff;
+  color: #1d563c;
+  font: 750 12px/1.2 inherit;
+  text-align: start;
+  cursor: pointer;
+}
+main.home-premium .refined-opportunities .cause-search-trigger:hover {
+  background: #eff7f1;
+}
+main.home-premium .refined-opportunities .cause-search-trigger > .app-icon:first-child {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  color: #27845c;
+}
+main.home-premium .refined-opportunities .cause-search-trigger > span {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+main.home-premium .refined-opportunities .cause-search-trigger > .app-icon:last-child {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  opacity: .65;
+}
+.cause-category-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  gap: 5px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 9px;
+  border: 1px solid #d6e5da;
+  border-radius: 9px;
+  background: #fff;
+  color: #2e654b;
+}
+.cause-category-select:focus-within {
+  border-color: #2c9164;
+  box-shadow: 0 0 0 3px rgba(32, 128, 83, .13);
+}
+.cause-category-select > .app-icon {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.cause-category-select > .app-icon:last-child {
+  flex-basis: 12px;
+  width: 12px;
+  height: 12px;
+}
+.cause-category-select select {
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #24513c;
+  font-family: inherit;
+  font-size: 11.5px;
+  line-height: 1.2;
+  font-weight: 780;
+  cursor: pointer;
+}
+.cause-category-select select option {
+  background: #fff;
+  color: #1f4b35;
+}
+main.home-premium .refined-opportunities .cause-results-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px 7px;
+  min-width: 0;
+  padding: 0 5px 0 7px;
+  border: 0;
+  border-inline-start: 1px solid #dce8de;
+  text-align: end;
+}
+main.home-premium .refined-opportunities .cause-results-line > p {
+  flex: 0 1 auto;
+  min-width: 0;
+  color: #54715f;
+  font-size: 10.5px;
+  font-weight: 760;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+main.home-premium .refined-opportunities .cause-results-line > button {
+  flex: none;
+  gap: 3px;
+  min-height: 34px;
+  padding: 3px 5px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+main.home-premium .refined-opportunities .cause-search-trigger:focus-visible,
+.cause-category-select:has(select:focus-visible) {
+  outline: 2px solid #b48f54;
+  outline-offset: 2px;
+}
+.overlay .campaign-search-panel .search-toolbar-unified {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(133px, 167px);
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin: 10px 0 8px;
+}
+.overlay .campaign-search-panel .search-toolbar-unified .search-input {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 41px;
+  height: 41px;
+  margin: 0;
+  padding-inline: 10px 4px;
+  border-radius: 9px;
+}
+.overlay .campaign-search-panel .search-toolbar-unified .search-input input {
+  min-width: 0;
+  min-height: 32px;
+  padding: 5px 6px;
+}
+.overlay .campaign-search-panel .search-toolbar-unified .search-category-select {
+  height: 41px;
+  min-height: 41px;
+}
+.overlay .campaign-search-panel .search-count {
+  margin: 0 0 5px;
+  font-size: 10.5px;
+}
+@media (max-width: 760px) {
+  main.home-premium .refined-opportunities .cause-browser-bar {
+    grid-template-columns: minmax(0, 1fr) minmax(105px, 38%);
+    gap: 5px;
+    min-height: 0;
+    padding: 5px 6px 4px;
+  }
+  main.home-premium .refined-opportunities .cause-search-trigger {
+    min-height: 39px;
+    gap: 6px;
+    padding-inline: 7px;
+    font-size: 11px;
+  }
+  main.home-premium .refined-opportunities .cause-results-line {
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    min-height: 18px;
+    padding: 1px 4px 0;
+    border: 0;
+    border-top: 1px solid #e4ece5;
+    text-align: start;
+  }
+  main.home-premium .refined-opportunities .cause-results-line > p { font-size: 10px; }
+  main.home-premium .refined-opportunities .cause-results-line > button { min-height: 25px; }
+  .cause-category-select {
+    gap: 4px;
+    min-height: 39px;
+    padding: 0 6px;
+  }
+  .cause-category-select > .app-icon:first-of-type { display: none; }
+  .cause-category-select select {
+    height: 37px;
+    font-size: 11px;
+  }
+  .overlay .campaign-search-panel .search-toolbar-unified {
+    grid-template-columns: minmax(0, 1fr) minmax(105px, 37%);
+    gap: 5px;
+    margin-block: 9px 6px;
+  }
+  .overlay .campaign-search-panel .search-toolbar-unified .search-input {
+    padding-inline: 6px 2px;
+  }
+}
+@media (max-width: 360px) {
+  main.home-premium .refined-opportunities .cause-browser-bar {
+    grid-template-columns: minmax(0, 1fr) 107px;
+  }
+  main.home-premium .refined-opportunities .cause-search-trigger { font-size: 10.5px; }
+  main.home-premium .refined-opportunities .cause-search-trigger > .app-icon:last-child { display: none; }
+  .overlay .campaign-search-panel .search-toolbar-unified {
+    grid-template-columns: minmax(0, 1fr) 108px;
+  }
+  .overlay .campaign-search-panel .search-toolbar-unified .search-input input { font-size: 13px; }
+  .cause-category-select select { font-size: 10px; }
+}
