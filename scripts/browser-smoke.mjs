@@ -377,28 +377,56 @@ async function inspect({ path: route, name }, viewport) {
       const shot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
       await writeFile(path.join(out, `home-premium-${section.name}-${viewport.name}.png`), Buffer.from(shot.data, 'base64'));
     }
-    // Discovery browser and search modal must share the same concise eight filters.
+    // Main discovery: one integrated search action + native category dropdown.
     const causeBar = await evalPage(`(() => {
-      const root = document.querySelector('.refined-opportunities .cause-browser-bar');
-      const row = root?.querySelector('.filter-row');
-      const buttons = [...(row?.querySelectorAll('button') || [])];
+      const bar = document.querySelector('.refined-opportunities .cause-browser-bar');
+      const trigger = bar?.querySelector('.cause-search-trigger');
+      const select = bar?.querySelector('select[aria-label="Filter causes by category"]');
+      const rect = bar?.getBoundingClientRect();
+      const triggerRect = trigger?.getBoundingClientRect();
+      const selectRect = select?.getBoundingClientRect();
       return {
-        count: buttons.length,
-        names: buttons.map(b => b.textContent.trim()),
-        columns: row ? getComputedStyle(row).gridTemplateColumns.split(' ').length : 0,
-        width: row?.getBoundingClientRect().width,
-        scrollWidth: row?.scrollWidth,
-        countText: root?.querySelector('.cause-results-line p')?.textContent?.trim(),
-        height: root?.getBoundingClientRect().height,
-        buttonHeights: buttons.map(b => Math.round(b.getBoundingClientRect().height)),
+        searchText: trigger?.textContent?.trim(),
+        optionLabels: [...(select?.options || [])].map(o => o.label),
+        value: select?.value,
+        countText: bar?.querySelector('.cause-results-line p')?.textContent?.trim(),
+        height: Math.round(rect?.height || 0),
+        overflow: bar?.scrollWidth - bar?.clientWidth,
+        triggerHeight: triggerRect?.height,
+        selectHeight: selectRect?.height,
+        sameRow: Math.abs((triggerRect?.top || 0) - (selectRect?.top || 0)) < 8,
+        visible: !!trigger && !!select,
+        oldGridAbsent: !bar?.querySelector('.filter-row'),
       };
     })()`);
-    assert.deepEqual(causeBar.names, ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
-    assert.equal(causeBar.columns, viewport.width <= 760 ? 4 : 8, 'Cause category filters must stay in 4 or 8 grid columns');
-    assert.ok(causeBar.scrollWidth <= causeBar.width + 3, 'Cause filter row must not horizontally scroll');
-    assert.ok(causeBar.buttonHeights.every(height => height >= 35 && height <= 46), 'Cause filters must be compact');
+    assert.ok(causeBar.visible && causeBar.oldGridAbsent, 'Filters belong inside search toolbar, not a separate grid');
+    assert.deepEqual(causeBar.optionLabels, ['All causes','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
+    assert.equal(causeBar.value, 'All');
+    assert.match(causeBar.searchText, /Search all causes/);
     assert.match(causeBar.countText, /6 opportunities/);
-    assert.ok(causeBar.height <= (viewport.width <= 760 ? 135 : 110), 'Opportunity controls should not consume too much height');
+    assert.ok(causeBar.overflow <= 3 && causeBar.sameRow, 'Integrated search and dropdown must fit in one row');
+    assert.ok(causeBar.height <= (viewport.width <= 760 ? 90 : 59), 'Integrated toolbar must eliminate unused vertical space');
+    assert.ok(causeBar.triggerHeight >= 38 && causeBar.selectHeight >= 35, 'Toolbar controls need usable sizes');
+    await evalPage(`document.querySelector('#causes .cause-browser-bar').scrollIntoView({ block: 'center', behavior: 'instant' }); true`);
+    await pause(210);
+    const toolbarShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
+    await writeFile(path.join(out, `discovery-toolbar-${viewport.name}.png`), Buffer.from(toolbarShot.data, 'base64'));
+    await evalPage(`(() => {
+      const el = document.querySelector('.cause-browser-bar select');
+      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+      setter.call(el, 'Water');
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    })()`);
+    await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 1`), 5000);
+    const waterResult = await evalPage(`document.querySelector('.refined-opportunities .cause-results-line p')?.textContent?.trim()`);
+    assert.match(waterResult, /1 opportunity/);
+    await evalPage(`(() => {
+      const el = document.querySelector('.cause-browser-bar select');
+      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+      setter.call(el, 'All');
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    })()`);
+    await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 6`), 5000);
     if (viewport.width <= 780) {
       const dock = await evalPage(`(() => {
         const nav = document.querySelector('.refined-mobile-nav');
@@ -421,44 +449,59 @@ async function inspect({ path: route, name }, viewport) {
       assert.ok(dock.overflow <= 3 && dock.withinView, 'Mobile navigation must not scroll or overflow');
     }
 
-    // The search dialog is interactive: chips, filter count, live query and result buttons.
-    await evalPage(`document.querySelector('.refined-opportunities .section-heading > button')?.click(); true`);
+    // Modal dropdown shares the same filter state. Search remains fully interactive.
+    await evalPage(`document.querySelector('.refined-opportunities .cause-search-trigger')?.click(); true`);
     await until(async () => evalPage(`!!document.querySelector('.overlay .campaign-search-panel')`), 6000);
     const searchInitial = await evalPage(`(() => {
       const panel = document.querySelector('.campaign-search-panel');
-      const filters = [...panel.querySelectorAll('.filter-row button')];
-      const results = [...panel.querySelectorAll('.search-results > button')];
+      const select = panel?.querySelector('select[aria-label="Filter search results by category"]');
+      const search = panel?.querySelector('.search-toolbar-unified .search-input');
+      const results = [...(panel?.querySelectorAll('.search-results > button') || [])];
       const rect = panel.getBoundingClientRect();
+      const selectRect = select?.getBoundingClientRect();
+      const searchRect = search?.getBoundingClientRect();
       return {
         count: results.length,
-        categoryCount: filters.length,
-        columns: getComputedStyle(panel.querySelector('.filter-row')).gridTemplateColumns.split(' ').length,
+        options: [...(select?.options || [])].map(o => o.value),
+        selected: select?.value,
+        oldFilterGridAbsent: !panel.querySelector('.filter-row'),
+        sameRow: Math.abs((selectRect?.top || 0) - (searchRect?.top || 0)) < 8,
+        categoryHeight: selectRect?.height,
         withinView: rect.left >= -2 && rect.right <= innerWidth + 2,
         scrollX: panel.scrollWidth - panel.clientWidth,
         height: rect.height,
-        maxVisibleResultWidth: results.length ? Math.max(...results.map(r => r.scrollWidth - r.clientWidth)) : 0,
+        maxResultOverflow: results.length ? Math.max(...results.map(r => r.scrollWidth - r.clientWidth)) : 0,
         thumbs: results.map(r => getComputedStyle(r.querySelector('img')).objectFit),
         rowHeights: results.map(r => Math.round(r.getBoundingClientRect().height)),
         countLabel: panel.querySelector('.search-count')?.textContent.trim(),
       };
     })()`);
-    assert.equal(searchInitial.categoryCount, 8);
+    assert.deepEqual(searchInitial.options, ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
+    assert.equal(searchInitial.selected, 'All');
+    assert.ok(searchInitial.oldFilterGridAbsent && searchInitial.sameRow, 'Search modal should use one toolbar with dropdown');
     assert.equal(searchInitial.count, 6);
-    assert.equal(searchInitial.columns, viewport.width <= 760 ? 4 : 8);
     assert.equal(searchInitial.withinView, true, 'Search panel must fit its viewport');
     assert.ok(searchInitial.scrollX <= 3, 'Search panel must not scroll horizontally');
-    assert.ok(searchInitial.maxVisibleResultWidth <= 3, 'Search results must not overflow');
-    assert.ok(searchInitial.thumbs.every(v => v === 'cover'), 'Search photos should preserve focal cover crops');
-    assert.ok(searchInitial.rowHeights.every(h => h <= 88), 'Search results should remain compact');
+    assert.ok(searchInitial.maxResultOverflow <= 3, 'Search result rows must not overflow');
+    assert.ok(searchInitial.thumbs.every(v => v === 'cover'), 'Search photos must retain their focal crops');
+    assert.ok(searchInitial.rowHeights.every(h => h <= 88), 'Search rows should remain compact');
     assert.match(searchInitial.countLabel, /6 example campaigns/);
-    // Let the dialog finish its entrance transition; otherwise screenshots capture partial opacity.
-    await pause(440);
+    await pause(440); // Wait for entrance transition before capturing the visual.
     const searchShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, `compact-search-${viewport.name}.png`), Buffer.from(searchShot.data, 'base64'));
-
-    await evalPage(`[...document.querySelectorAll('.campaign-search-panel .filter-row button')].find(b => b.textContent.trim() === 'Zakat')?.click(); true`);
+    await evalPage(`(() => {
+      const el = document.querySelector('.campaign-search-panel select');
+      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+      setter.call(el, 'Zakat');
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    })()`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 3`), 5000);
-    await evalPage(`[...document.querySelectorAll('.campaign-search-panel .filter-row button')].find(b => b.textContent.trim() === 'All')?.click(); true`);
+    await evalPage(`(() => {
+      const el = document.querySelector('.campaign-search-panel select');
+      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
+      setter.call(el, 'All');
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    })()`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
     await evalPage(`(() => {
       const i = document.querySelector('.campaign-search-panel input[aria-label="Search campaigns"]');
@@ -499,7 +542,7 @@ async function inspect({ path: route, name }, viewport) {
       await evalPage(`document.querySelector('.platform-overlay .platform-close')?.click(); true`);
       await until(async () => evalPage(`!document.querySelector('.platform-overlay')`), 5000);
     }
-    console.log(JSON.stringify({route:'compact-discovery',viewport:viewport.name,searchResults:searchInitial.count,filterColumns:searchInitial.columns,mobileNav:viewport.width<=780}));
+    console.log(JSON.stringify({route:'compact-discovery',viewport:viewport.name,searchResults:searchInitial.count,dropdown:true,mobileNav:viewport.width<=780}));
     // Google reviews were intentionally removed. Store buttons must remain.
     const footerCheck = await evalPage(`(() => ({
       hasGoogleReviews: !!document.querySelector('footer .google-review-preview'),
