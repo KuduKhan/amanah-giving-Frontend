@@ -397,9 +397,18 @@ async function inspect({ path: route, name }, viewport) {
         sameRow: Math.abs((triggerRect?.top || 0) - (selectRect?.top || 0)) < 8,
         visible: !!trigger && !!select,
         oldGridAbsent: !bar?.querySelector('.filter-row'),
+        segmented: !!bar?.querySelector('.discovery-field .cause-search-trigger'),
+        fieldHeight: bar?.querySelector('.discovery-field')?.getBoundingClientRect().height,
+        fieldRadius: getComputedStyle(bar?.querySelector('.discovery-field')).borderTopLeftRadius,
+        downChevron: getComputedStyle(bar?.querySelector('.cause-category-select > .app-icon:last-child')).transform,
+        caretPresent: !!bar?.querySelector('.cause-category-select > .app-icon:last-child'),
+        countSeparate: !bar?.querySelector('.discovery-field .cause-results-line'),
       };
     })()`);
-    assert.ok(causeBar.visible && causeBar.oldGridAbsent, 'Filters belong inside search toolbar, not a separate grid');
+    assert.ok(causeBar.visible && causeBar.oldGridAbsent && causeBar.segmented, 'Filters must be in the segmented search bar, not a separate grid');
+    assert.ok(causeBar.fieldHeight >= 40 && causeBar.fieldHeight <= 45, 'Unified search bar should be compact');
+    assert.ok(parseFloat(causeBar.fieldRadius) >= 9 && causeBar.caretPresent, 'Unified search must have rounded corners and a dropdown indicator');
+    assert.ok(causeBar.downChevron !== 'none' && causeBar.countSeparate, 'Dropdown arrow must point down and results remain outside the field');
     assert.deepEqual(causeBar.optionLabels, ['All causes','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
     assert.equal(causeBar.value, 'All');
     assert.match(causeBar.searchText, /Search all causes/);
@@ -420,6 +429,7 @@ async function inspect({ path: route, name }, viewport) {
     await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 1`), 5000);
     const waterResult = await evalPage(`document.querySelector('.refined-opportunities .cause-results-line p')?.textContent?.trim()`);
     assert.match(waterResult, /1 opportunity/);
+    assert.equal(await evalPage(`document.querySelector('.cause-browser-bar .cause-category-select')?.dataset.filtered`), 'true', 'Active cause category must have a distinct visual state');
     await evalPage(`(() => {
       const el = document.querySelector('.cause-browser-bar select');
       const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
@@ -474,11 +484,18 @@ async function inspect({ path: route, name }, viewport) {
         thumbs: results.map(r => getComputedStyle(r.querySelector('img')).objectFit),
         rowHeights: results.map(r => Math.round(r.getBoundingClientRect().height)),
         countLabel: panel.querySelector('.search-count')?.textContent.trim(),
+        unifiedHeight: panel.querySelector('.search-toolbar-unified')?.getBoundingClientRect().height,
+        unifiedBorder: getComputedStyle(panel.querySelector('.search-toolbar-unified')).borderTopWidth,
+        unifiedRadius: getComputedStyle(panel.querySelector('.search-toolbar-unified')).borderTopLeftRadius,
+        shortcutInModal: !!panel.querySelector('.discovery-search-shortcut'),
       };
     })()`);
     assert.deepEqual(searchInitial.options, ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education']);
     assert.equal(searchInitial.selected, 'All');
     assert.ok(searchInitial.oldFilterGridAbsent && searchInitial.sameRow, 'Search modal should use one toolbar with dropdown');
+    assert.ok(searchInitial.unifiedHeight >= 41 && searchInitial.unifiedHeight <= 46, 'Unified dialog field must remain compact');
+    assert.ok(parseFloat(searchInitial.unifiedBorder) >= 1 && parseFloat(searchInitial.unifiedRadius) >= 9, 'Search dialog needs a single premium segmented field');
+    assert.equal(searchInitial.shortcutInModal, false, 'Keyboard hint belongs only on homepage trigger');
     assert.equal(searchInitial.count, 6);
     assert.equal(searchInitial.withinView, true, 'Search panel must fit its viewport');
     assert.ok(searchInitial.scrollX <= 3, 'Search panel must not scroll horizontally');
@@ -496,6 +513,7 @@ async function inspect({ path: route, name }, viewport) {
       el.dispatchEvent(new Event('change', { bubbles: true }));
     })()`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 3`), 5000);
+    assert.equal(await evalPage(`document.querySelector('.campaign-search-panel .search-category-select')?.dataset.filtered`), 'true', 'Selected search category should be visually highlighted');
     await evalPage(`(() => {
       const el = document.querySelector('.campaign-search-panel select');
       const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set;
