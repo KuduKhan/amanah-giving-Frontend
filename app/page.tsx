@@ -19,6 +19,7 @@ import { DRAFT_KEY, readDrafts, downloadText, draftText, type GivingDraft } from
 import './campaign-inline.css';
 import { campaignImageFocus } from './campaignImageFocus';
 import './home-premium.css';
+import './discovery-compact.css';
 
 type Campaign = {
   id: string;
