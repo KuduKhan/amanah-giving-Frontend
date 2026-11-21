@@ -137,6 +137,27 @@ export default function CategoryDropdown({ options, value, onChange, label, clas
     };
   }, [open, selectedIndex]);
 
+  // A portaled option is outside the trigger's DOM tab order, so explicitly
+  // continue Tab / Shift+Tab from the original trigger rather than skipping
+  // the rest of the form or leaving an accessible search dialog.
+  const continueTab = (backwards: boolean) => {
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const dialog = trigger.closest<HTMLElement>('[aria-modal="true"]');
+    const scope = dialog ?? document.body;
+    const elements = [...scope.querySelectorAll<HTMLElement>(
+      'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+    )].filter(node =>
+      !!node.getClientRects().length &&
+      getComputedStyle(node).visibility !== 'hidden' &&
+      !menuRef.current?.contains(node)
+    );
+    const index = elements.indexOf(trigger);
+    const destination = elements[index + (backwards ? -1 : 1)] ??
+      (dialog ? (backwards ? elements[elements.length - 1] : elements[0]) : trigger);
+    (destination ?? trigger).focus({ preventScroll: true });
+  };
+
   const handleKey = (event: KeyboardEvent<HTMLDivElement>) => {
     if (!open) {
       if (event.target === triggerRef.current && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
@@ -154,7 +175,10 @@ export default function CategoryDropdown({ options, value, onChange, label, clas
       setOpen(false);
       triggerRef.current?.focus({ preventScroll: true });
     } else if (event.key === 'Tab') {
+      event.preventDefault();
+      event.stopPropagation();
       setOpen(false);
+      continueTab(event.shiftKey);
     } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       event.stopPropagation();
