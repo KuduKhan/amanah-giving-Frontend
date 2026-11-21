@@ -276,3 +276,121 @@
     box-shadow: 0 5px 13px rgb(20 62 43 / 6%);
   }
 }
+
+
+/* Narrow-phone acceptance polish: space and legibility before decoration.
+   Full CTA text remains accessible through each button's aria-label. */
+main.home-premium :is(.refined-seasonal, .refined-knowledge) .compact-action-label {
+  display: none;
+}
+@media (max-width: 600px) {
+  main.home-premium :is(.refined-seasonal, .refined-knowledge) .full-action-label {
+    display: none;
+  }
+  main.home-premium :is(.refined-seasonal, .refined-knowledge) .compact-action-label {
+    display: inline;
+    white-space: normal;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article,
+  main.home-premium .refined-knowledge .knowledge-card {
+    position: relative;
+    isolation: isolate;
+    /* Avoid the global hover lift shifting neighbouring tiny cards. */
+    transform: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article:hover,
+  main.home-premium .refined-knowledge .knowledge-card:hover {
+    transform: none;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article > button,
+  main.home-premium .refined-knowledge .knowledge-card > button {
+    flex-shrink: 0;
+    min-height: 44px;
+    padding-block: 8px 5px;
+    overflow-wrap: anywhere;
+    border-top-color: #dce8df;
+  }
+  main.home-premium .refined-seasonal .season-action-label,
+  main.home-premium .refined-knowledge .knowledge-card > button > span {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article > p,
+  main.home-premium .refined-knowledge .knowledge-card > p:not(.eyebrow) {
+    /* Natural height preserves all information without clipping. */
+    flex: 1 1 auto;
+    text-wrap: pretty;
+  }
+  main.home-premium .refined-knowledge .knowledge-card h3,
+  main.home-premium .refined-seasonal .seasonal-track h3 {
+    text-wrap: pretty;
+    hyphens: auto;
+  }
+}
+@media (max-width: 360px) {
+  main.home-premium .refined-seasonal .seasonal-track,
+  main.home-premium .refined-knowledge .knowledge-grid {
+    gap: 8px;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article,
+  main.home-premium .refined-knowledge .knowledge-card {
+    padding: 11px 10px 9px;
+    border-radius: 12px;
+  }
+  /* Stack icon above small categorical text when a horizontal top row
+     would be compressed to only ~110px of interior width. */
+  main.home-premium .refined-seasonal .season-card-top,
+  main.home-premium .refined-knowledge .knowledge-card-top {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 9px;
+    min-width: 0;
+  }
+  main.home-premium .refined-seasonal .season-card-top > span {
+    text-align: start;
+    line-height: 1.25;
+    font-size: 10px;
+  }
+  main.home-premium .refined-knowledge .knowledge-card-top > .eyebrow {
+    min-height: 0;
+    max-width: 100%;
+    text-align: start;
+    line-height: 1.25;
+    font-size: 9.5px;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article h3,
+  main.home-premium .refined-knowledge .knowledge-card h3 {
+    font-size: 14px;
+    line-height: 1.26;
+    margin-bottom: 7px;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article > p,
+  main.home-premium .refined-knowledge .knowledge-card > p:not(.eyebrow) {
+    margin-bottom: 10px;
+    font-size: 11.5px;
+    line-height: 1.46;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article > button,
+  main.home-premium .refined-knowledge .knowledge-card > button {
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+}
+@media (max-width: 310px) {
+  main.home-premium .seasonal-giving.refined-seasonal {
+    padding-inline: 10px;
+  }
+  main.home-premium .refined-seasonal .seasonal-track,
+  main.home-premium .refined-knowledge .knowledge-grid {
+    gap: 7px;
+  }
+  main.home-premium .refined-seasonal .seasonal-track article,
+  main.home-premium .refined-knowledge .knowledge-card {
+    padding: 10px 9px 8px;
+  }
+}

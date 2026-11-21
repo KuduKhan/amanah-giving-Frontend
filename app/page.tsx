@@ -399,7 +399,7 @@ export default function Home() {
           <article key={occasion} data-occasion={occasion}>
             <div className="season-card-top"><div className="season-icon"><Icon name={icon}/></div><span>{timing}</span></div>
             <h3>{title}</h3><p>{detail}</p>
-            <button type="button" aria-haspopup="dialog" onClick={() => occasion === 'fidyah' ? startDonation(null, 'Fidyah / Kaffarah') : openPlanner(occasion)}><span>{action}</span><Icon name="arrow-right"/></button>
+            <button type="button" aria-haspopup="dialog" aria-label={action} onClick={() => occasion === 'fidyah' ? startDonation(null, 'Fidyah / Kaffarah') : openPlanner(occasion)}><span className="season-action-label"><span className="full-action-label">{action}</span><span className="compact-action-label" aria-hidden="true">{occasion === 'jumuah' ? 'Weekly plan' : occasion === 'ramadan' ? 'Ramadan plan' : occasion === 'qurbani' ? 'Qurbani plan' : 'Prepare gift'}</span></span><Icon name="arrow-right"/></button>
           </article>
         ))}</div>
       </section>
@@ -482,7 +482,7 @@ export default function Home() {
               <h3>{program.title}</h3>
               <p>{program.summary}</p>
               <button type="button" aria-haspopup="dialog" aria-label={`Prepare a local draft for ${program.title}`} onClick={() => startDonation(null, 'Sadaqah', `Knowledge · ${program.title}`)}>
-                Prepare a local draft <Icon name="arrow-right"/>
+                <span className="full-action-label">Prepare a local draft</span><span className="compact-action-label" aria-hidden="true">Prepare draft</span> <Icon name="arrow-right"/>
               </button>
             </article>
           ))}

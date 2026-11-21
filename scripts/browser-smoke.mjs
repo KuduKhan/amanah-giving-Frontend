@@ -206,7 +206,7 @@ async function inspect({ path: route, name }, viewport) {
     assert.equal(premium.zakatInputs, 6, 'Zakat calculator must have six inputs');
     assert.equal(premium.knowledgeCards, 4, 'Four knowledge opportunities must remain');
 
-    if (viewport.width <= 390) {
+    if (viewport.width <= 600) {
       const pairedCards = await evalPage(`(() => {
         const report = (selector) => {
           const grid = document.querySelector(selector);
@@ -218,12 +218,29 @@ async function inspect({ path: route, name }, viewport) {
             const button = el.querySelector('button');
             const action = button?.getBoundingClientRect();
             const heading = el.querySelector('h3')?.getBoundingClientRect();
-            const description = el.querySelector('p')?.getBoundingClientRect();
-            return button && action && heading && description
+            const description = el.querySelector(':scope > p')?.getBoundingClientRect();
+            const full = button?.querySelector('.full-action-label');
+            const compact = button?.querySelector('.compact-action-label');
+            const icon = button?.querySelector('.app-icon');
+            const iconBounds = icon?.getBoundingClientRect();
+            const inner = el.querySelector('.season-card-top, .knowledge-card-top')?.getBoundingClientRect();
+            const innerNodes = [...el.querySelectorAll('.season-card-top > *, .knowledge-card-top > *')]
+              .filter(node => getComputedStyle(node).display !== 'none')
+              .map(node => node.getBoundingClientRect());
+            const noBadgeCollision = innerNodes.length < 2 || innerNodes[1].top >= innerNodes[0].bottom - 2
+              || innerNodes[1].left >= innerNodes[0].right - 2;
+            const compactVisible = compact && getComputedStyle(compact).display !== 'none';
+            const fullHidden = full && getComputedStyle(full).display === 'none';
+            const realAction = button?.getAttribute('aria-label') || '';
+            return button && action && heading && description && inner
               && action.height >= 43.5
               && action.left >= card.left - 2 && action.right <= card.right + 2
               && action.bottom <= card.bottom + 2
               && heading.right <= card.right + 2 && description.right <= card.right + 2
+              && heading.bottom <= description.top + 2 && description.bottom <= action.top + 2
+              && inner.left >= card.left - 2 && inner.right <= card.right + 2
+              && noBadgeCollision && compactVisible && fullHidden && !!realAction
+              && iconBounds && iconBounds.right <= card.right + 2 && iconBounds.left >= card.left - 2
               && el.scrollWidth <= el.clientWidth + 3;
           });
           return {
@@ -233,6 +250,9 @@ async function inspect({ path: route, name }, viewport) {
             secondRow: Math.abs(boxes[2].top - boxes[3].top) <= 2,
             separatedRows: boxes[2].top >= Math.max(boxes[0].bottom, boxes[1].bottom) - 2,
             equalWidths: Math.abs(boxes[0].width - boxes[1].width) <= 2,
+            cardsDontOverlap: !boxes.some((box, i) => boxes.some((other, j) =>
+              j > i && box.left < other.right - 1 && box.right > other.left + 1
+                && box.top < other.bottom - 1 && box.bottom > other.top + 1)),
             actionsFit: boundsOK,
             clipped: grid.scrollWidth > grid.clientWidth + 3,
             labels: tiles.map(el => el.querySelector('button')?.textContent.trim()),
@@ -248,7 +268,7 @@ async function inspect({ path: route, name }, viewport) {
         assert.equal(grid.columns, 2, name + ': must form exactly two columns on the phone');
         assert.ok(grid.firstRow && grid.secondRow && grid.separatedRows,
           name + ': must be a true two-by-two grid, not a carousel or single column');
-        assert.ok(grid.equalWidths && grid.actionsFit && !grid.clipped,
+        assert.ok(grid.equalWidths && grid.cardsDontOverlap && grid.actionsFit && !grid.clipped,
           name + ': equal-size cards and full-height touch controls must stay inside their boundaries');
       }
       console.log(JSON.stringify({ route: 'giving-mobile-2x2', viewport: viewport.name, pairedCards }));
@@ -766,6 +786,19 @@ try {
         failure ||= error;
         errors.push(`${route.name} ${viewport.name}: ${error.message}`);
       }
+    }
+  }
+  // Extra home-only breakpoints stress the crowded 300–430px band without
+  // making unrelated secondary pages part of this targeted mobile regression.
+  for (const viewport of [
+    { name: 'tiny-300', width: 300, height: 720 },
+    { name: 'phone-360', width: 360, height: 800 },
+    { name: 'phone-430', width: 430, height: 932 },
+  ]) {
+    try { await inspect(routes[0], viewport); }
+    catch (error) {
+      failure ||= error;
+      errors.push('home ' + viewport.name + ': ' + error.message);
     }
   }
   for (const viewport of [dimensions[1], dimensions[3]]) {
