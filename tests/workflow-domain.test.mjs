@@ -126,3 +126,26 @@ test('memory adapter offers swappable async contract, copy isolation and safe re
   assert.equal(fundBalance(await gateway.snapshot(), 'sadaqah'), 161000);
   assert.equal(fundBalance(await gateway.reset(), 'sadaqah'), 160000);
 });
+
+test('organization can correct a returned campaign and restart eligibility checks', () => {
+  const created = applyWorkflowCommand(base(), {
+    type: 'create-campaign', role: 'organization', title: 'Wajir essentials appeal',
+    county: 'Wajir', fundType: 'zakat', budgetKes: 32000,
+  });
+  const campaignId = created.campaigns[0].id;
+  const returned = applyWorkflowCommand(created, {
+    type: 'review-campaign', role: 'admin', campaignId, decision: 'request-changes',
+  });
+  assert.equal(returned.campaigns[0].status, 'changes-requested');
+  const resubmitted = applyWorkflowCommand(returned, {
+    type: 'revise-campaign', role: 'organization', campaignId,
+    title: 'Wajir family relief appeal', budgetKes: 36000,
+  });
+  assert.equal(resubmitted.campaigns[0].status, 'submitted');
+  assert.equal(resubmitted.campaigns[0].budgetKes, 36000);
+  assert.equal(resubmitted.campaigns[0].shariah, 'pending');
+  assert.throws(() => applyWorkflowCommand(created, {
+    type: 'revise-campaign', role: 'organization', campaignId,
+    title: 'Wajir family relief appeal', budgetKes: 36000,
+  }), /returned for changes/);
+});
