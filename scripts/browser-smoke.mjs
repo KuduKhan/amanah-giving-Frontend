@@ -205,6 +205,55 @@ async function inspect({ path: route, name }, viewport) {
     assert.equal(premium.calculatorPresent, true, 'Zakat calculator missing');
     assert.equal(premium.zakatInputs, 6, 'Zakat calculator must have six inputs');
     assert.equal(premium.knowledgeCards, 4, 'Four knowledge opportunities must remain');
+
+    if (viewport.width <= 390) {
+      const pairedCards = await evalPage(`(() => {
+        const report = (selector) => {
+          const grid = document.querySelector(selector);
+          if (!grid) return { missing: true };
+          const tiles = [...grid.querySelectorAll('article')];
+          const boxes = tiles.map(el => el.getBoundingClientRect());
+          const boundsOK = tiles.every((el, idx) => {
+            const card = boxes[idx];
+            const button = el.querySelector('button');
+            const action = button?.getBoundingClientRect();
+            const heading = el.querySelector('h3')?.getBoundingClientRect();
+            const description = el.querySelector('p')?.getBoundingClientRect();
+            return button && action && heading && description
+              && action.height >= 43.5
+              && action.left >= card.left - 2 && action.right <= card.right + 2
+              && action.bottom <= card.bottom + 2
+              && heading.right <= card.right + 2 && description.right <= card.right + 2
+              && el.scrollWidth <= el.clientWidth + 3;
+          });
+          return {
+            count: tiles.length,
+            columns: getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
+            firstRow: Math.abs(boxes[0].top - boxes[1].top) <= 2,
+            secondRow: Math.abs(boxes[2].top - boxes[3].top) <= 2,
+            separatedRows: boxes[2].top >= Math.max(boxes[0].bottom, boxes[1].bottom) - 2,
+            equalWidths: Math.abs(boxes[0].width - boxes[1].width) <= 2,
+            actionsFit: boundsOK,
+            clipped: grid.scrollWidth > grid.clientWidth + 3,
+            labels: tiles.map(el => el.querySelector('button')?.textContent.trim()),
+          };
+        };
+        return {
+          seasonal: report('.refined-seasonal .seasonal-track'),
+          knowledge: report('.refined-knowledge .knowledge-grid'),
+        };
+      })()`);
+      for (const [name, grid] of Object.entries(pairedCards)) {
+        assert.equal(grid.count, 4, name + ': all four mobile cards must render');
+        assert.equal(grid.columns, 2, name + ': must form exactly two columns on the phone');
+        assert.ok(grid.firstRow && grid.secondRow && grid.separatedRows,
+          name + ': must be a true two-by-two grid, not a carousel or single column');
+        assert.ok(grid.equalWidths && grid.actionsFit && !grid.clipped,
+          name + ': equal-size cards and full-height touch controls must stay inside their boundaries');
+      }
+      console.log(JSON.stringify({ route: 'giving-mobile-2x2', viewport: viewport.name, pairedCards }));
+    }
+
     assert.equal(premium.ecosystemButtons, 6, 'Six platform roles must remain');
     assert.equal(premium.howSteps, 4, 'Four giving steps must remain');
     console.log(JSON.stringify({ route: 'homepage-premium', viewport: viewport.name, premium }));
