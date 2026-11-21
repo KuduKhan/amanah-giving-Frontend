@@ -425,9 +425,9 @@ async function inspect({ path: route, name }, viewport) {
     const toolbarShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, 'discovery-toolbar-' + viewport.name + '.png'), Buffer.from(toolbarShot.data, 'base64'));
     await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
-    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    await until(async () => evalPage(`!!document.querySelector('[data-floating-category-menu="true"]')`), 5000);
     const iconMenu = await evalPage(`(() => {
-      const menu = document.querySelector('.cause-browser-bar [role="listbox"]');
+      const menu = document.querySelector('[data-floating-category-menu="true"]');
       const options = [...menu.querySelectorAll('[role="option"]')];
       const rect = menu.getBoundingClientRect();
       return {
@@ -435,7 +435,9 @@ async function inspect({ path: route, name }, viewport) {
         iconCount: options.filter(o => !!o.querySelector('.cause-category-option-icon .app-icon')).length,
         count: options.length,
         optionMinHeight: Math.min(...options.map(o => o.getBoundingClientRect().height)),
-        fits: rect.left >= 0 && rect.right <= innerWidth + 2,
+        fits: rect.left >= 6 && rect.right <= innerWidth - 6 && rect.top >= 0 && rect.bottom <= innerHeight + 2,
+        portalOutsideClippingContainers: menu.parentElement === document.body,
+        placement: menu.dataset.placement,
         selected: menu.querySelector('[aria-selected="true"]')?.dataset.category,
       };
     })()`);
@@ -443,11 +445,13 @@ async function inspect({ path: route, name }, viewport) {
     assert.equal(iconMenu.iconCount, 8, 'Each category must have its original SVG icon');
     assert.ok(iconMenu.fits && iconMenu.optionMinHeight >= 36, 'Icon dropdown must fit and remain touch-usable');
     assert.equal(iconMenu.selected, 'All');
+    assert.equal(iconMenu.portalOutsideClippingContainers, true, 'Homepage menu must escape all clipping ancestors');
+    assert.ok(['up', 'down'].includes(iconMenu.placement));
     assert.deepEqual([...iconMenu.labels].map(x => x.replace(/All causes/, 'All').replace('Allcheck','All')), 
       ['All','Zakat','Food','Orphans','Water','Mosque','Health','Education'].map((v,i) => i===0 ? v : v));
     const menuShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, 'discovery-categories-' + viewport.name + '.png'), Buffer.from(menuShot.data, 'base64'));
-    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-option[data-category="Water"]')?.click(); true`);
+    await evalPage(`document.querySelector('[data-floating-category-menu="true"] .cause-category-option[data-category="Water"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 1`), 5000);
     const water = await evalPage(`(() => ({
       count: document.querySelector('.refined-opportunities .cause-results-line p')?.textContent.trim(),
@@ -458,18 +462,18 @@ async function inspect({ path: route, name }, viewport) {
     assert.equal(water.current, 'Water');
     assert.equal(water.active, 'true');
     await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
-    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    await until(async () => evalPage(`!!document.querySelector('[data-floating-category-menu="true"]')`), 5000);
     await evalPage(`(() => {
-      const selected = document.querySelector('.cause-browser-bar [role="option"][aria-selected="true"]');
+      const selected = document.querySelector('[data-floating-category-menu="true"] [role="option"][aria-selected="true"]');
       selected?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
       return true;
     })()`);
-    await until(async () => evalPage(`!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
+    await until(async () => evalPage(`!document.querySelector('[data-floating-category-menu="true"]')`), 5000);
     assert.equal(await evalPage(`document.querySelector('.cause-browser-bar .cause-category-current-label')?.textContent.trim()`), 'Water',
       'Escape closes menu without clearing the selection');
     await evalPage(`document.querySelector('.cause-browser-bar .cause-category-trigger')?.click(); true`);
-    await until(async () => evalPage(`!!document.querySelector('.cause-browser-bar [role="listbox"]')`), 5000);
-    await evalPage(`document.querySelector('.cause-browser-bar .cause-category-option[data-category="All"]')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('[data-floating-category-menu="true"]')`), 5000);
+    await evalPage(`document.querySelector('[data-floating-category-menu="true"] .cause-category-option[data-category="All"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.refined-opportunities .campaign-card').length === 6`), 5000);
     if (viewport.width <= 780) {
       const dock = await evalPage(`(() => {
@@ -533,19 +537,30 @@ async function inspect({ path: route, name }, viewport) {
     const searchShot = await cdp('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false, fromSurface: true });
     await writeFile(path.join(out, 'compact-search-' + viewport.name + '.png'), Buffer.from(searchShot.data, 'base64'));
     await evalPage(`document.querySelector('.search-category-select .cause-category-trigger')?.click(); true`);
-    await until(async () => evalPage(`!!document.querySelector('.search-category-select [role="listbox"]')`), 5000);
-    const menu = await evalPage(`(() => ({
-      count: document.querySelectorAll('.search-category-select [role="option"]').length,
-      icons: document.querySelectorAll('.search-category-select .cause-category-option-icon .app-icon').length,
-    }))()`);
+    await until(async () => evalPage(`!!document.querySelector('[data-floating-category-menu="true"]')`), 5000);
+    const menu = await evalPage(`(() => {
+      const list = document.querySelector('[data-floating-category-menu="true"]');
+      const rect = list.getBoundingClientRect();
+      const panel = document.querySelector('.campaign-search-panel');
+      return {
+        count: list.querySelectorAll('[role="option"]').length,
+        icons: list.querySelectorAll('.cause-category-option-icon .app-icon').length,
+        portalInDialog: list.parentElement === panel.closest('.overlay'),
+        notClipped: rect.left >= 6 && rect.right <= innerWidth - 6 &&
+          rect.top >= 0 && rect.bottom <= innerHeight + 2,
+        scrollable: list.scrollHeight >= list.clientHeight,
+      };
+    })()`);
     assert.equal(menu.count, 8);
     assert.equal(menu.icons, 8);
-    await evalPage(`document.querySelector('.search-category-select [data-category="Zakat"]')?.click(); true`);
+    assert.equal(menu.portalInDialog, true, 'Modal menu must remain inside its accessible focus trap');
+    assert.equal(menu.notClipped, true, 'Search dialog menu must not clip outside the visible screen');
+    await evalPage(`document.querySelector('[data-floating-category-menu="true"] [data-category="Zakat"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 3`), 5000);
     assert.equal(await evalPage(`document.querySelector('.campaign-search-panel .search-category-select')?.dataset.filtered`), 'true');
     await evalPage(`document.querySelector('.search-category-select .cause-category-trigger')?.click(); true`);
-    await until(async () => evalPage(`!!document.querySelector('.search-category-select [role="listbox"]')`), 5000);
-    await evalPage(`document.querySelector('.search-category-select [data-category="All"]')?.click(); true`);
+    await until(async () => evalPage(`!!document.querySelector('[data-floating-category-menu="true"]')`), 5000);
+    await evalPage(`document.querySelector('[data-floating-category-menu="true"] [data-category="All"]')?.click(); true`);
     await until(async () => evalPage(`document.querySelectorAll('.campaign-search-panel .search-results > button').length === 6`), 5000);
     await evalPage(`(() => {
       const i = document.querySelector('.campaign-search-panel input[aria-label="Search campaigns"]');
