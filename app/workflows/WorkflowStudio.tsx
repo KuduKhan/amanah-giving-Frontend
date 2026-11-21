@@ -170,6 +170,29 @@ export default function WorkflowStudio({ role }: { role: WorkflowRole }) {
             <button className="amanah-workflow-primary" type="submit" disabled={busy}>Submit for mock review <Icon name="arrow-right"/></button>
           </form>}
 
+          {role === 'organization' && snapshot.campaigns.some(row => row.status === 'changes-requested') &&
+            <div className="amanah-workflow-revisions">
+              <h5>Returned campaigns — revise and resubmit</h5>
+              {snapshot.campaigns.filter(row => row.status === 'changes-requested').map(campaign =>
+                <form className="amanah-workflow-revision" key={campaign.id} onSubmit={(event: FormEvent<HTMLFormElement>) => {
+                  event.preventDefault();
+                  const fields = new FormData(event.currentTarget);
+                  void apply({
+                    type: 'revise-campaign', role: 'organization', campaignId: campaign.id,
+                    title: String(fields.get('title') || ''), budgetKes: Number(fields.get('budget')),
+                  }, 'Revised campaign resubmitted.');
+                }}>
+                  <p>{campaign.id} · {campaign.county} · {givingTypeLabel(campaign.fundType)}</p>
+                  <label>Updated fictional title
+                    <input name="title" type="text" required minLength={6} maxLength={80} defaultValue={campaign.title}/>
+                  </label>
+                  <label>Updated sample budget (KSh)
+                    <input name="budget" type="number" min={1000} max={5000000} step={1} required defaultValue={campaign.budgetKes}/>
+                  </label>
+                  <button type="submit" disabled={busy} className="amanah-workflow-primary">Resubmit sample <Icon name="arrow-right"/></button>
+                </form>)}
+            </div>}
+
           {role === 'beneficiary' && <form className="amanah-workflow-form" onSubmit={(event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
             void apply({ type: 'submit-case', role: 'beneficiary', need: caseNeed, county: caseCounty }, 'Anonymous assistance scenario submitted.');
