@@ -30,6 +30,7 @@ type MenuGeometry = {
 export default function CategoryDropdown({ options, value, onChange, label, className = '' }: Props) {
   const [open, setOpen] = useState(false);
   const [geometry, setGeometry] = useState<MenuGeometry | null>(null);
+  const [menuHost, setMenuHost] = useState<HTMLElement | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -43,6 +44,12 @@ export default function CategoryDropdown({ options, value, onChange, label, clas
     const next = entries[(index + entries.length) % entries.length];
     next.focus({ preventScroll: true });
     next.scrollIntoView({ block: 'nearest' });
+  };
+
+  const openMenu = () => {
+    setMenuHost(rootRef.current?.closest<HTMLElement>('[aria-modal="true"]') ?? document.body);
+    setGeometry(null);
+    setOpen(true);
   };
 
   const choose = (next: string) => {
@@ -135,7 +142,7 @@ export default function CategoryDropdown({ options, value, onChange, label, clas
       if (event.target === triggerRef.current && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
         event.preventDefault();
         event.stopPropagation();
-        setOpen(true);
+        openMenu();
       }
       return;
     }
@@ -169,12 +176,6 @@ export default function CategoryDropdown({ options, value, onChange, label, clas
     }
   };
 
-  // A dialog portal stays INSIDE the aria-modal overlay (and its focus trap),
-  // but OUTSIDE the scrollable search panel that otherwise clips the list.
-  const menuHost = open && typeof document !== 'undefined'
-    ? (rootRef.current?.closest<HTMLElement>('[aria-modal="true"]') ?? document.body)
-    : null;
-
   return (
     <div
       ref={rootRef}
@@ -195,7 +196,7 @@ export default function CategoryDropdown({ options, value, onChange, label, clas
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listboxId}
-        onClick={() => setOpen(wasOpen => !wasOpen)}
+        onClick={() => open ? setOpen(false) : openMenu()}
       >
         <span className="cause-category-current-icon"><Icon name={selected[1]}/></span>
         <span className="cause-category-current-label">{value === 'All' ? 'All causes' : value}</span>
