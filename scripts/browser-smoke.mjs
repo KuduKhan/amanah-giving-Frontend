@@ -584,6 +584,41 @@ async function inspect({ path: route, name }, viewport) {
     if (openPlatformButton) {
       await evalPage(`document.querySelector('.site-header .nav-platform').click(); true`);
       await until(async () => evalPage(`!!document.querySelector('.platform-overlay .platform-ai')`), 5000);
+      const studio = await evalPage(`(() => {
+        const root = document.querySelector('.platform-overlay .amanah-workflow');
+        const safety = root?.querySelector('.amanah-workflow-safety')?.textContent ?? '';
+        return {
+          present: !!root,
+          heading: root?.querySelector('#amanah-workflow-title')?.textContent?.trim(),
+          cards: root?.querySelectorAll('.amanah-workflow-metric').length,
+          wallet: root?.querySelector('.amanah-workflow-metric')?.textContent?.trim(),
+          safe: safety.includes('fictional') && safety.includes('No authentication'),
+          clipped: root ? root.scrollWidth > root.clientWidth + 4 : true,
+        };
+      })()`);
+      assert.equal(studio.present && studio.safe && studio.cards === 4, true, 'Workflow studio must explicitly distinguish demo and real records');
+      assert.equal(studio.clipped, false, 'Workflow studio must not overflow the platform viewport');
+      if (viewport.width >= 1180) {
+        await evalPage(`document.querySelector('.amanah-workflow-form button[type="submit"]')?.click(); true`);
+        await until(async () => evalPage(`document.querySelector('.amanah-workflow-metric')?.textContent.includes('161,000')`), 5000);
+        await evalPage(`document.querySelector('.platform-sidebar nav button[aria-label="Admin"]')?.click(); true`);
+        await until(async () => evalPage(`document.querySelector('#amanah-workflow-task')?.textContent.includes('Review a campaign')`), 5000);
+        const gated = await evalPage(`(() => {
+          const campaign = [...document.querySelectorAll('.amanah-workflow-review')]
+            .find(node => node.textContent.includes('CAM-DEMO-101'));
+          return !!campaign?.querySelector('button:disabled');
+        })()`);
+        assert.equal(gated, true, 'Admin cannot approve Zakat before separate Shariah review');
+        await evalPage(`document.querySelector('.platform-sidebar nav button[aria-label="Shariah"]')?.click(); true`);
+        await until(async () => evalPage(`document.querySelector('#amanah-workflow-task')?.textContent.includes('Zakat eligibility')`), 5000);
+        await evalPage(`document.querySelector('.amanah-workflow-review-actions > button:not(.amanah-workflow-secondary)')?.click(); true`);
+        await until(async () => evalPage(`document.querySelector('.amanah-workflow-metric:nth-child(3)')?.textContent.includes('0 awaiting Shariah')`), 5000);
+        await evalPage(`document.querySelector('.platform-sidebar nav button[aria-label="Admin"]')?.click(); true`);
+        await until(async () => evalPage(`document.querySelector('#amanah-workflow-task')?.textContent.includes('Review a campaign')`), 5000);
+        await evalPage(`[...document.querySelectorAll('.amanah-workflow-review')].find(node => node.textContent.includes('CAM-DEMO-101'))?.querySelector('button:not(:disabled)')?.click(); true`);
+        await until(async () => evalPage(`[...document.querySelectorAll('.amanah-workflow-campaign')].some(node => node.textContent.includes('Kilifi household assistance') && node.textContent.includes('approved'))`), 5000);
+        console.log(JSON.stringify({route: 'workflow-studio', viewport: viewport.name, mockDonation: true, zakatGate: true, reviewed: true}));
+      }
       await evalPage(`document.querySelector('.platform-overlay .platform-ai')?.click(); true`);
       await until(async () => evalPage(`!!document.querySelector('.platform-overlay #platform-guide:not([hidden])')`), 5000);
       const guide = await evalPage(`(() => {
