@@ -260,13 +260,45 @@ main.home-premium .refined-opportunities .campaign-compact-controls > .progress 
   height: 4px;
 }
 main.home-premium .refined-opportunities .campaign-compact-controls > .card-footer {
+  display: flex;
+  justify-content: space-between;
   gap: 6px;
 }
 main.home-premium .refined-opportunities .campaign-compact-controls .card-footer > button {
-  border-radius: 8px;
+  flex: 0 1 auto;
+  width: fit-content;
+  min-height: 27px;
+  height: auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  line-height: 1.15;
   font-weight: 760;
   letter-spacing: .004em;
+  white-space: normal;
+  text-wrap: pretty;
 }
+main.home-premium .refined-opportunities .campaign-compact-controls .card-footer > button::before { content: none; }
+main.home-premium .refined-updates .update-card .update-image-toolbar {
+  flex-wrap: wrap;
+  align-items: center;
+}
+main.home-premium .refined-updates .update-image-toolbar .update-photo-badge {
+  max-width: 100%;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+main.home-premium .refined-updates .update-card .update-image-toolbar .update-evidence-pill {
+  min-height: 27px;
+  height: auto;
+  padding: 5px 8px;
+  font-size: 10px;
+  line-height: 1.15;
+  border-radius: 999px;
+  white-space: normal;
+}
+main.home-premium .refined-updates .update-card .update-image-toolbar .update-evidence-pill::before { content: none; }
 
 /* Knowledge cards need editorial discipline, not decorative bulk. */
 main.home-premium .section.refined-knowledge {

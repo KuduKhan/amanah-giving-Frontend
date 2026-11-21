@@ -66,13 +66,24 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
     action();
   };
 
+  const navigate = (id: string) => {
+    setActive(id);
+    setMenuOpen(false);
+    requestAnimationFrame(() => {
+      const heading = document.getElementById(id)?.querySelector<HTMLElement>('h1, h2');
+      if (!heading) return;
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    });
+  };
+
   return <header className="site-header premium-header refined-header" ref={header} onBlur={event => {
     if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
   }}>
     <div className="header-layout">
     <a className="brand" href="#top" onClick={() => setMenuOpen(false)} aria-label="Amanah Giving home"><AmanahLogo size="md"/></a>
     <nav className="desktop-links" aria-label="Main navigation">
-      {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}><Icon name={link.icon}/>{link.label}</a>)}
+      {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => navigate(link.id)}><Icon name={link.icon}/>{link.label}</a>)}
       <Link href="/hajj"><Icon name="kaaba"/>Amanah Hajj</Link>
       <button className="nav-platform" aria-haspopup="dialog" onClick={onPlatform}><Icon name="platform"/>Platform</button>
     </nav>
@@ -96,7 +107,7 @@ export default function SiteHeader({ labels, language, onLanguage, onSearch, onN
       <p className="menu-eyebrow" id="navigation-menu-title">Explore Amanah</p>
       <div className="menu-scroll">
         <nav aria-labelledby="navigation-menu-title">
-          {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => setMenuOpen(false)}><Icon name={link.icon}/><span>{link.label}</span><Icon name="chevron"/></a>)}
+          {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined} onClick={() => navigate(link.id)}><Icon name={link.icon}/><span>{link.label}</span><Icon name="chevron"/></a>)}
           <Link className="menu-hajj" href="/hajj" onClick={() => setMenuOpen(false)}><Icon name="kaaba"/><span>Amanah Hajj</span><Icon name="chevron"/></Link>
           <button type="button" aria-haspopup="dialog" onClick={() => run(onPlatform)}><Icon name="platform"/><span>Platform</span><Icon name="chevron"/></button>
           <button type="button" aria-haspopup="dialog" onClick={() => run(onAccount)}><Icon name="wallet"/><span>{labels.sign}</span><Icon name="chevron"/></button>

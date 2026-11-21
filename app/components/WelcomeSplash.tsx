@@ -25,6 +25,17 @@ export default function WelcomeSplash() {
   const timeouts = useRef<number[]>([]);
   const skipButton = useRef<HTMLButtonElement>(null);
   const originalOverflow = useRef('');
+  const welcomeActive = stage !== 'done';
+
+  useEffect(() => {
+    if (!welcomeActive) return;
+    const pages = [...document.querySelectorAll('main')];
+    const previousInert = pages.map(page => page.inert);
+    pages.forEach(page => { page.inert = true; });
+    return () => {
+      pages.forEach((page, index) => { page.inert = previousInert[index]; });
+    };
+  }, [welcomeActive]);
 
   const clearTimers = () => {
     for (const id of timeouts.current) window.clearTimeout(id);
