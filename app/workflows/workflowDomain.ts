@@ -57,6 +57,7 @@ export type WorkflowSnapshot = {
 export type WorkflowCommand =
   | { type: 'create-campaign'; role: 'organization'; title: string; county: County; fundType: FundType; budgetKes: number }
   | { type: 'review-campaign'; role: 'admin'; campaignId: string; decision: 'approve' | 'request-changes' }
+  | { type: 'revise-campaign'; role: 'organization'; campaignId: string; title: string; budgetKes: number }
   | { type: 'evaluate-zakat'; role: 'shariah'; campaignId: string; eligible: boolean }
   | { type: 'simulated-gift'; role: 'donor'; fundType: FundType; amountKes: number }
   | { type: 'simulated-disbursement'; role: 'finance'; campaignId: string; amountKes: number }
@@ -127,6 +128,19 @@ export function applyWorkflowCommand(snapshot: WorkflowSnapshot, command: Workfl
         status: 'submitted', shariah: command.fundType === 'zakat' ? 'pending' : 'not-required',
       };
       return audit({ ...snapshot, campaigns: [campaign, ...snapshot.campaigns], sequence: snapshot.sequence + 1 }, command.role, id, 'Campaign submitted for sample review');
+    }
+    case 'revise-campaign': {
+      guard(command.role === 'organization', 'Only the organization demo can revise its example campaign.');
+      const campaign = snapshot.campaigns.find(row => row.id === command.campaignId);
+      guard(campaign && campaign.status === 'changes-requested', 'Only campaigns returned for changes may be revised.');
+      const title = command.title.trim().replace(/\s+/g, ' ');
+      guard(title.length >= 6 && title.length <= 80, 'Enter a campaign title between 6 and 80 characters.');
+      guard(amountValid(command.budgetKes, 1000, 5000000), 'The revised sample budget must be from KSh 1,000 to KSh 5,000,000.');
+      return audit({ ...snapshot, campaigns: snapshot.campaigns.map(row =>
+        row.id === campaign.id ? {
+          ...row, title, budgetKes: command.budgetKes, status: 'submitted',
+          shariah: row.fundType === 'zakat' ? 'pending' : 'not-required',
+        } : row) }, command.role, campaign.id, 'Revised campaign resubmitted for sample verification');
     }
     case 'evaluate-zakat': {
       guard(command.role === 'shariah', 'Only the Shariah demo can evaluate Zakat eligibility.');
