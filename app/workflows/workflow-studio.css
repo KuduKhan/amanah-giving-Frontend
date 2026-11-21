@@ -272,6 +272,23 @@
 .amanah-workflow-bottom button { min-height: 34px; padding: 7px 9px; border: 1px solid #d0dfd1; background: #fff; color: #45664e; border-radius: 8px; font-size: 10px; font-weight: 740; }
 .amanah-workflow-bottom button:hover { background: #f0f6f0; }
 
+.amanah-workflow-revisions { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e3eee4; }
+.amanah-workflow-revisions h5 { margin: 0; color: #315b42; font-size: 12px; font-weight: 810; }
+.amanah-workflow-revision {
+  display: grid;
+  grid-template-columns: minmax(0,1.2fr) minmax(0,.8fr) auto;
+  gap: 8px;
+  align-items: end;
+  padding: 12px;
+  border: 1px solid #e4dfcc;
+  border-radius: 10px;
+  background: #fdfbf4;
+}
+.amanah-workflow-revision p { grid-column: 1 / -1; margin: 0; color: #856d3c; font-size: 10.5px; }
+.amanah-workflow-revision label { min-width: 0; display: grid; gap: 5px; color: #4e6252; font-size: 10px; font-weight: 730; }
+.amanah-workflow-revision input { display: block; width: 100%; min-width: 0; min-height: 42px; padding: 9px; border: 1px solid #d4dccf; border-radius: 8px; background: white; color: #204a34; font-size: 12px; }
+@media (max-width: 590px) { .amanah-workflow-revision { grid-template-columns: minmax(0,1fr); } }
+
 @media (max-width: 900px) {
   .amanah-workflow-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
