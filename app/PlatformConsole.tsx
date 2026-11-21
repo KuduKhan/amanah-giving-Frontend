@@ -2,6 +2,7 @@
 
 import Icon from './Icon';
 import AmanahLogo from './AmanahLogo';
+import WorkflowStudio from './workflows/WorkflowStudio';
 import Image from 'next/image';
 import { downloadText } from './givingDrafts';
 
@@ -93,6 +94,7 @@ export default function PlatformConsole({ onClose, onGive, initialPortal = 'dono
         <form id="platform-guide" className="assistant-bar" hidden={!assistantOpen} onSubmit={(event: FormEvent) => { event.preventDefault(); setAssistantReply('Example guidance (not personalised): a verified water or education Sadaqah Jariyah campaign may fit. I can explain options, but I do not issue religious rulings or move funds.'); }}><input aria-label="Ask the example giving guide" placeholder="Ask about giving types, causes or impact" required/><button type="submit">Ask</button>{assistantReply && <p role="status">{assistantReply}</p>}</form>
 
         <div className="platform-content"><p className="preview-note">Workspace examples · Figures, records and controls are illustrative. No organization, account or financial changes are submitted.</p>{message && <section className="workflow-preview" id="workflow-preview" tabIndex={-1} aria-labelledby="workflow-title"><button className="workflow-close" aria-label="Close workflow preview" onClick={() => setMessage('')}><Icon name="close"/></button><p className="eyebrow">Workflow preview</p><h3 id="workflow-title">{message.replace(/ (opened|created|saved|submitted|approved|prepared)$/i, '')}</h3><p>This task is shown as a preview. No record was submitted, approved, downloaded or changed on a live service.</p><button className="text-link" onClick={() => downloadText('amanah-workflow-note.txt', `AMANAH GIVING — WORKFLOW NOTE\n${message}\nPreview only. No live record was changed.\n`)}>Download workflow note <Icon name="→"/></button></section>}
+          <WorkflowStudio role={portal}/>
           {portal === 'donor' && <DonorPortal onGive={onGive} act={act} notifications={notifications} setNotifications={setNotifications} privateProfile={privateProfile} setPrivateProfile={setPrivateProfile}/>} 
           {portal === 'beneficiary' && <BeneficiaryPortal act={act}/>} 
           {portal === 'organization' && <OrganizationPortal act={act}/>} 
@@ -124,7 +126,6 @@ function BeneficiaryPortal({ act }: ActionProps) {
   const [step, setStep] = useState(1);
   const [requestType, setRequestType] = useState('');
   const [details, setDetails] = useState('');
-  const [contact, setContact] = useState('');
   const [contactTime, setContactTime] = useState('Morning');
 
   return <>
@@ -142,16 +143,23 @@ function BeneficiaryPortal({ act }: ActionProps) {
           ))}
         </div>}
         {step === 2 && <label className="portal-field">Sample supporting details
-          <textarea value={details} onChange={event => setDetails(event.target.value)} placeholder="Describe an example situation"/>
+          <select value={details} onChange={event => setDetails(event.target.value)}>
+            <option value="">Choose an optional fictional situation</option>
+            <option value="Illustrative school materials request">Illustrative school materials request</option>
+            <option value="Illustrative household food request">Illustrative household food request</option>
+            <option value="Illustrative shelter request">Illustrative shelter request</option>
+            <option value="Illustrative transport assistance request">Illustrative transport assistance request</option>
+          </select>
+          <small>Only preset examples are accepted. No identifiable personal or health details.</small>
         </label>}
         {step === 3 && <div className="portal-form">
-          <label>Sample contact<input type="tel" value={contact} onChange={event => setContact(event.target.value)} placeholder="07XX XXX XXX"/></label>
+          <p className="safety-note" role="note">Contact details are intentionally disabled until a private, backend-protected application process exists.</p>
           <label>Safe time to contact<select value={contactTime} onChange={event => setContactTime(event.target.value)}><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label>
         </div>}
         {step === 4 && <div className="review-box">
           <b>{requestType}</b>
           <p>{details.trim() || 'No supporting details added.'}</p>
-          <p>{contact.trim() ? `Sample contact provided · ${contactTime}` : 'No sample contact added.'}</p>
+          <p>No personal contact collected · Preferred example contact window: {contactTime}</p>
         </div>}
         <div className="form-actions">
           <button className="portal-back-button" type="button" disabled={step === 1} onClick={() => setStep(step - 1)} aria-label="Return to previous request step"><Icon name="arrow-left"/> Back</button>

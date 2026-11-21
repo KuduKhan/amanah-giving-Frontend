@@ -1,0 +1,315 @@
+/* Amanah Giving — self-contained pre-backend workflow studio.
+ * No overlays, animated glow or global element selectors; responsive from 320px.
+ */
+.amanah-workflow {
+  min-width: 0;
+  margin: 0 0 18px;
+  border: 1px solid #cbded2;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #ffffff 0%, #f2f8f3 72%, #f9fbf8 100%);
+  box-shadow: 0 9px 30px -25px rgba(15, 60, 42, .38);
+  color: #1d4233;
+  overflow: hidden;
+}
+.amanah-workflow * { box-sizing: border-box; }
+.amanah-workflow button, .amanah-workflow input, .amanah-workflow select { font: inherit; }
+.amanah-workflow button { cursor: pointer; }
+.amanah-workflow button:disabled { cursor: not-allowed; opacity: .48; }
+.amanah-workflow button:focus-visible, .amanah-workflow :is(input,select):focus-visible, .amanah-workflow-table-scroll:focus-visible {
+  outline: 2px solid #a77c37;
+  outline-offset: 2px;
+}
+.amanah-workflow-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+  padding: clamp(13px, 1.6vw, 19px);
+}
+.amanah-workflow-heading-copy { min-width: 0; }
+.amanah-workflow-kicker, .amanah-workflow-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 850;
+  color: #207354;
+  letter-spacing: .08em;
+}
+.amanah-workflow-kicker .app-icon, .amanah-workflow-role .app-icon { width: 15px; height: 15px; }
+.amanah-workflow-heading h3 {
+  margin: 5px 0;
+  font: 650 clamp(18px, 2vw, 23px)/1.25 var(--font-geist-sans), Arial, sans-serif;
+  letter-spacing: -.025em;
+  color: #153f2f;
+}
+.amanah-workflow-heading p {
+  margin: 0;
+  color: #557363;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.amanah-workflow-toggle, .amanah-workflow-details-heading > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 6px;
+  min-height: 37px;
+  padding: 8px 10px;
+  border: 1px solid #c7dfcd;
+  border-radius: 9px;
+  background: white;
+  color: #196446;
+  font-size: 11.5px;
+  font-weight: 760;
+}
+.amanah-workflow-toggle:hover, .amanah-workflow-details-heading > button:hover {
+  background: #eaf5ee;
+}
+.amanah-workflow-toggle .app-icon, .amanah-workflow-details-heading > button .app-icon { width: 13px; height: 13px; }
+.amanah-workflow-safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 11px clamp(13px, 1.6vw, 19px);
+  border-top: 1px solid #dce8dd;
+  border-bottom: 1px solid #dce8dd;
+  background: #f3f9f3;
+  color: #506d5b;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.amanah-workflow-safety strong { color: #2b5941; }
+.amanah-workflow-safety .app-icon { flex: 0 0 16px; width: 16px; height: 16px; margin-top: 2px; color: #217755; }
+.amanah-workflow-body { display: grid; gap: 12px; padding: clamp(12px, 1.5vw, 17px); }
+.amanah-workflow-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+.amanah-workflow-metric {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 11px 10px;
+  border: 1px solid #d9e8dc;
+  border-radius: 11px;
+  background: rgba(255,255,255,.93);
+}
+.amanah-workflow-metric > span { font-size: 10.5px; line-height: 1.35; color: #52715f; font-weight: 730; }
+.amanah-workflow-metric > strong { font-size: clamp(17px, 2vw, 22px); line-height: 1.2; color: #164a34; font-weight: 820; font-variant-numeric: tabular-nums; }
+.amanah-workflow-metric > small { font-size: 9.5px; line-height: 1.35; color: #6d8777; }
+.amanah-workflow-panel, .amanah-workflow-details {
+  min-width: 0;
+  padding: clamp(12px, 1.6vw, 17px);
+  border: 1px solid #d6e5da;
+  border-radius: 13px;
+  background: white;
+}
+.amanah-workflow-task-heading { margin-bottom: 11px; }
+.amanah-workflow-task-heading h4, .amanah-workflow-details-heading h4 {
+  margin: 4px 0;
+  color: #173e2f;
+  font-size: clamp(14px, 1.8vw, 17px);
+  font-weight: 840;
+  letter-spacing: -.018em;
+  line-height: 1.3;
+}
+.amanah-workflow-task-heading > p, .amanah-workflow-details-heading p {
+  margin: 0;
+  color: #607766;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+.amanah-workflow-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 11px;
+}
+.amanah-workflow-form > label {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  color: #365d49;
+  font-size: 11px;
+  font-weight: 760;
+}
+.amanah-workflow-form > label.amanah-workflow-wide { grid-column: 1 / -1; }
+.amanah-workflow-form :is(select, input) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 11px;
+  border: 1px solid #c8ddd0;
+  border-radius: 9px;
+  background: #fafdfa;
+  color: #1f4432;
+  font-size: 13px;
+  font-weight: 620;
+}
+.amanah-workflow-form :is(select, input):hover { border-color: #9cbdab; }
+.amanah-workflow-primary, .amanah-workflow-review-actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 43px;
+  padding: 9px 13px;
+  border: 1px solid #17684b;
+  border-radius: 9px;
+  color: white;
+  background: #15644b;
+  font-size: 11.5px;
+  font-weight: 780;
+  line-height: 1.3;
+  text-align: center;
+}
+.amanah-workflow-primary:hover:not(:disabled), .amanah-workflow-review-actions > button:hover:not(:disabled) { background: #0c503c; }
+.amanah-workflow-primary .app-icon { width: 15px; height: 15px; }
+.amanah-workflow-footnote {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #647a6d;
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.amanah-workflow-queue { display: grid; gap: 9px; }
+.amanah-workflow-queue h5 { margin: 5px 0 0; color: #244e3a; font-size: 12px; }
+.amanah-workflow-review {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 11px;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid #e0ebe2;
+  border-radius: 10px;
+  background: #fbfdfb;
+}
+.amanah-workflow-review > div:first-child { display: grid; min-width: 0; gap: 3px; }
+.amanah-workflow-review > div:first-child span { color: #6e8275; font-size: 10px; overflow-wrap: anywhere; }
+.amanah-workflow-review > div:first-child b { color: #1a4431; font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.amanah-workflow-review > div:first-child small { color: #587160; font-size: 10px; }
+.amanah-workflow-review-actions { display: flex; flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.amanah-workflow-review-actions > button { min-height: 37px; padding: 7px 9px; font-size: 10px; }
+.amanah-workflow-review-actions > button.amanah-workflow-secondary {
+  color: #225840;
+  border-color: #c2ddcc;
+  background: #eff7f0;
+}
+.amanah-workflow-review-actions > button.amanah-workflow-secondary:hover:not(:disabled) { background: #e2f1e6; }
+.amanah-workflow-empty { margin: 0; color: #697e70; font-size: 11.5px; }
+.amanah-workflow-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  margin: 0;
+  border-radius: 10px;
+  background: #e9f5e9;
+  color: #20553a;
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+.amanah-workflow-feedback.amanah-workflow-error { background: #fff0ec; color: #98452b; }
+.amanah-workflow-feedback .app-icon { width: 15px; height: 15px; flex: none; }
+.amanah-workflow-details-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.amanah-workflow-campaigns { display: grid; gap: 6px; }
+.amanah-workflow-campaign {
+  display: grid;
+  grid-template-columns: minmax(0,1.5fr) minmax(0,1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border: 1px solid #edf1ec;
+  border-radius: 9px;
+  background: #fafcf9;
+}
+.amanah-workflow-campaign > div { min-width: 0; display: grid; gap: 3px; }
+.amanah-workflow-campaign b { font-size: 11.5px; color: #254a34; line-height: 1.3; overflow-wrap: anywhere; }
+.amanah-workflow-campaign span, .amanah-workflow-campaign small { font-size: 10px; line-height: 1.35; color: #627d6b; }
+.amanah-workflow-campaign strong { font-size: 12px; color: #20533b; font-variant-numeric: tabular-nums; }
+.amanah-workflow-campaign .amanah-workflow-status {
+  padding: 5px 7px;
+  border: 1px solid #e5d7b3;
+  border-radius: 7px;
+  background: #fcf6e8;
+  color: #876828;
+  font-size: 9.5px;
+  font-weight: 780;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+.amanah-workflow-campaign .amanah-workflow-status.is-approved { border-color: #b7d9c2; background: #e9f5ec; color: #20663f; }
+.amanah-workflow-table-scroll { max-width: 100%; overflow-x: auto; margin-top: 12px; border: 1px solid #dfebe1; border-radius: 9px; }
+.amanah-workflow-table { width: 100%; min-width: 590px; border-collapse: collapse; text-align: start; color: #315940; font-size: 10.5px; }
+.amanah-workflow-table th { background: #eef6ef; text-align: start; font-weight: 800; }
+.amanah-workflow-table th, .amanah-workflow-table td { padding: 9px 10px; border-bottom: 1px solid #e8f0e8; font-variant-numeric: tabular-nums; }
+.amanah-workflow-table tbody tr:last-child td { border-bottom: none; }
+.amanah-workflow-case-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 7px; }
+.amanah-workflow-case-strip > div { display: grid; gap: 3px; padding: 9px; border-radius: 9px; background: #f5f9f5; border: 1px solid #e0ebe2; }
+.amanah-workflow-case-strip b { font-size: 11px; color: #24543a; }
+.amanah-workflow-case-strip span { font-size: 10px; color: #667d6a; }
+.amanah-workflow-case-strip em { font-size: 10px; font-style: normal; color: #397658; font-weight: 700; text-transform: capitalize; }
+.amanah-workflow-audit { display: grid; gap: 8px; list-style: none; padding: 8px 0 0; margin: 11px 0 0; border-top: 1px solid #e3ece3; }
+.amanah-workflow-audit li { display: grid; gap: 4px; padding: 6px 7px; border-inline-start: 2px solid #9bc6a6; }
+.amanah-workflow-audit strong { font-size: 11px; color: #315640; font-weight: 730; }
+.amanah-workflow-audit span { font-size: 10px; color: #687d6e; }
+.amanah-workflow-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 9px; }
+.amanah-workflow-bottom span { display: inline-flex; align-items: center; gap: 6px; color: #688071; font-size: 10px; line-height: 1.5; }
+.amanah-workflow-bottom .app-icon { width: 14px; height: 14px; }
+.amanah-workflow-bottom button { min-height: 34px; padding: 7px 9px; border: 1px solid #d0dfd1; background: #fff; color: #45664e; border-radius: 8px; font-size: 10px; font-weight: 740; }
+.amanah-workflow-bottom button:hover { background: #f0f6f0; }
+
+.amanah-workflow-revisions { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #e3eee4; }
+.amanah-workflow-revisions h5 { margin: 0; color: #315b42; font-size: 12px; font-weight: 810; }
+.amanah-workflow-revision {
+  display: grid;
+  grid-template-columns: minmax(0,1.2fr) minmax(0,.8fr) auto;
+  gap: 8px;
+  align-items: end;
+  padding: 12px;
+  border: 1px solid #e4dfcc;
+  border-radius: 10px;
+  background: #fdfbf4;
+}
+.amanah-workflow-revision p { grid-column: 1 / -1; margin: 0; color: #856d3c; font-size: 10.5px; }
+.amanah-workflow-revision label { min-width: 0; display: grid; gap: 5px; color: #4e6252; font-size: 10px; font-weight: 730; }
+.amanah-workflow-revision input { display: block; width: 100%; min-width: 0; min-height: 42px; padding: 9px; border: 1px solid #d4dccf; border-radius: 8px; background: white; color: #204a34; font-size: 12px; }
+@media (max-width: 590px) { .amanah-workflow-revision { grid-template-columns: minmax(0,1fr); } }
+
+@media (max-width: 900px) {
+  .amanah-workflow-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 590px) {
+  .amanah-workflow-heading { flex-wrap: wrap; }
+  .amanah-workflow-heading > .amanah-workflow-toggle { width: 100%; justify-content: space-between; }
+  .amanah-workflow-body { padding: 10px; }
+  .amanah-workflow-metrics { gap: 6px; }
+  .amanah-workflow-metric { padding: 9px 8px; }
+  .amanah-workflow-metric > strong { font-size: 17px; }
+  .amanah-workflow-form { grid-template-columns: 1fr; }
+  .amanah-workflow-form > label.amanah-workflow-wide { grid-column: auto; }
+  .amanah-workflow-review { align-items: stretch; flex-direction: column; }
+  .amanah-workflow-review-actions { justify-content: stretch; }
+  .amanah-workflow-review-actions > button { flex: 1 1 115px; }
+  .amanah-workflow-campaign { grid-template-columns: minmax(0, 1fr) auto; }
+  .amanah-workflow-campaign > div:nth-child(2) { grid-column: 1; grid-row: 2; }
+  .amanah-workflow-campaign > .amanah-workflow-status { grid-column: 2; grid-row: 1 / 3; }
+  .amanah-workflow-details-heading { align-items: flex-start; flex-wrap: wrap; }
+  .amanah-workflow-details-heading > button { width: 100%; justify-content: space-between; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .amanah-workflow * { scroll-behavior: auto; transition: none; animation: none; }
+}
