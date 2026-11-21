@@ -22,6 +22,7 @@ import { campaignImageFocus } from './campaignImageFocus';
 import './home-premium.css';
 import './discovery-compact.css';
 import './discovery-dropdown.css';
+import './mobile-giving-grid.css';
 
 type Campaign = {
   id: string;
