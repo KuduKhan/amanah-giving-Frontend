@@ -565,26 +565,28 @@ main.home-premium .refined-opportunities .opportunity-heading .cause-search-cont
 .discovery-field .cause-category-select[data-open="true"] .cause-category-caret {
   transform: rotate(-90deg);
 }
-.discovery-field .cause-category-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 120;
+.cause-category-menu[data-floating-category-menu="true"] {
+  position: fixed;
+  z-index: 1300;
   display: grid;
   gap: 2px;
   box-sizing: border-box;
   width: max(100%, 224px);
-  max-width: min(285px, calc(100vw - 28px));
+  max-width: calc(100vw - 16px);
   max-height: min(366px, calc(100dvh - 185px));
   padding: 6px;
   border: 1px solid #c9dfd1;
   border-radius: 13px;
   background: #fff;
   box-shadow: 0 18px 42px -20px rgba(8, 49, 31, .33), 0 5px 14px -10px rgba(8, 49, 31, .18);
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
-.discovery-field .cause-category-option {
+.cause-category-menu .cause-category-option {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -602,21 +604,23 @@ main.home-premium .refined-opportunities .opportunity-heading .cause-search-cont
   font-weight: 690;
   line-height: 1.2;
   text-align: start;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   cursor: pointer;
 }
-.discovery-field .cause-category-option:hover,
-.discovery-field .cause-category-option:focus-visible {
-  outline: 0;
+.cause-category-menu .cause-category-option:hover,
+.cause-category-menu .cause-category-option:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: -2px;
   background: #edf6ef;
   color: #17583d;
 }
-.discovery-field .cause-category-option[aria-selected="true"] {
+.cause-category-menu .cause-category-option[aria-selected="true"] {
   background: #e5f3e9;
   color: #145f41;
   font-weight: 810;
 }
-.discovery-field .cause-category-option-icon {
+.cause-category-menu .cause-category-option-icon {
   display: grid;
   place-items: center;
   flex: 0 0 28px;
@@ -626,15 +630,15 @@ main.home-premium .refined-opportunities .opportunity-heading .cause-search-cont
   border-radius: 8px;
   background: #f6faf7;
 }
-.discovery-field .cause-category-option-icon .app-icon {
+.cause-category-menu .cause-category-option-icon .app-icon {
   width: 16px;
   height: 16px;
 }
-.discovery-field .cause-category-option[aria-selected="true"] .cause-category-option-icon {
+.cause-category-menu .cause-category-option[aria-selected="true"] .cause-category-option-icon {
   border-color: #c8dfcd;
   background: #fff;
 }
-.discovery-field .cause-category-check.app-icon {
+.cause-category-menu .cause-category-check.app-icon {
   width: 15px;
   height: 15px;
   margin-inline-start: auto;
@@ -676,7 +680,7 @@ main.home-premium .refined-opportunities .opportunity-heading:has(.cause-categor
     width: 14px;
     height: 14px;
   }
-  .discovery-field .cause-category-menu {
+  .cause-category-menu[data-floating-category-menu="true"] {
     width: max(100%, 218px);
   }
 }
